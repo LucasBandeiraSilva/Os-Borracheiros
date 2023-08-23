@@ -1,0 +1,16 @@
+main{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+}
+
+body{
+    background: linear-gradient(rgb(7, 7, 162),rgb(0, 0, 0));
+}
+
+#nav{
+    background-color: transparent;
+}
