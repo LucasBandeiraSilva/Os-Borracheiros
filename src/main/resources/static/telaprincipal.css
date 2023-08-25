@@ -17,6 +17,11 @@ body {
     color: rgb(226, 226, 226);
 }
 
+li a{
+    text-decoration: none;
+    color: #a0a0a0;
+}
+
 
 ul {
     height: 35vh;

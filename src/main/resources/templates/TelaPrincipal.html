@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="telaprincipal.css">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="telaprincipal.css" />
     <title>Home</title>
-</head>
-<body>
+  </head>
+  <body>
     <nav>
-        <ul>
-            <li><a href=""></a>Home</li>
-            <li><a href="#"></a>Produtos</li>
-            <li><a href="cadastro.html"></a>Usuários</li>
-            <li><a href="#"></a>Pedidos</li>
-        </ul>
-   </nav>
-</body>
+      <ul>
+        <li><a href=""></a>Home</li>
+        <li><a href="#"></a>Produtos</li>
+        <li><a th:href="@{/cadastro}">Usuarios</a></li>
+        <li><a href="#"></a>Pedidos</li>
+      </ul>
+    </nav>
+  </body>
 </html>

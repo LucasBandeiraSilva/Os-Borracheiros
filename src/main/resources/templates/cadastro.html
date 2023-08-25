@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="cadastro.css">
+    <link rel="stylesheet" href="cadastro.css" />
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css" />
     <title>Document</title>
   </head>
@@ -12,7 +12,7 @@
       <!-- place navbar here -->
       <ul class="nav justify-content-center bg-light">
         <li class="nav-item">
-          <a class="nav-link active" href="#" aria-current="page">home</a>
+          <a class="nav-link active" th:href="@{/}" aria-current="page">home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">login</a>
@@ -33,68 +33,72 @@
               class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded"
               style="height: 600px; width: 400px"
             >
-              <form action="#">
+              <form action="#" id="form">
+                
                 <div class="mb-3">
                   <label for="" class="form-label">nome</label>
                   <input
                     type="text"
-                    class="form-control"
-                    name=""
-                    id=""
+                    class="form-control inputs required"
+                    name="nome"
+                    id="nome"
                     aria-describedby="helpId"
                     placeholder="nome de usuario"
+                    onchange="verificaNome()"
                   />
-                  <small id="helpId" class="form-text text-dark"
-                    >Nome de Usuario</small
+
+                <div class="mb-3">
+                  <label for="login" class="form-label">email</label>
+                  <input
+                    type="email"
+                    class="form-control inputs required"
+                    name="email"
+                    id="email"
+                    aria-describedby="helpId"
+                    placeholder="digite seu email"
+                    oninput="nameValidate()"
+                  />
+                  <span class="span-required"
+                    >email invalido</span
                   >
                 </div>
                 <div class="mb-3">
-                  <label for="" class="form-label">Email</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name=""
-                    id=""
-                    aria-describedby="helpId"
-                    placeholder="Email"
-                  />
-                  <small id="helpId" class="form-text text-dark"
-                    >informe seu email</small
-                  >
+                  <label for="cpf" class="form-label">cpf</label>
+                  <input type="number" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="emailHelpId" placeholder="cpf">
                 </div>
+
                 <div class="mb-3">
-                  <label for="" class="form-label">cpf</label>
+                  <label for="password" class="form-label">Senha</label>
                   <input
-                    type="text"
-                    class="form-control"
-                    name=""
-                    id=""
+                    type="password"
+                    class="form-control inputs required"
+                    name="password"
+                    id="password"
                     aria-describedby="helpId"
-                    placeholder="cpf"
+                    placeholder="Senha"
+                    oninput="validateMainPassword()"
                   />
-                  <small id="helpId" class="form-text text-dark"
-                    >Informe o cpf</small
+                  <span class="span-required"
+                    >Senha deve ter no mínimo 6 caracteres</span
                   >
                 </div>
+
                 <div class="mb-3">
-                  <label for="" class="form-label">Password</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name=""
-                    id=""
-                    aria-describedby="helpId"
-                    placeholder="senha"
-                  />
-                  <small id="helpId" class="form-text text-dark"
-                    >informe sua senha</small
+                  <label for="newPassword" class="form-label"
+                    >Digite Novamente a senha</label
                   >
+                  <input
+                    type="password"
+                    class="form-control inputs required"
+                    name="newPassword"
+                    id="newPassword"
+                    aria-describedby="helpId"
+                    placeholder="Nova Senha"
+                    oninput="comparePassword()"
+                  />
+                  <span class="span-required">As senhas não conferem</span>
                 </div>
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary">
-                    enviar dados
-                  </button>
-                </div>
+                <button class="btn btn-primary"type="submit">enviar</button>
               </form>
             </div>
           </div>
@@ -104,8 +108,10 @@
     <footer>
       <!-- place footer here -->
     </footer>
+
+    <script src="Cadastro.js"></script>
     <!-- Bootstrap JavaScript Libraries -->
-    <!-- <script
+    <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
       integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
       crossorigin="anonymous"
@@ -115,6 +121,6 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
       integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
       crossorigin="anonymous"
-    ></script> -->
+    ></script>
   </body>
 </html>
