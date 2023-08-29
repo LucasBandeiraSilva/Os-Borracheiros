@@ -19,6 +19,10 @@ public class UserController {
         return "cadastro";
     }
     
+    @GetMapping("/listaUsuario")
+    public String showUser(){
+        return "ListaUsuario";
+    }
 
     
 }
