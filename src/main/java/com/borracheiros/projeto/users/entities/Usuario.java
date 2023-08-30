@@ -30,8 +30,14 @@ public class Usuario {
     private String email;
     @Column(nullable = false) 
     private String telefone;
+    @Column(nullable = false)
+    private String StatusUsuario;
 
     @ManyToMany
   private List<Role> roles;
+
+   public Usuario(){
+    
+   }
 }
 
