@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="index.html" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <title>Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.html" />
+  <title>testing</title>
 </head>
-<body class="text-center">
-    <form class="form-signin">
-        <h1 class="h3 mb-3 font-weight-normal">Faça login</h1>
-        <label for="inputEmail" class="sr-only">Endereço de email</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Seu email" required autofocus>
-        <label for="inputPassword" class="sr-only">Senha</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required>
-        <div class="checkbox mb-3">
-          <label>
-            <input type="checkbox" value="remember-me"> Lembrar de mim
-          </label>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-        <p class="mt-5 mb-3 text-muted">&copy; Os_Borracheiros</p>
-      </form>
+<body>
+  
+  <form action="#" class="main-form">
+    <div class="container">
+      <div class="form-header">
+        <h5>Login</h5>
+      </div>
+      <div class="form-body"> 
+        <input type="text" name="Username" id="Usernames" placeholder='Username'>
+        <input type="text" name="Username" id="Usernames" placeholder='Password'>
+      </div>
+      <div class="form-button">
+        <button type="submit">Submit</button>
+      </div>
+    </div>
+  </form>
+  
 </body>
 </html>
