@@ -18,7 +18,6 @@
           <a class="nav-link" th:href="@{/logout}">Logout</a>
         </li>
       </ul>
-      <div class="text-center text-white"><h1>nome da loja</h1></div>
     </header>
     <main>
       <div class="container">
@@ -31,11 +30,11 @@
           <div class="col">
             <div
               class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded"
-              style="height: 600px; width: 400px"
+              style="height: 690px; width: 400px"
             >
-              <form action="#" id="form">
+              <form action="/ListaUsuario" method="post" id="form">
                 
-                <div class="mb-3">
+                <div class="mb-1">
                   <label for="" class="form-label">nome</label>
                   <input
                     type="text"
@@ -47,8 +46,18 @@
                     onchange="verificaNome()"
                   />
 
-                <div class="mb-3">
-                  <label for="login" class="form-label">email</label>
+                  <div class="my-1">
+                    <label for="form-label">Data Nascimento</label>
+                    <input type="date" id="data" name="dataNascimento" class="form-control">
+                  </div>
+
+                  <div class="my-1">
+                    <label for="form-label">telefone</label>
+                    <input type="number" id="telefone" name="telefone" class="form-control" maxlength="15" placeholder="numero de telefone">
+                  </div>
+
+                <div class="mb-2">
+                  <label for="email" class="form-label">email</label>
                   <input
                     type="email"
                     class="form-control inputs required"
@@ -62,18 +71,18 @@
                     >email invalido</span
                   >
                 </div>
-                <div class="mb-3">
+                <div class="mb-2">
                   <label for="cpf" class="form-label">cpf</label>
-                  <input type="number" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="emailHelpId" placeholder="cpf">
+                  <input type="number" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-2">
                   <label for="password" class="form-label">Senha</label>
                   <input
                     type="password"
                     class="form-control inputs required"
-                    name="password"
-                    id="password"
+                    name="senha"
+                    id="senha"
                     aria-describedby="helpId"
                     placeholder="Senha"
                     oninput="validateMainPassword()"
@@ -83,7 +92,7 @@
                   >
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-2">
                   <label for="newPassword" class="form-label"
                     >Digite Novamente a senha</label
                   >
@@ -97,10 +106,21 @@
                     oninput="comparePassword()"
                   />
                   <span class="span-required">As senhas não conferem</span>
+                  <label class="form-label" for="">Status</label>
+                  <select class="form-select" name="StatusUsuario" id="StatusUsuario">
+                    <option value="ativo">ATIVO</option>
+                    <option value="inativo">INATIVO</option>
+                  </select>
+                  <label class="form-label" for="">Tipo Usuario</label>
+                  <select class="form-select" name="role" id="role">
+                    <option value="1">ADMIN</option>
+                    <option value="2">Estoquista</option>
+                  </select>
                 </div>
                 <button class="btn btn-primary"type="submit">enviar</button>
-              </form>
-            </div>
+                <p></p>
+              </div>
+            </form>
           </div>
         </div>
       </div>

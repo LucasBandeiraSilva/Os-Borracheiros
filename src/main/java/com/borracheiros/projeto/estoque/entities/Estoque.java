@@ -22,9 +22,5 @@ public class Estoque {
     private String nome;
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
-
 }
 

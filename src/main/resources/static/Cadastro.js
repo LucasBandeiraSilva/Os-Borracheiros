@@ -5,7 +5,7 @@ const email =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 form.addEventListener("submit", (Event) => {
-    Event.preventDefault()
+   
   nameValidate();
   emailRegex();
   validateMainPassword();
@@ -51,4 +51,10 @@ function comparePassword() {
     setError(4);
   }
 }
+const hasErrors = document.querySelectorAll(".span-required").length > 0;
+
+  if (!hasErrors) {
+    // Todas as validações passaram, então podemos enviar o formulário
+    form.submit();
+  }
 })
