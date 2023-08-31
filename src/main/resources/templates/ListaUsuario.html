@@ -5,17 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="ListaUsuario.css"/>
     <title>Lista Usuario</title>
 </head>
 <body>
     <H1>Lista de Usuario</H1>
+    <hr>
     <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+        <input id="input-busca" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><a th:href="@{/cadastro}">Novo</a></button>
     </form>
     <br>
+    
       <table class="table table-striped">
 
         <thead>
@@ -24,10 +27,10 @@
                 <th scope="col">Email</th>
                 <th scope="col">Status</th>
                 <th scope="col">Alterar</th>
-                <th scope="col">Habilitar/Desabilitar</th>
+                <th scope="col">Desabilitar/habilitar</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tabela">
             <tr th:each="usuario : ${usuarios}">
                 <th class="col-1" th:text="${usuario.nome}"></th>
                 <th class="col-2" th:text="${usuario.email}"></th>
@@ -35,7 +38,7 @@
                 <th class="col-1"><a href="#">Alterar</a></th>
                 <th class="col-4"> 
                     <label class="switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" onclick="alert()">
                             <span class="slider"></span>
                     </label>
                 </th>
@@ -43,9 +46,21 @@
             </tr>
         </tbody>
       </table>
-      
-      
 
+<script>
+    function alert(){
+        Swal.fire(
+            {
+                text: 'Você acabou de Ativa ou Inativar um usuario',
+                icon: 'warning',
+                title: 'Atenção',
+            }
+        )
+    }
+</script>   
+      
+<script src="eventos.js"></script>      
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
