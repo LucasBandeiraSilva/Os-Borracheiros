@@ -2,6 +2,7 @@ package com.borracheiros.projeto.users;
 
 import com.borracheiros.projeto.dto.UserDto;
 import com.borracheiros.projeto.users.entities.Role;
+import com.borracheiros.projeto.users.entities.RoleRepository;
 import com.borracheiros.projeto.users.entities.Usuario;
 
 import java.util.List;
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class UserController {
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @GetMapping("/")
     public String home() {
@@ -39,17 +42,16 @@ public class UserController {
 
     @PostMapping("/ListaUsuario")
     public String Create(UserDto userDto) {
-        Long roleId = userDto.getRole(); // Valor selecionado no formulário
+        // Valor selecionado no formulário
          Usuario usuario = userDto.toUsuario();
+         Long roleId = userDto.getRole(); // Valor selecionado no formulário
 
-        if (roleId != null) {
-            Role role;
-
-            if (roleId == 1) {
-                role = new Role(1L); // Crie um objeto Role correspondente a "ADMIN"
-            } else if (roleId == 2) {
-                role = new Role(2L); // Crie um objeto Role correspondente a "Estoquista"
-            }
+         Role role = roleRepository.findById(roleId).orElse(null);
+         if (role != null) {
+              usuario = userDto.toUsuario();
+             usuario.setRole(role); // Defina a role no objeto Usuario
+             
+         
         }
         this.usuarioRepository.save(usuario);
         return "redirect:/ListaUsuario";
