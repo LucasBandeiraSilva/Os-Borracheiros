@@ -10,14 +10,6 @@
   <body>
     <header>
       <!-- place navbar here -->
-      <ul class="nav justify-content-center bg-light">
-        <li class="nav-item">
-          <a class="nav-link active" th:href="@{/}" aria-current="page">home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/logout}">Logout</a>
-        </li>
-      </ul>
     </header>
     <main>
       <div class="container">
@@ -27,24 +19,32 @@
           >
             <p>Cadastre-se em nossa loja!</p>
           </div>
+          
+          <div
+            class="col h2 text-white d-flex align-items-center justify-content-center"
+          >
+            
+          </div>
           <div class="col">
             <div
-              class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded"
-              style="height: 690px; width: 400px"
+              class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
+              style="height: 760px; width: 600px"
             >
-              <form action="/ListaUsuario" method="post" id="form">
+              <form action="/ListaUsuario" method="post" id="form" class="p-5">
+                <div class="row">
+                  <div>
+                    <label for="" class="form-label mt-4">nome</label>
+                    <input
+                      type="text"
+                      class="form-control inputs required"
+                      name="nome"
+                      id="nome"
+                      placeholder="nome de usuario"
+                      onchange="verificaNome()"
+                    />
+                    
+                </div>
                 
-                <div class="mb-1">
-                  <label for="" class="form-label">nome</label>
-                  <input
-                    type="text"
-                    class="form-control inputs required"
-                    name="nome"
-                    id="nome"
-                    aria-describedby="helpId"
-                    placeholder="nome de usuario"
-                    onchange="verificaNome()"
-                  />
 
                   <div class="my-1">
                     <label for="form-label">Data Nascimento</label>
@@ -73,11 +73,14 @@
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">cpf</label>
-                  <input type="number" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
+                  <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
+                  <span th:if="${cpfMismatch}" class="text-danger">cpf ja cadastrado!!!</span>
+                  
                 </div>
 
                 <div class="mb-2">
                   <label for="password" class="form-label">Senha</label>
+                  
                   <input
                     type="password"
                     class="form-control inputs required"
@@ -93,31 +96,38 @@
                 </div>
 
                 <div class="mb-2">
-                  <label for="newPassword" class="form-label"
+                  <label for="confirmPassword" class="form-label"
                     >Digite Novamente a senha</label
                   >
                   <input
                     type="password"
                     class="form-control inputs required"
-                    name="newPassword"
+                    name="confirmPassword"
                     id="newPassword"
                     aria-describedby="helpId"
                     placeholder="Nova Senha"
                     oninput="comparePassword()"
                   />
                   <span class="span-required">As senhas não conferem</span>
-                  <label class="form-label" for="">Status</label>
+                  <span th:if="${passwordMismatch}" class="text-danger">As senhas não coincidem</span>
+                  
+                  <div class="mb-2">
+
+                    <label class="form-label " for="">Status</label>
                   <select class="form-select" name="StatusUsuario" id="StatusUsuario">
                     <option value="ativo">ATIVO</option>
-                    <option value="inativo">INATIVO</option>
+                    <option value="inativo" disabled>INATIVO</option>
                   </select>
-                  <label class="form-label" for="">Tipo Usuario</label>
+                  </div>
+
+                    <label class="form-label" for="">Tipo Usuario</label>
                   <select class="form-select" name="role" id="role">
                     <option value="1">ADMIN</option>
                     <option value="2">Estoquista</option>
                   </select>
+                  
                 </div>
-                <button class="btn btn-primary"type="submit">enviar</button>
+                <button class="btn btn-primary mt-2 w-100"type="submit">enviar</button>
                 <p></p>
               </div>
             </form>
@@ -125,22 +135,6 @@
         </div>
       </div>
     </main>
-    <footer>
-      <!-- place footer here -->
-    </footer>
-
     <script src="Cadastro.js"></script>
-    <!-- Bootstrap JavaScript Libraries -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-      integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>

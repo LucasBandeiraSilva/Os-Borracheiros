@@ -1,22 +1,22 @@
 package com.borracheiros.projeto.users;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.borracheiros.projeto.dto.UserDto;
 import com.borracheiros.projeto.users.entities.Role;
 import com.borracheiros.projeto.users.entities.RoleRepository;
 import com.borracheiros.projeto.users.entities.Usuario;
 
 import jakarta.validation.Valid;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 
@@ -46,52 +46,58 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login(){
+    public String login() {
         return "index";
     }
 
     @PostMapping("/login")
     public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha) {
-        
+
         Usuario usuario = usuarioRepository.findByEmail(email);
 
         if (usuario != null) {
-            
+
             if (senha.equals(usuario.getSenha())) {
-                
-                return "redirect:/";
+
+                return "redirect:/ListaUsuario";
             }
         }
 
         return null;
     }
+
     @PostMapping("/ListaUsuario")
-public String createUser(@Valid UserDto userDto, BindingResult bindingResult) {
-    
-    if (bindingResult.hasErrors()) {
-        System.out.println("codigo com erros");
-        return "redirect:/";
-    } else {
-        Usuario usuario = userDto.toUsuario();
+    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
 
-        Long roleId = userDto.getRole();
+        if (bindingResult.hasErrors()) {
+            System.out.println("Formulário com erros");
+            return "Erro"; // Substitua pelo nome da sua página
+        } else {
+            Usuario usuario = userDto.toUsuario();
 
-        // Procura a função (role) com base no ID fornecido
-        Role role = roleRepository.findById(roleId).orElse(null);
+            Long roleId = userDto.getRole();
 
-        if (role != null) {
-            
-            usuario.setRole(role);
+            // Procura a função (role) com base no ID fornecido
+            Role role = roleRepository.findById(roleId).orElse(null);
 
-          
-            usuarioRepository.save(usuario);
+            if (!userDto.getSenha().equals(userDto.getConfirmPassword())
+                    || usuarioRepository.existsByCpf(userDto.getCpf())) {
+                model.addAttribute("passwordMismatch", true);
+                model.addAttribute("cpfMismatch", true);
+                return "cadastro";
+            }
 
-            return "redirect:/ListaUsuario";
+            if (role != null) {
+
+                usuario.setRole(role);
+
+                usuarioRepository.save(usuario);
+
+                return "redirect:/ListaUsuario";
+            }
+            return "Erro";
         }
-        return "Erro";
+
     }
-    
-    
-}
 
 }

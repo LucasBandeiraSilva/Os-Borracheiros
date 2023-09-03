@@ -55,7 +55,7 @@
           <th class="col-2" th:text="${usuario.nome}"></th>
           <th class="col-3" th:text="${usuario.email}"></th>
           <th class="col-4" th:text="${usuario.StatusUsuario}"></th>
-          <th class="col-5" th:text="${usuario.role}"></th>
+          <th class="col-5" th:text="${usuario.role.id}"></th>
           <th class="col-5"><a th:href="@{/cadastro/{usuarioId}/edit(usuarioId=${usuario.id})}">Alterar</a></th>
           <th class="col-4">
             <label class="switch">

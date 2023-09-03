@@ -5,4 +5,6 @@ import com.borracheiros.projeto.users.entities.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
     Usuario findByEmail(String nome);
+    boolean existsByCpf(String cpf);
+    
 }
