@@ -1,12 +1,17 @@
 package com.borracheiros.projeto.users;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.swing.text.html.Option;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,6 +36,11 @@ public class UserController {
         return "TelaPrincipal";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "index";
+    }
+
     @GetMapping("/cadastro")
     public String showCreateUserPage() {
         return "cadastro";
@@ -45,11 +55,6 @@ public class UserController {
 
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "index";
-    }
-
     @PostMapping("/login")
     public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha) {
 
@@ -59,7 +64,7 @@ public class UserController {
 
             if (senha.equals(usuario.getSenha())) {
 
-                return "redirect:/ListaUsuario";
+                return "redirect:/";
             }
         }
 
@@ -67,21 +72,21 @@ public class UserController {
     }
 
     @PostMapping("/ListaUsuario")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
+    public String createUser(@Valid UserDto usuarioDto, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
             System.out.println("Formulário com erros");
             return "Erro"; // Substitua pelo nome da sua página
         } else {
-            Usuario usuario = userDto.toUsuario();
+            Usuario usuario = usuarioDto.toUsuario();
 
-            Long roleId = userDto.getRole();
+            Long roleId = usuarioDto.getRole();
 
             // Procura a função (role) com base no ID fornecido
             Role role = roleRepository.findById(roleId).orElse(null);
 
-            if (!userDto.getSenha().equals(userDto.getConfirmPassword())
-                    || usuarioRepository.existsByCpf(userDto.getCpf())) {
+            if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())
+                    || usuarioRepository.existsByCpf(usuarioDto.getCpf())) {
                 model.addAttribute("passwordMismatch", true);
                 model.addAttribute("cpfMismatch", true);
                 return "cadastro";
@@ -100,4 +105,56 @@ public class UserController {
 
     }
 
+    @GetMapping("/usuarios/editar/{id}")
+    public String alterar(@PathVariable("id") Long id, Model model){
+        Optional <Usuario> optional = this.usuarioRepository.findById(id);
+        // if(optional.isEmpty()){
+        //     return "erro";
+        // }
+        model.addAttribute("usuario", optional.get());
+        return "Edit";
+    }
+
+    @GetMapping("usuarios/salvar")
+    public String salvarPessoa(@ModelAttribute("usuario") Usuario usuario){
+        this.usuarioRepository.save(usuario);
+        return "redirect:/ListaUsuario";
+    }
+
+    @PostMapping("/ListaUsuario/salvar")
+    public String salvarUser(@ModelAttribute("usuario") Usuario usuario, Model model) {
+    
+       
+    
+        // Verifique se o CPF é nulo ou vazio
+        if (usuario.getCpf() == null || usuario.getCpf().isEmpty()) {
+            model.addAttribute("cpfNull", true);
+            return "Edit";
+        }
+    
+        // Verifique se a senha é nula ou vazia
+        if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
+            model.addAttribute("emailNull", true);
+            return "Edit";
+        }
+        if (usuario.getDataNascimento() == null) {
+            model.addAttribute("dataNull", true);
+            return "Edit";
+        }
+    
+        // Verifique se o CPF já existe no banco de dados
+        if (usuarioRepository.existsByCpf(usuario.getCpf())) {
+            model.addAttribute("cpfMismatch", true);
+            return "Edit";
+        }
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            model.addAttribute("EmailMismatch", true);
+            return "Edit";
+        }
+    
+        // Se todas as verificações passarem, salve o usuário e redirecione
+        this.usuarioRepository.save(usuario);
+        return "redirect:/ListaUsuario";
+    }
+    
 }

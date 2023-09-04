@@ -54,9 +54,15 @@
           <th class="col-1" th:text="${usuario.id}"></th>
           <th class="col-2" th:text="${usuario.nome}"></th>
           <th class="col-3" th:text="${usuario.email}"></th>
-          <th class="col-4" th:text="${usuario.StatusUsuario}"></th>
+          <th
+            id="status"
+            class="col-4 status"
+            th:text="${usuario.StatusUsuario}"
+          ></th>
           <th class="col-5" th:text="${usuario.role.id}"></th>
-          <th class="col-5"><a th:href="@{/cadastro/{usuarioId}/edit(usuarioId=${usuario.id})}">Alterar</a></th>
+          <th class="col-5">
+            <a th:href="@{usuarios/editar/{id}(id=${usuario.id})}">Alterar</a>
+          </th>
           <th class="col-4">
             <label class="switch">
               <input type="checkbox" onclick="alert()" />
@@ -70,7 +76,7 @@
     <script>
       function alert() {
         Swal.fire({
-          text: "Você acabou de Ativa ou Inativar um usuario",
+          text: "Você acabou de Ativar ou Inativar um usuario",
           icon: "warning",
           title: "Atenção",
         });

@@ -38,4 +38,12 @@ public class UserDto {
         usuario.setSenha(this.senha);
         return usuario;
     }
+
+    public void fromUsuario(Usuario usuario){
+        this.nome = usuario.getNome();
+        this.cpf = usuario.getCpf();
+        this.email = usuario.getEmail();
+        this.StatusUsuario = usuario.getStatusUsuario();
+        
+    }
 }
