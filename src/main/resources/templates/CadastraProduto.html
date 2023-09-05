@@ -1,14 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/src/main/resources/static/CadastraProduto.css">
-    <title>Cadastro de Produto</title>
+    <link rel="stylesheet" href="../static/CadastraProduto.css">
+    <title>Cadastro Produto</title>
 </head>
 <body>
-    <div>
-        <h1>Teste</h1>
+    <div class="cadastro">
+        <form action="">
+            <h1>Cadastro de produto:</h1>
+            
+            <div class="nome">
+                <label for="form-label">Nome do Produto:</label>
+                <input type="text" id="nomeProduto" name="nomeProduto" class="" required>
+              </div>
+
+              <div>
+                <br><label for="form-label">Classificação do Produto</label>
+                <ul class="classificacao">
+                    <label for="star1">★</label><input type="radio" id="star1" name="rating" value="1">
+                    <label for="star2">★</label><input type="radio" id="star2" name="rating" value="2">
+                    <label for="star3">★</label><input type="radio" id="star3" name="rating" value="3">
+                    <label for="star4">★</label><input type="radio" id="star4" name="rating" value="4">
+                    <label for="star5">★</label><input type="radio" id="star5" name="rating" value="5">
+                </ul>
+              </div>
+
+              <div class="discricao">
+                <label for="form-label">Descrição do Produto:</label>
+                <br><textarea type="text" id="descricaoProduto" class="" required></textarea>
+              </div>
+
+              <div>
+               <br><label for="form-label">Valor do Produto:</label>
+               <input type="number" id="valor" name="valor" min="0" required>
+               
+                <br><label for="form-label">Quantidade do Produto:</label>
+                <input type="number" id="qtdProduto" name="qtdProduto" min="0" step="1" required>
+              </div>
+
+              <div>
+                <form action="upload.php" method="post" enctype="multipart/form-data">
+                    <label for="imagens">Selecione uma ou mais imagens:</label>
+                    <input type="file" id="imagens" name="imagens[]" accept="image/*" multiple required>
+                    
+                    <div id="preview"></div>
+                    
+                    <button type="submit">Enviar Imagens</button>
+                </form>
+            
+                <script>
+                    const input = document.getElementById('imagens');
+                    const preview = document.getElementById('preview');
+            
+                    input.addEventListener('change', () => {
+                        preview.innerHTML = ''; // Limpa as pré-visualizações existentes
+            
+                        for (const file of input.files) {
+                            const image = document.createElement('img');
+                            image.src = URL.createObjectURL(file);
+                            image.className = 'image-preview';
+                            preview.appendChild(image);
+                        }
+                    });
+                </script>
+              </div>
+
+
+
+        </form>
+    </div>
+    <div class="info">
+        <h1>Informações</h1>
     </div>
 </body>
 </html>

@@ -1,3 +1,32 @@
-h1{
-    background-color: brown;
+body{
+    
+}
+
+
+.cadastro > form{
+    border: 3px solid red;
+    margin: 50px;
+    width: 50%;
+}
+
+.cadastro > form > h1{
+    
+}
+
+.info{
+    border: 3px solid blue;
+    background-color: blue;
+    margin-left: 800px;
+    margin-right: 35px;
+    margin-top: 10px;
+    height: 25em;
+}
+
+#preview {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image-preview {
+    margin: 10px;
 }
