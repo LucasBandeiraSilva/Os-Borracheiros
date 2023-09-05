@@ -1,19 +1,12 @@
 main{
     display: flex;
-    width: 100vw;
-    height: 100vh;
+    height: 110vh;
     justify-content: center;
     align-items: center;
-    color: #000;
-}
-
-body{
     background: linear-gradient(rgb(7, 7, 162),rgb(0, 0, 0));
+        
 }
 
-#nav{
-    background-color: transparent;
-}
 .span-required{
     display: none;
     font-size: 1rem;

@@ -12,8 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,34 +25,22 @@ public class Usuario {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @NotBlank
-  @NotNull
+
   private String nome;
-  @NotNull
-  @DateTimeFormat(pattern = "dd/MM/yyyy")
-  private LocalDate dataNascimento;
-  @NotBlank
-  @NotNull
+
   @Column(unique = true)
   private String cpf;
 
-  @NotBlank
-  @NotNull
-  @Column(nullable = false)
+  @Column(unique = false)
   private String email;
- 
-  @NotNull
-  @Column(nullable = false)
-  private Long telefone;
 
-  @NotBlank
-  @NotNull
-  @Column(nullable = false)
+  private String telefone;
+
+  private LocalDate dataNascimento;
+
   private String StatusUsuario;
-    
-  @NotBlank
-  @NotNull
-  @Column(unique = true)
+
+   @Column(unique = false)
   private String senha;
 
   @ManyToOne

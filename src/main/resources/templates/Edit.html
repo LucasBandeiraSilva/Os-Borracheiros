@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link rel="stylesheet" href="cadastro.css" /> -->
+    <link rel="stylesheet" href="cadastro.css" />
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <title>Cadastro Funcionario</title>
   </head>
@@ -17,7 +17,7 @@
           <div
             class="col h2 text-white d-flex align-items-center justify-content-center"
           >
-            <p>Cadastre-se em nossa loja!</p>
+            <p>Edite seus dados!</p>
           </div>
           
           <div
@@ -30,52 +30,52 @@
               class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
               style="height: 760px; width: 600px"
             >
-              <form  th:object="${userDto}" action="/ListaUsuario" method="post" id="form" class="p-5">
+              <form  th:action="@{/ListaUsuario/salvar}" th:object="${usuario}" method="post" id="form" class="p-5">
+                <input type="hidden" th:field="*{id}" />
+
                 <div class="row">
                   <div>
                     <label for="" class="form-label mt-4">nome</label>
                     <input
                       type="text"
                       class="form-control inputs required"
-                      name="nome"
+                      th:field="*{nome}"
                       id="nome"
                       placeholder="nome de usuario"
                       onchange="verificaNome()"
                     />
                     
                 </div>
-                
-
-                  <div class="my-1">
+                <div class="my-1">
                     <label for="form-label">Data Nascimento</label>
-                    <input type="date" id="data" name="dataNascimento" class="form-control">
+                    <input type="date" id="data"  th:field="*{dataNascimento}"class="form-control" > 
+                    <span th:if="${dataNull}" class="text-danger">Preencha sua data de nascimento!!!</span>
                   </div>
-
-                  <div class="my-1">
-                    <label for="form-label">telefone</label>
-                    <input type="number" id="telefone" name="telefone" class="form-control" maxlength="15" placeholder="numero de telefone">
-                  </div>
+                  
 
                 <div class="mb-2">
                   <label for="email" class="form-label">email</label>
                   <input
                     type="email"
                     class="form-control inputs required"
-                    name="email"
+                    th:field="*{email}"
                     id="email"
                     aria-describedby="helpId"
                     placeholder="digite seu email"
                     oninput="nameValidate()"
+
                   />
                   <span class="span-required"
                     >email invalido</span
                   >
+                  <span th:if="${emailNull}" class="text-danger">email vazio</span>
+                  <span th:if="${EmailMismatch}" class="text-danger">email ja existente!!!</span>
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">cpf</label>
-                  <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
+                  <input type="text" class="form-control inputs required" th:field="*{cpf}" id="cpf" aria-describedby="cpf" placeholder="cpf">
                   <span th:if="${cpfMismatch}" class="text-danger">cpf ja cadastrado!!!</span>
-                  <span th:if="${cpfMismatch}" class="text-danger">cpf ja cadastrado!!!</span>
+                  <span th:if="${cpfNull}" class="text-danger">preencha o campo cpf!!!</span>
                   
                 </div>
 
@@ -90,10 +90,14 @@
                     aria-describedby="helpId"
                     placeholder="Senha"
                     oninput="validateMainPassword()"
+                    
+                    
                   />
                   <span class="span-required"
                     >Senha deve ter no mínimo 6 caracteres</span
                   >
+                  <span th:if="${senhaNull}" class="text-danger">As senhas não coincidem</span>
+
                 </div>
 
                 <div class="mb-2">
@@ -117,7 +121,7 @@
                     <label class="form-label " for="">Status</label>
                   <select class="form-select" name="StatusUsuario" id="StatusUsuario">
                     <option value="ativo">ATIVO</option>
-                    <option value="inativo" disabled>INATIVO</option>
+                    <option value="inativo">INATIVO</option>
                   </select>
                   </div>
 
@@ -136,6 +140,6 @@
         </div>
       </div>
     </main>
-    <script src="Cadastro.js"></script>
+    <script th:src="@{/Cadastro.js}"></script>
   </body>
 </html>
