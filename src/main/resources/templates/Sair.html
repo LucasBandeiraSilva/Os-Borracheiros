@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Seu cabeçalho aqui -->
+</head>
+<body>
+    <p>Esta página será redirecionada em 5 segundos...</p>
+
+    <script>
+        // Função para redirecionar após 5 segundos
+        function redirecionarApos5Segundos() {
+            setTimeout(function () {
+                window.location.href = '/'; // Redirecionamento para a página desejada
+            }, 5000); // 5000 milissegundos = 5 segundos
+        }
+
+        // Chame a função quando a página carregar
+        window.onload = redirecionarApos5Segundos;
+    </script>
+</body>
+</html>

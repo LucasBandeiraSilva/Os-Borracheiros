@@ -28,11 +28,14 @@
         placeholder="Buscar"
         aria-label="Search"
       />
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+      <button class="btn btn-outline-success my-2 my-sm-0 mr-2" type="submit">
         Buscar
       </button>
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-        <a th:href="@{/cadastro}">Novo</a>
+      <button class="btn btn-success my-2 my-sm-0 mr-2" type="submit">
+        <a class="text-decoration-none text-white" th:href="@{/cadastro}">Novo</a>
+      </button>
+      <button class="btn btn-primary my-2 my-sm-0" type="submit">
+        <a class="text-decoration-none text-white" th:href="@{/}">home</a>
       </button>
     </form>
     <br />
