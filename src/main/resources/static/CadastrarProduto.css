@@ -1,7 +1,3 @@
-body{
-    
-}
-
 
 .cadastro > form{
     border: 3px solid red;
@@ -9,9 +5,7 @@ body{
     width: 50%;
 }
 
-.cadastro > form > h1{
-    
-}
+
 
 .info{
     border: 3px solid blue;
@@ -30,3 +24,4 @@ body{
 .image-preview {
     margin: 10px;
 }
+

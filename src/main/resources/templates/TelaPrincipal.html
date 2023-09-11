@@ -3,19 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="telaprincipal.css" />
+    <link rel="stylesheet" href="/telaprincipal.css" />
     <title>Home</title>
   </head>
   <body>
     <nav>
-        <ul>
-            <!-- <li><a href=""></a>Home</li> -->
-            <li><a href="#"></a>Produtos</li>
-            <li><a th:href="@{/ListaUsuario}" >Usuários</a></li>
-            <li><a href="#"></a>Pedidos</li>
-            <li><a th:href="@{/login}" >Login</a></li>
-            <li><a th:href="@{/sair}" >logout</a></li>
-        </ul>
-   </nav>
-</body>
+      <ul>
+        <li><a th:href="@{produto/cadastro}">Produtos</a></li>
+        <li><a th:href="@{/ListaUsuario}">Usuários</a></li>
+        <li><a href="#"></a>Pedidos</li>
+        <li><a th:href="@{/login}">Login</a></li>
+        <li><a th:href="@{/sair}">logout</a></li>
+      </ul>
+    </nav>
+  </body>
 </html>

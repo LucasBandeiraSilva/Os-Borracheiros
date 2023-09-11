@@ -99,10 +99,11 @@ public class UserController {
             if (role != null) {
 
                 usuario.setRole(role);
-
+                
                 usuarioRepository.save(usuario);
 
                 return "redirect:/ListaUsuario";
+                
             }
             return "Erro";
         }
