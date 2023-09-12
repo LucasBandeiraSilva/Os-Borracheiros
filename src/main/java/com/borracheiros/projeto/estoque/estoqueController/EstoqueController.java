@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,12 +82,11 @@ public class EstoqueController {
         return estoque.getImagem();
     }
 
-    @GetMapping("/visualizarProdutos")
-    public String visualizarProduto (Model model) {
-        List<Estoque> produtos = estoqueRepository.findAll();
-        model.addAttribute("produtos", produtos);
-        return "VisualizarProdutos";
-
+    @GetMapping("/produto/{id}")
+    @ResponseBody
+    public Estoque obterProdutoPorId(@PathVariable Long id) {
+        return estoqueRepository.findById(id).orElse(null);
+    }
     }
 
-}
+

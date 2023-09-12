@@ -18,7 +18,7 @@
     <title>Lista Produtos</title>
   </head>
   <body>
-    <h1>Lista de Usuario</h1>
+    <h1>Lista de Produtos</h1>
     <hr />
     <form class="form-inline my-2 my-lg-0">
       <input
@@ -37,7 +37,7 @@
         >
       </button>
       <button class="btn btn-primary my-2 my-sm-0" type="submit">
-        <a class="text-decoration-none text-white" th:href="@{/}"></a>
+        <a class="text-decoration-none text-white" th:href="@{/}">Voltar</a>
       </button>
     </form>
     <br />
@@ -53,6 +53,7 @@
           <th scope="col">Quantidade Estoque</th>
           <th scope="col">Avaliacao</th>
           <th scope="col">Descricao Detalhada</th>
+          <th scope="col">Visualizar Produtos</th>
           <th scope="col">Alterar</th>
           <th scope="col">Alterar status</th>
         </tr>
@@ -71,6 +72,9 @@
           <th class="col-6" th:text="${produto.quantidadeEstoque}"></th>
           <th class="col-7" th:text="${produto.avaliacao}"></th>
           <th class="col-8" th:text="${produto.descricaoDetalhada}"></th>
+          <th class="col-9">
+            <a th:href="@{'/produto/' + ${produto.id}}">Visualizar</a>
+          </th>
           <th class="col-9">
             <a th:href="@{/}">Alterar</a>
           </th>
