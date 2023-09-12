@@ -15,10 +15,10 @@
       href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css"
     />
     <link rel="stylesheet" href="ListaUsuario.css" />
-    <title>Lista Produtos</title>
+    <title>Lista de Produtos</title>
   </head>
   <body>
-    <h1>Lista de Usuario</h1>
+    <h1>Lista de Produtos</h1>
     <hr />
     <form class="form-inline my-2 my-lg-0">
       <input
@@ -28,13 +28,12 @@
         placeholder="Buscar"
         aria-label="Search"
       />
-      <button class="btn btn-outline-success my-2 my-sm-0 mr-2" type="submit">
-        Buscar
-      </button>
+      
       <button class="btn btn-success my-2 my-sm-0 mr-2" type="submit">
-        <a class="text-decoration-none text-white" th:href="@{/cadastro}"
-          >Novo</a
+        <a class="text-decoration-none text-white" th:href="@{/produto/cadastro}"
+          >Novo produto</a
         >
+     
       </button>
       <button class="btn btn-primary my-2 my-sm-0" type="submit">
         <a class="text-decoration-none text-white" th:href="@{/}">Voltar</a>
@@ -87,7 +86,7 @@
     <script>
       function alert() {
         Swal.fire({
-          text: "Você acabou de Ativar ou Inativar um usuario",
+          text: "Você acabou de Ativar ou Inativar um produto",
           icon: "warning",
           title: "Atenção",
         });

@@ -18,19 +18,28 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.dto.EstoqueDto;
+import com.borracheiros.projeto.dto.UserDto;
 import com.borracheiros.projeto.estoque.EstoqueRepository;
 import com.borracheiros.projeto.estoque.entities.Estoque;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
 public class EstoqueController {
+    UserDto userDto = new UserDto();
+    
 
     @Autowired
     EstoqueRepository estoqueRepository;
 
     @GetMapping("produto/cadastro")
-    public String cadastroProduto() {
+    public String cadastroProduto(HttpSession session) {
+        Long roleId = (Long) session.getAttribute("roleId");
+
+        if(roleId == null){
+            return "aviso";
+        }
         return "CadastraProduto";
     }
 
@@ -39,7 +48,7 @@ public class EstoqueController {
         ModelAndView mv = new ModelAndView();
         List<Estoque> produtos = this.estoqueRepository.findAll();
 
-        mv.setViewName("ListaProduto");
+        mv.setViewName("produtos/ListaProduto");
         mv.addObject("produtos", produtos);
         return mv;
 
@@ -56,10 +65,6 @@ public class EstoqueController {
             return "Erro";
         }
 
-        DecimalFormat df = new DecimalFormat("#,00");
-        String precoFormatado = df.format(produtoDTO.getPreco());
-        produtoDTO.setPreco(new BigDecimal(precoFormatado));
-
         try {
             produtoDTO.setImagem(file.getBytes());
         } catch (IOException e) {
@@ -70,14 +75,13 @@ public class EstoqueController {
         System.out.println(estoque);
         estoqueRepository.save(estoque);
 
-        return "redirect:/listasProdutos";
+        return "redirect:/visualizarProdutos";
     }
 
     @GetMapping("/imagem/{id}")
     @ResponseBody
     public byte [] exibirImagem(Model model, @PathVariable("id") long id){
         Estoque estoque = this.estoqueRepository.getOne(id);
-        System.out.println("a imagem é " + estoque.getImagem());
         return estoque.getImagem();
     }
 
@@ -85,7 +89,7 @@ public class EstoqueController {
     public String visualizarProduto (Model model) {
         List<Estoque> produtos = estoqueRepository.findAll();
         model.addAttribute("produtos", produtos);
-        return "VisualizarProdutos";
+        return "produtos/VisualizarProduto";
 
     }
 
