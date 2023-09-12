@@ -22,7 +22,7 @@ public class Estoque {
 
     private String nome;
 
-    @Column(precision = 8, scale = 2)
+    @Column
     private BigDecimal preco;
 
     @Column
