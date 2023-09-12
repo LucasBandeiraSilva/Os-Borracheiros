@@ -23,7 +23,16 @@
         margin-right: 10px;
       }
       body {
-        background-color: #6c6969;
+        background-color: #3d3d3d;
+      }
+
+      button > a{
+        text-decoration: none;
+        color: #f0f0f0;
+      }
+
+      *{
+        color: #f0f0f0;
       }
     </style>
   </head>
@@ -51,7 +60,7 @@
               name="nome"
               id="titulo"
               size="20px"
-              placeholder=" nome do produto"
+              placeholder=" Nome do produto"
               maxlength="35"
             />
           </div>
@@ -68,7 +77,7 @@
             />
 
           </div>
-          <label for="descrição longa">descrição longa</label>
+          <label for="descrição longa">Descrição longa</label>
 
           <div class="mb-3">
             <label for="" class="form-label"></label>
@@ -115,14 +124,15 @@
           <div class="mb-3">
             <label for="" class="form-label">Avaliação</label>
             <select class="form-select form-select-lg" name="" id="">
-              <option value="1">1 estrelas</option>
-              <option value="2">2 estrelas</option>
-              <option value="3">3 estrelas</option>
-              <option value="4">4 estrelas</option>
-              <option value="5">5 estrelas</option>
+              <option value="1">1 Estrela</option>
+              <option value="2">2 Estrela</option>
+              <option value="3">3 Estrela</option>
+              <option value="4">4 Estrela</option>
+              <option value="5">5 Estrela</option>
             </select>
           </div>
           <button type="submit" class="btn btn-success">Enviar</button>
+          <button type="submit" class="btn btn-warning"><a th:href="@{/}">Voltar</a></button>
         </form>
         <div id="preview"></div>
       </div>
