@@ -46,7 +46,7 @@ public class UserController {
         }
 
         List<Usuario> usuarios = this.usuarioRepository.findAll();
-        mv.setViewName("ListaUsuario");
+        mv.setViewName("usuarios/ListaUsuario");
         mv.addObject("usuarios", usuarios);
         return mv;
 
@@ -93,7 +93,7 @@ public class UserController {
                     || usuarioRepository.existsByCpf(usuarioDto.getCpf())) {
                 model.addAttribute("passwordMismatch", true);
                 model.addAttribute("cpfMismatch", true);
-                return "cadastro";
+                return "usuarios/cadastro";
             }
 
             if (role != null) {
@@ -121,7 +121,7 @@ public class UserController {
     @GetMapping("usuarios/salvar")
     public String salvarPessoa(@ModelAttribute("usuario") Usuario usuario) {
         this.usuarioRepository.save(usuario);
-        return "redirect:/ListaUsuario";
+        return "/ListaUsuario";
     }
 
     @PostMapping("/ListaUsuario/salvar")

@@ -52,19 +52,19 @@
                   </div>
 
                   <div class="my-1">
-                    <label for="form-label">telefone</label>
+                    <label for="form-label">Telefone</label>
                     <input type="number" id="telefone" name="telefone" class="form-control" maxlength="15" placeholder="numero de telefone">
                   </div>
 
                 <div class="mb-2">
-                  <label for="email" class="form-label">email</label>
+                  <label for="email" class="form-label">Email</label>
                   <input
                     type="email"
                     class="form-control inputs required"
                     name="email"
                     id="email"
                     aria-describedby="helpId"
-                    placeholder="digite seu email"
+                    placeholder="Digite seu email"
                     oninput="nameValidate()"
                   />
                   <span class="span-required"
@@ -72,7 +72,7 @@
                   >
                 </div>
                 <div class="mb-2">
-                  <label for="cpf" class="form-label">cpf</label>
+                  <label for="cpf" class="form-label">CPF</label>
                   <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
                   <span th:if="${cpfMismatch}" class="text-danger">cpf ja cadastrado!!!</span>
                   
@@ -127,7 +127,7 @@
                   </select>
                   
                 </div>
-                <button class="btn btn-primary mt-2 w-100"type="submit">enviar</button>
+                <button class="btn btn-primary mt-2 w-100"type="submit">Enviar</button>
                 <p></p>
               </div>
             </form>

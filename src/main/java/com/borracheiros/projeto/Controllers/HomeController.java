@@ -24,7 +24,7 @@ public class HomeController {
 
     @GetMapping("/cadastro")
     public String criarUsuario() {
-        return "cadastro";
+        return "usuarios/cadastro";
     }
 
     @GetMapping("/sair")

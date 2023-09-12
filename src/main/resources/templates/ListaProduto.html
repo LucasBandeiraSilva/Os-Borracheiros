@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css"
+    />
+    <link rel="stylesheet" href="ListaUsuario.css" />
+    <title>Lista Produtos</title>
+  </head>
+  <body>
+    <h1>Lista de Usuario</h1>
+    <hr />
+    <form class="form-inline my-2 my-lg-0">
+      <input
+        id="input-busca"
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Buscar"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success my-2 my-sm-0 mr-2" type="submit">
+        Buscar
+      </button>
+      <button class="btn btn-success my-2 my-sm-0 mr-2" type="submit">
+        <a class="text-decoration-none text-white" th:href="@{/cadastro}"
+          >Novo</a
+        >
+      </button>
+      <button class="btn btn-primary my-2 my-sm-0" type="submit">
+        <a class="text-decoration-none text-white" th:href="@{/}"></a>
+      </button>
+    </form>
+    <br />
+
+    <table class="table table-striped">
+      <thead>
+        <tr class="thead-dark">
+          <th scope="col">Id</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Imagem</th>
+          <th scope="col">Descrição</th>
+          <th scope="col">Preço</th>
+          <th scope="col">Quantidade Estoque</th>
+          <th scope="col">Avaliacao</th>
+          <th scope="col">Descricao Detalhada</th>
+          <th scope="col">Alterar</th>
+          <th scope="col">Alterar status</th>
+        </tr>
+      </thead>
+      <tbody id="tabela">
+        <tr th:each="produto : ${produtos}">
+          <th class="col-1" th:text="${produto.id}"></th>
+          <th class="col-2" th:text="${produto.nome}"></th>
+          <th class="col-3"><img th:src="@{/imagem/{id}(id=${produto.id})}" alt="imagem do produto" style="height: 100px; width: 100px;"></th> 
+          <th class="col-4" th:text="${produto.descricao}"></th>
+          <th
+            id="status"
+            class="col-5"
+            th:text="${produto.preco}"
+          ></th>
+          <th class="col-6" th:text="${produto.quantidadeEstoque}"></th>
+          <th class="col-7" th:text="${produto.avaliacao}"></th>
+          <th class="col-8" th:text="${produto.descricaoDetalhada}"></th>
+          <th class="col-9">
+            <a th:href="@{/}">Alterar</a>
+          </th>
+          <th class="col-10">
+            <label class="switch">
+              <input type="checkbox" onclick="alert()" />
+              <span class="slider"></span>
+            </label>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+      function alert() {
+        Swal.fire({
+          text: "Você acabou de Ativar ou Inativar um usuario",
+          icon: "warning",
+          title: "Atenção",
+        });
+      }
+    </script>
+
+    <script src="eventos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
