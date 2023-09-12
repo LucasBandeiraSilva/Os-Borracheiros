@@ -81,4 +81,12 @@ public class EstoqueController {
         return estoque.getImagem();
     }
 
+    @GetMapping("/visualizarProdutos")
+    public String visualizarProduto (Model model) {
+        List<Estoque> produtos = estoqueRepository.findAll();
+        model.addAttribute("produtos", produtos);
+        return "VisualizarProdutos";
+
+    }
+
 }
