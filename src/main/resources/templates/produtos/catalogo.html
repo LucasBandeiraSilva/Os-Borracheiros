@@ -10,7 +10,7 @@
 <body>
     <div class="container mt-5">
         <div class="row">
-            <div th:each="produto : ${produto}" class="col-md-4">
+            <div th:each="produto : ${produtos}" class="col-md-4">
                 <div class="card">
                     <img th:src="@{/imagem/{id}(id=${produto.getId()})}" class="card-img-top" alt="Imagem  Produto">
                     <div class="card-body">

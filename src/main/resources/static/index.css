@@ -1,83 +1,84 @@
 * {
-    box-sizing:border-box;
-    font-family:'Sora';
-  }
-  
-  body {
-    background-color: lightyellow;
-  }
-  
-  form {
-    display: grid;
-    place-items: center;
-    height:100vh;
-    
-  }
-  
-  .container{
-    background-color: skyblue;
-    padding:2rem;
-    border-radius:4px;
-    cursor:pointer;
-    box-shadow: 2px 2px 20px rgba(222,      10, 93, 0.2);
-    transition: all 0.3s ease-out .1s;
-  }
-  
-  .container:hover {
-    transform: Scale(1.02);
-      box-shadow: 2px 2px 20px rgba(222,      120, 043, 0.3);
-  }
-  
-  h5{
-    /*background-color:purple;*/
-    text-align:center;
-    font-size:1.5rem;
-    color:#fff;
-    margin:0;
-  }
-  
-  input{
-    margin: 1rem 0;
-    width:100%;
-    padding:.5em;
-    color: darkgray;
-    border:none;
-    border-bottom: 1px solid #fff;
-    background:none;
-  }
-  
-  input:focus{
-    outline:none;
-    color: #fff;
-  }
-  
-  ::placeholder{
-    color:#fff;
-    letter-spacing: .5px;
-    font-size:.8rem;
-  }
-  
-  .form-button {
-    margin-top: 1rem;
-    text-align: center;
+  box-sizing: border-box;
+  font-family: "Sora";
+}
+
+body {
+  background-color: lightyellow;
+}
+
+form {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: skyblue;
+  padding: 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 2px 2px 20px rgba(222, 10, 93, 0.2);
+  transition: all 0.3s ease-out 0.1s;
+}
+
+.container:hover {
+  transform: Scale(1.02);
+  box-shadow: 2px 2px 20px rgba(222, 120, 043, 0.3);
+}
+
+h5 {
+  /*background-color:purple;*/
+  text-align: center;
+  font-size: 1.5rem;
+  color: #fff;
+  margin: 0;
+}
+
+input {
+  margin: 1rem 0;
+  width: 100%;
+  padding: 0.5em;
+  color: darkgray;
+  border: none;
+  border-bottom: 1px solid #fff;
+  background: none;
+}
+
+input:focus {
+  outline: none;
+  color: #fff;
+}
+
+::placeholder {
+  color: #fff;
+  letter-spacing: 0.5px;
+  font-size: 0.8rem;
+}
+
+.form-button {
+  margin-top: 1rem;
+  text-align: center;
   /*   background-color: red; */
-  }
-  
-  
-  button {
-    width: 100%;
-    color: #fff;
-    cursor: pointer;
-    border: 1px solid #fff;
-    background:none;
-    border-radius: 4px;
-    padding: .4rem;
-    transition: all .3s ease-in-out .1s;
-  }
-  
-  button:hover {
-    background-color: #fff;
-    color:skyblue;
-  }
-  
-  
+}
+
+button {
+  width: 100%;
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid #fff;
+  background: none;
+  border-radius: 4px;
+  padding: 0.4rem;
+  transition: all 0.3s ease-in-out 0.1s;
+}
+
+button:hover {
+  background-color: #fff;
+  color: skyblue;
+}
+span {
+  color: red;
+  display: flex;
+  justify-content: center;
+}

@@ -1,10 +1,7 @@
 package com.borracheiros.projeto.estoque.estoqueController;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +26,6 @@ import jakarta.validation.Valid;
 @Controller
 public class EstoqueController {
     UserDto userDto = new UserDto();
-    
 
     @Autowired
     EstoqueRepository estoqueRepository;
@@ -38,7 +34,7 @@ public class EstoqueController {
     public String cadastroProduto(HttpSession session) {
         Long roleId = (Long) session.getAttribute("roleId");
 
-        if(roleId == null){
+        if (roleId == null) {
             return "aviso";
         }
         return "CadastraProduto";
@@ -56,7 +52,6 @@ public class EstoqueController {
     }
 
     @PostMapping("/listasProdutos")
-    
     public String createProduct(@Valid EstoqueDto produtoDTO, BindingResult bindingResult,
             @RequestParam("fileProduto") MultipartFile file, Model model) {
 
@@ -76,21 +71,31 @@ public class EstoqueController {
         System.out.println(estoque);
         estoqueRepository.save(estoque);
 
-        return "redirect:/visualizarProdutos";
+        return "redirect:/catalogo";
     }
 
     @GetMapping("/imagem/{id}")
     @ResponseBody
-    public byte [] exibirImagem(Model model, @PathVariable("id") long id){
+    public byte[] exibirImagem(Model model, @PathVariable("id") long id) {
         Estoque estoque = this.estoqueRepository.getOne(id);
         return estoque.getImagem();
     }
 
     @GetMapping("/produto/{id}")
     @ResponseBody
-    public Estoque obterProdutoPorId(@PathVariable Long id) {
-        return estoqueRepository.findById(id).orElse(null);
-    }
+    public ModelAndView obterProdutoPorId(@PathVariable Long id) {
+        ModelAndView mv = new ModelAndView();
+        Estoque produto = estoqueRepository.findById(id).orElse(null);
+        mv.setViewName("produtos/VisualizarProduto");
+        return mv.addObject("produto", produto);
+
     }
 
+    @GetMapping("/catalogo")
+    public String visualizarProduto(Model model) {
+        List<Estoque> produtos = estoqueRepository.findAll();
+        model.addAttribute("produtos", produtos);
+        return "produtos/catalogo";
 
+    }
+}

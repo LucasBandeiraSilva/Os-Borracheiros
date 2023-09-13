@@ -54,24 +54,19 @@ public class UserController {
 
     @PostMapping("/login")
     public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha,
-            UserDto usuarioDto, HttpSession session) {
+            UserDto usuarioDto, HttpSession session, Model model) {
 
         Usuario usuario = usuarioRepository.findByEmail(email);
 
-        if (usuario != null) {
+        if (usuario != null && senha.equals(usuario.getSenha())) {
 
-            if (senha.equals(usuario.getSenha())) {
-                 usuarioDto.setRole(usuario.getRole().getId());
-                
-                System.out.println("roleId: " + usuarioDto.getRole());
-                session.setAttribute("roleId", usuario.getRole().getId());
-                
-                return "redirect:/";
-            }
+            System.out.println("roleId: " + usuarioDto.getRole());
+            session.setAttribute("roleId", usuario.getRole().getId());
 
-            
+            return "redirect:/";
+
         }
-
+        model.addAttribute("loginMismatch", true);
         return "index";
     }
 
@@ -99,11 +94,11 @@ public class UserController {
             if (role != null) {
 
                 usuario.setRole(role);
-                
+
                 usuarioRepository.save(usuario);
 
                 return "redirect:/ListaUsuario";
-                
+
             }
             return "Erro";
         }
@@ -161,7 +156,5 @@ public class UserController {
         this.usuarioRepository.save(usuario);
         return "redirect:/ListaUsuario";
     }
-
-    
 
 }
