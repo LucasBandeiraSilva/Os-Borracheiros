@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.dto.UserDto;
@@ -32,6 +34,8 @@ public class UserController {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping("/ListaUsuario")
     public ModelAndView ListaUsuario(HttpSession session) {
@@ -157,4 +161,12 @@ public class UserController {
         return "redirect:/ListaUsuario";
     }
 
+
+
+    //para atualizar o status do usuario
+    @PostMapping("/usuario/status")
+    @ResponseBody
+    public void status(@RequestParam("id") Long id, @RequestParam("UsuarioStatus") boolean usuarioStatus ) {
+        usuarioService.status(id,usuarioStatus);
+    }
 }

@@ -38,7 +38,7 @@ public class Usuario {
 
   private LocalDate dataNascimento;
 
-  private String StatusUsuario;
+  private Boolean StatusUsuario;
 
    @Column(unique = false)
   private String senha;
