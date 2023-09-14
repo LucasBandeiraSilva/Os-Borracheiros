@@ -43,7 +43,6 @@
     <table class="table table-striped">
       <thead>
         <tr class="thead-dark">
-          <th scope="col">Id</th>
           <th scope="col">Nome</th>
           <th scope="col">Email</th>
           <th scope="col">Status</th>
@@ -54,7 +53,6 @@
       </thead>
       <tbody id="tabela">
         <tr th:each="usuario : ${usuarios}">
-          <th class="col-1" th:text="${usuario.id}"></th>
           <th class="col-2" th:text="${usuario.nome}"></th>
           <th class="col-3" th:text="${usuario.email}"></th>
           <th
@@ -67,10 +65,13 @@
             <a th:href="@{usuarios/editar/{id}(id=${usuario.id})}">Alterar</a>
           </th>
           <th class="col-4">
+            <form th:action="@{usuario/status}" method="post">
             <label class="switch">
-              <input type="checkbox" onclick="alert()" />
+              <input type="hidden" name="id" th:value="${usuario.id}">
+              <input type="checkbox" name="StatusUsuario" th:checked="${usuario.StatusUsuario}"  onclick="alert()"/>
               <span class="slider"></span>
             </label>
+          </form>
           </th>
         </tr>
       </tbody>
