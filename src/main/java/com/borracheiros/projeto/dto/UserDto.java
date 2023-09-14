@@ -15,7 +15,7 @@ public class UserDto {
     private String nome;
     @NotBlank
     private String senha;
-    private String StatusUsuario;
+    private Boolean StatusUsuario;
     @NotNull
     private LocalDate dataNascimento;
 
