@@ -70,10 +70,10 @@
         <th class="col-7" th:text="${produto.avaliacao}"></th>
         <th class="col-8" th:text="${produto.descricaoDetalhada}"></th>
         <th class="col-9">
-          <a th: href="#" id="openModalLink">Visualizar</a>
+          <!-- <a th:href="#" id="openModalLink">Visualizar</a> -->
         </th>
         <th class="col-9">
-          <a th:href="@{/}">Alterar</a>
+          <a th:href="@{produto/editar/{id}(id=${produto.id})}">Alterar</a>
         </th>
         <th class="col-10">
           <label class="switch">

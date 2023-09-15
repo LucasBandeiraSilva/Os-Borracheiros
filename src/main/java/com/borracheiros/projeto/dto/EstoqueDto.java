@@ -5,24 +5,18 @@ import java.math.BigDecimal;
 import com.borracheiros.projeto.estoque.entities.Estoque;
 
 import jakarta.persistence.Lob;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class EstoqueDto {
-    @NotBlank(message = "O nome do produto é obrigatório")
     private String nome;
-    @NotNull(message = "Você Precisa definir os preços do produto")
     private BigDecimal preco;
 
     private Integer quantidadeEstoque;
-    @NotNull(message = "você precisa escolher uma avaliação")
     private double avaliacao;
-    @NotBlank(message = "Você precisa fornecer uma descrição longa")
     private String descricaoDetalhada;
-    @NotBlank(message = "Você precisa fornecer uma descrição longa")
     private String descricao;
+    @Lob
     private byte[] imagem;
 
     public Estoque toEstoque() {
