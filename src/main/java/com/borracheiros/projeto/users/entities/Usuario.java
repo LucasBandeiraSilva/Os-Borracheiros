@@ -34,13 +34,9 @@ public class Usuario {
   @Column(unique = false)
   private String email;
 
-  private String telefone;
-
-  private LocalDate dataNascimento;
-
   private Boolean StatusUsuario;
 
-   @Column(unique = false)
+  @Column(unique = false)
   private String senha;
 
   @ManyToOne

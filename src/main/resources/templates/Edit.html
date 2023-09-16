@@ -46,11 +46,7 @@
                     />
                     
                 </div>
-                <div class="my-1">
-                    <label for="form-label">Data Nascimento</label>
-                    <input type="date" id="data"  th:field="*{dataNascimento}"class="form-control" > 
-                    <span th:if="${dataNull}" class="text-danger">Preencha sua data de nascimento!!!</span>
-                  </div>
+               
                   
 
                 <div class="mb-2">
@@ -120,8 +116,8 @@
 
                     <label class="form-label " for="">Status</label>
                   <select class="form-select" name="StatusUsuario" id="StatusUsuario">
-                    <option value="ativo">ATIVO</option>
-                    <option value="inativo">INATIVO</option>
+                    <option value="true" th:selected="${usuario.StatusUsuario} == true">ATIVO</option>
+                    <option value="false" th:selected="${usuario.StatusUsuario} == false">INATIVO</option>
                   </select>
                   </div>
 

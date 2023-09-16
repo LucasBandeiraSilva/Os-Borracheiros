@@ -75,7 +75,7 @@ public class EstoqueController {
         System.out.println(estoque);
         estoqueRepository.save(estoque);
 
-        return "redirect:/catalogo";
+        return "redirect:/listasProdutos";
     }
 
     @GetMapping("/imagem/{id}")

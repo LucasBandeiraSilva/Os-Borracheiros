@@ -17,10 +17,6 @@ public class UserDto {
     private String senha;
     
     private Boolean StatusUsuario;
-    @NotNull
-    private LocalDate dataNascimento;
-
-    private String telefone;
     @NotBlank
     private String email;
     @NotBlank
@@ -32,11 +28,10 @@ public class UserDto {
         Usuario usuario = new Usuario();
         usuario.setNome(this.nome);
         usuario.setCpf(this.cpf);
-        usuario.setDataNascimento(this.dataNascimento);
         usuario.setEmail(this.email);
-        usuario.setTelefone(telefone);
         usuario.setStatusUsuario(this.StatusUsuario);
         usuario.setSenha(this.senha);
+        
         return usuario;
     }
 

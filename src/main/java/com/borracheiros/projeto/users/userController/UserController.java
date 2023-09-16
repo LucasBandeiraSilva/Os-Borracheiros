@@ -125,7 +125,7 @@ public class UserController {
 
     @PostMapping("/ListaUsuario/salvar")
     public String salvarUser(@ModelAttribute("usuario") @Valid Usuario usuario, Model model,
-            BindingResult bindingResult) {
+            BindingResult bindingResult, @RequestParam("StatusUsuario") String statusUsuario) {
 
         if (bindingResult.hasErrors()) {
             System.out.println("erro");
@@ -142,10 +142,7 @@ public class UserController {
             model.addAttribute("emailNull", true);
             return "Edit";
         }
-        if (usuario.getDataNascimento() == null) {
-            model.addAttribute("dataNull", true);
-            return "Edit";
-        }
+       
 
         if (usuarioRepository.existsByCpf(usuario.getCpf())) {
             model.addAttribute("cpfMismatch", true);

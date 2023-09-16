@@ -18,7 +18,7 @@
     <title>Lista Produtos</title>
   </head>
   <body>
-    <h1>Lista de Usuario</h1>
+    <h1>Lista de Produtos</h1>
     <hr />
     <form class="form-inline my-2 my-lg-0">
       <input
@@ -32,7 +32,7 @@
         Buscar
       </button>
       <button class="btn btn-success my-2 my-sm-0 mr-2" type="submit">
-        <a class="text-decoration-none text-white" th:href="@{/cadastro}"
+        <a class="text-decoration-none text-white" th:href="@{produto/cadastro}"
           >Novo</a
         >
       </button>
@@ -52,7 +52,6 @@
         <th scope="col">Preço</th>
         <th scope="col">Quantidade Estoque</th>
         <th scope="col">Avaliacao</th>
-        <th scope="col">Descricao Detalhada</th>
         <th scope="col">Visualizar Produtos</th>
         <th scope="col">Alterar</th>
         <th scope="col">Alterar status</th>
@@ -68,9 +67,8 @@
         <th id="status" class="col-5" th:text="${produto.preco}"></th>
         <th class="col-6" th:text="${produto.quantidadeEstoque}"></th>
         <th class="col-7" th:text="${produto.avaliacao}"></th>
-        <th class="col-8" th:text="${produto.descricaoDetalhada}"></th>
         <th class="col-9">
-          <!-- <a th:href="#" id="openModalLink">Visualizar</a> -->
+          <a th:href="@{/produto/{id}(id=${produto.getId()})}">Visualizar produto</a>
         </th>
         <th class="col-9">
           <a th:href="@{produto/editar/{id}(id=${produto.id})}">Alterar</a>
