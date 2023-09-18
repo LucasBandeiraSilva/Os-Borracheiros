@@ -1,11 +1,8 @@
 package com.borracheiros.projeto.Controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.borracheiros.projeto.dto.UserDto;
 
 import jakarta.servlet.http.HttpSession;
 

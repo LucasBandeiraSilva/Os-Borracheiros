@@ -41,7 +41,7 @@ public class EstoqueController {
         if (roleId == null) {
             return "aviso";
         }
-        return "CadastraProduto";
+        return "produtos/CadastraProduto";
     }
 
     @GetMapping("/listasProdutos")
@@ -95,14 +95,6 @@ public class EstoqueController {
 
     }
 
-    @GetMapping("/catalogo")
-    public String visualizarProduto(Model model) {
-        List<Estoque> produtos = estoqueRepository.findAll();
-        model.addAttribute("produtos", produtos);
-        return "produtos/catalogo";
-
-    }
-
     @GetMapping("/produto/editar/{id}")
     public String alterar(@PathVariable("id") Long id, Model model) {
         Optional<Estoque> optional = this.estoqueRepository.findById(id);
@@ -114,19 +106,18 @@ public class EstoqueController {
     @PostMapping("produto/salvar")
     public String salvarUser(@ModelAttribute("estoque") Estoque estoque, Model model,
             BindingResult bindingResult, @RequestParam("fileProduto") MultipartFile file) {
-                
 
         if (estoque.getQuantidadeEstoque() == null || estoque.getQuantidadeEstoque() <= 0) {
             model.addAttribute("estoqueError", true);
             return "produtos/EditProduto";
 
         }
-        if ( estoque.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
+        if ( estoque.getPreco() == null||estoque.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
             model.addAttribute("precoError", true);
             return "produtos/EditProduto";
 
         }
-        if (file.isEmpty()) {
+        if (file == null ||file.isEmpty()) {
             model.addAttribute("imgError", true);
             return "produtos/EditProduto";
 

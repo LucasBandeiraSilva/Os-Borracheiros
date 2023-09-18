@@ -31,10 +31,9 @@
         color: #f0f0f0;
       }
 
-      input {
-        color: #000000;
+      label {
+        color: #f0f0f0;
       }
-
     </style>
   </head>
 
@@ -119,11 +118,12 @@
               aria-describedby="fileHelpId"
             />
             <div id="fileHelpId" class="form-text text-white">
-                Informe a imagem do produto
+              Informe a imagem do produto
             </div>
-        </div>
-       
-
+            <span th:if="${imgError}" class="text-danger"
+              >voce deve escolher uma imagem!!!</span
+            >
+          </div>
 
           <label for="preco">Preço do produto</label>
           <div class="mb-3">
@@ -136,7 +136,9 @@
               maxlength="1000000"
               th:field="*{preco}"
             />
-            
+            <span th:if="${precoError}" class="text-danger"
+              >Preço invalido!!!</span
+            >
           </div>
           <label for="quantidadeEstoque">Quantidade do produto</label>
           <div class="mb-3">
@@ -149,8 +151,8 @@
               maxlength="2000"
               th:field="*{quantidadeEstoque}"
             />
-            <span th:if="${precoError}" class="text-danger"
-              >Preço invalido!!!</span
+            <span th:if="${estoqueError}" class="text-danger"
+              >Esotoque deve ser maior ou igual a 1!!!</span
             >
           </div>
           <div class="mb-3">

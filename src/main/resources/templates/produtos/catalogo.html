@@ -15,7 +15,11 @@
       <div class="row">
         <div th:each="produto : ${produtos}" class="col-md-4">
           <div class="card">
-            <a th:href="@{/produto/{id}(id=${produto.getId()})}" target="_parent" rel="noopener noreferrer">
+            <a
+              th:href="@{/cliente/verProduto/{id}(id=${produto.getId()})}"
+              target="_parent"
+              rel="noopener noreferrer"
+            >
               <img
                 th:src="@{/imagem/{id}(id=${produto.getId()})}"
                 class="card-img-top"
@@ -31,16 +35,11 @@
                   th:text="${#numbers.formatDecimal(produto.preco, 2, 0)+ ',00'}"
                 ></span>
               </p>
-              <p
-                class="card-text"
-                th:text="'Quantidade em Estoque: ' + ${produto.quantidadeEstoque}"
-              ></p>
+
               <p
                 class="card-text"
                 th:text="'Avaliação: ' + ${produto.avaliacao}"
               ></p>
-              <p class="card-text">Descrição Detalhada:</p>
-              <p class="card-text" th:text="${produto.descricaoDetalhada}"></p>
             </div>
           </div>
         </div>

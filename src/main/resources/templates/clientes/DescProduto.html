@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <header>
+      <!-- place navbar here -->
+      <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+        <a class="navbar-brand ms-4" href="#">Logo aqui</a>
+        <button
+          class="navbar-toggler d-lg-none"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapsibleNavId"
+          aria-controls="collapsibleNavId"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        ></button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+          <ul class="navbar-nav me-auto ms-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="#" aria-current="page"
+                >Home <span class="visually-hidden">(current)</span></a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="#">algum outro link</a>
+            </li>
+          </ul>
+          <form class="d-flex my-2 my-lg-0">
+            <input
+              class="form-control me-sm-2"
+              type="text"
+              placeholder="pesquise o produto"
+            />
+            <button class="btn btn-success my-2 my-sm-0 me-4" type="submit">
+              pesquisar
+            </button>
+          </form>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div th:each="produto : ${produto}">
+        <div class="row mt-5">
+          <div class="col-4 ms-auto">
+            <div class="card">
+              <div class="card-body">
+                <img
+                  th:src="@{/imagem/{id}(id=${produto.getId()})}"
+                  class="card-img-top"
+                  alt="Imagem  Produto"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-4 ms-auto me-auto">
+            <div class="card" style="height: 45vh">
+              <h3
+                class="mt-3"
+                th:text="'Avaliação: ' + ${produto.avaliacao}"
+              ></h3>
+              <h3 style="margin-top: 10vh" th:text="${produto.nome}"></h3>
+              <div class="card-body d-flex flex-column justify-content-center">
+                <h3 class="card-title" th:text="'R$ ' + ${produto.preco}"></h3>
+                <button class="disabled btn btn-success mt-5">comprar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <dl class="row mt-5">
+          <dt class="col-sm-3">Descrição:</dt>
+          <dd class="col-sm-9" th:text="${produto.descricao}"></dd>
+          <dt class="col-sm-3">Descrição longa:</dt>
+          <dd class="col-sm-9" th:text="${produto.descricaoDetalhada}"></dd>
+        </dl>
+      </div>
+    </main>
+    <footer style="margin-top: 10vh">
+      <div class="card mb-2"></div>
+      <div class="card-footer text-black text-center">Rodapé</div>
+    </footer>
+    <!-- Bootstrap JavaScript Libraries -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+      integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

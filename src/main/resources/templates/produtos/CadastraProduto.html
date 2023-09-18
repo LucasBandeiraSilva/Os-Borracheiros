@@ -26,14 +26,15 @@
         background-color: #3d3d3d;
       }
 
-      button > a{
+      button > a {
         text-decoration: none;
         color: #f0f0f0;
       }
 
-      *{
+      label {
         color: #f0f0f0;
       }
+      
     </style>
   </head>
 
@@ -51,7 +52,12 @@
         class="container d-flex justify-content-center align-items-center"
         style="width: 25%"
       >
-        <form  th:object="${estoqueDto}" action="/listasProdutos"  method="post" enctype="multipart/form-data">
+        <form
+          th:object="${estoqueDto}"
+          action="/listasProdutos"
+          method="post"
+          enctype="multipart/form-data"
+        >
           <label for="nome">Nome do produto</label>
 
           <div class="mb-3">
@@ -75,13 +81,17 @@
               placeholder="Breve Descrição"
               maxlength="200"
             />
-
           </div>
           <label for="descrição longa">Descrição longa</label>
 
           <div class="mb-3">
             <label for="" class="form-label"></label>
-            <textarea class="form-control" name="descricaoDetalhada" id="" rows="3"></textarea>
+            <textarea
+              class="form-control"
+              name="descricaoDetalhada"
+              id=""
+              rows="3"
+            ></textarea>
           </div>
           <div class="mb-3">
             <label for="" class="form-label">Imagem</label>
@@ -106,24 +116,22 @@
               size="20px"
               placeholder="R$ 00.00"
               maxlength="1000000"
-              
             />
           </div>
           <label for="quantidadeEstoque">Quantidade do produto</label>
           <div class="mb-3">
             <input
-            type="number"
-            name="quantidadeEstoque"
-            id="qtdeProduto"
-            size="20px"
-            placeholder="10"
-            maxlength="2000"
-          />
-          
+              type="number"
+              name="quantidadeEstoque"
+              id="qtdeProduto"
+              size="20px"
+              placeholder="10"
+              maxlength="2000"
+            />
           </div>
           <div class="mb-3">
             <label for="" class="form-label">Avaliação</label>
-            <select class="form-select form-select-lg" name="" id="">
+            <select class="form-select form-select-lg" name="avaliacao" id="">
               <option value="0">0 Estrela</option>
               <option value="0.5">0.5 Estrela</option>
               <option value="1">1 Estrela</option>
@@ -138,7 +146,9 @@
             </select>
           </div>
           <button type="submit" class="btn btn-success">Enviar</button>
-          <button type="submit" class="btn btn-warning"><a th:href="@{/}">Voltar</a></button>
+          <button type="submit" class="btn btn-warning">
+            <a th:href="@{/}">Voltar</a>
+          </button>
         </form>
         <div id="preview"></div>
       </div>
