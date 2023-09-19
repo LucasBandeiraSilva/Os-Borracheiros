@@ -22,7 +22,6 @@ import com.borracheiros.projeto.dto.EstoqueDto;
 import com.borracheiros.projeto.dto.UserDto;
 import com.borracheiros.projeto.estoque.EstoqueRepository;
 import com.borracheiros.projeto.estoque.entities.Estoque;
-import com.borracheiros.projeto.users.entities.Usuario;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;

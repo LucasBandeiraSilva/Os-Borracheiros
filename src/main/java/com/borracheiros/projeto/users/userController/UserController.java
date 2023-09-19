@@ -38,16 +38,16 @@ public class UserController {
     private UsuarioService usuarioService;
 
     @GetMapping("/ListaUsuario")
-    public ModelAndView ListaUsuario(HttpSession session) {
+    public ModelAndView ListaUsuario() {
 
         ModelAndView mv = new ModelAndView();
 
-        Long roleId = (Long) session.getAttribute("roleId");
+        // Long roleId = (Long) session.getAttribute("roleId");
 
-        if (roleId == null || !roleId.equals(1L)) {
-            mv.setViewName("aviso");
-            return mv;
-        }
+        // if (roleId == null || !roleId.equals(1L)) {
+        //     mv.setViewName("usuarios/TelaEstoquista");
+        //     return mv;
+        // }
 
         List<Usuario> usuarios = this.usuarioRepository.findAll();
         mv.setViewName("usuarios/ListaUsuario");
@@ -56,20 +56,30 @@ public class UserController {
 
     }
 
+    @GetMapping("/estoquista")
+    public String telaEstoquista() {
+        return "usuarios/TelaEstoquista";
+    }
+
     @PostMapping("/login")
     public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha,
             UserDto usuarioDto, HttpSession session, Model model) {
 
         Usuario usuario = usuarioRepository.findByEmail(email);
 
-        if (usuario != null && senha.equals(usuario.getSenha())) {
+        // if (usuario != null && senha.equals(usuario.getSenha())) {
 
-            System.out.println("roleId: " + usuarioDto.getRole());
-            session.setAttribute("roleId", usuario.getRole().getId());
+        System.out.println("roleId: " + usuarioDto.getRole());
+        session.setAttribute("roleId", usuario.getRole().getId());
+        Long roleId = (Long) session.getAttribute("roleId");
+
+        if (roleId == 1) {
 
             return "redirect:/";
-
+        }else if(roleId == 2){
+            return "redirect:/estoquista";
         }
+
         model.addAttribute("loginMismatch", true);
         return "index";
     }
@@ -114,7 +124,7 @@ public class UserController {
         Optional<Usuario> optional = this.usuarioRepository.findById(id);
 
         model.addAttribute("usuario", optional.get());
-        return "Edit";
+        return "usuarios/Edit";
     }
 
     @GetMapping("usuarios/salvar")
@@ -134,23 +144,22 @@ public class UserController {
 
         if (usuario.getCpf() == null || usuario.getCpf().isEmpty()) {
             model.addAttribute("cpfNull", true);
-            return "Edit";
+            return "usuarios/Edit";
         }
 
         // Verifique se a senha é nula ou vazia
-        if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
-            model.addAttribute("emailNull", true);
-            return "Edit";
-        }
-       
+        // if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
+        // model.addAttribute("emailNull", true);
+        // return "Edit";
+        // }
 
         if (usuarioRepository.existsByCpf(usuario.getCpf())) {
             model.addAttribute("cpfMismatch", true);
-            return "Edit";
+            return "usuarios/Edit";
         }
         if (usuarioRepository.existsByEmail(usuario.getEmail())) {
             model.addAttribute("EmailMismatch", true);
-            return "Edit";
+            return "usuarios/Edit";
         }
 
         // Se todas as verificações passarem, salve o usuário e redirecione
@@ -158,12 +167,10 @@ public class UserController {
         return "redirect:/ListaUsuario";
     }
 
-
-
-    //para atualizar o status do usuario
+    // para atualizar o status do usuario
     @PostMapping("/usuario/status")
     @ResponseBody
-    public void status(@RequestParam("id") Long id, @RequestParam("UsuarioStatus") boolean usuarioStatus ) {
-        usuarioService.status(id,usuarioStatus);
+    public void status(@RequestParam("id") Long id, @RequestParam("UsuarioStatus") boolean usuarioStatus) {
+        usuarioService.status(id, usuarioStatus);
     }
 }

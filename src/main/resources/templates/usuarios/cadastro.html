@@ -8,9 +8,6 @@
     <title>Cadastro Funcionario</title>
   </head>
   <body>
-    <header>
-      <!-- place navbar here -->
-    </header>
     <main>
       <div class="container">
         <div class="row">
@@ -20,15 +17,10 @@
             <p>Cadastre-se em nossa loja!</p>
           </div>
           
-          <div
-            class="col h2 text-white d-flex align-items-center justify-content-center"
-          >
-            
-          </div>
           <div class="col">
             <div
               class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
-              style="height: 620px; width: 600px"
+              style="height: 600px; width: 600px"
             >
               <form  th:object="${userDto}" action="/ListaUsuario" method="post" id="form" class="p-5">
                 <div class="row">
@@ -104,13 +96,12 @@
                   <span th:if="${passwordMismatch}" class="text-danger">As senhas não coincidem</span>
 
 
-                  <div class="mb-2">
-
+                  <div class="mb-2 d-none">
                     <label class="form-label " for="">Status</label>
-                  <select class="form-select" name="StatusUsuario" id="StatusUsuario">
-                    <option value="true">ATIVO</option>
-                    <option value="false" disabled>INATIVO</option>
-                  </select>
+                    <select class="form-select" name="StatusUsuario" id="StatusUsuario">
+                    <option value="true" selected>ATIVO</option>
+                    <option value="false">INATIVO</option>
+                    </select>
                   </div>
                   
                     <label class="form-label" for="">Tipo Usuario</label>
@@ -120,7 +111,7 @@
                   </select>
                   
                 </div>
-                <button class="btn btn-primary mt-2 w-100"type="submit">Enviar</button>
+                <button class="btn btn-primary mt-3  w-100"type="submit">Enviar</button>
                 <p></p>
               </div>
             </form>
@@ -128,6 +119,6 @@
         </div>
       </div>
     </main>
-    <script src="Cadastro.js"></script>
+    <script src="/Cadastro.js"></script>
   </body>
 </html>
