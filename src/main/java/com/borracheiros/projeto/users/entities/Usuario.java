@@ -2,6 +2,7 @@ package com.borracheiros.projeto.users.entities;
 
 import java.time.LocalDate;
 
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
@@ -28,6 +29,7 @@ public class Usuario {
 
   private String nome;
 
+  @CPF
   @Column(unique = true)
   private String cpf;
 

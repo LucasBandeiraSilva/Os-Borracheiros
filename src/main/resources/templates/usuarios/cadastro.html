@@ -34,7 +34,6 @@
                       placeholder="nome de usuario"
                       onchange="verificaNome()"
                     />
-                    
                 </div>
                 
 
@@ -54,11 +53,13 @@
                   <span class="span-required"
                     >email invalido</span
                   >
+                  <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger">email ja cadastrado!!!</span>
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">CPF</label>
                   <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
-                  <span th:if="${cpfMismatch}" class="text-danger">cpf ja cadastrado!!!</span>
+                  <span th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}"
+                  class="text-danger">cpf ja cadastrado!!!</span>
                   
                 </div>
 

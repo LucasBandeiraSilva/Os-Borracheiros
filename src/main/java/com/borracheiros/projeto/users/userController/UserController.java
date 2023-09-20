@@ -45,8 +45,8 @@ public class UserController {
         // Long roleId = (Long) session.getAttribute("roleId");
 
         // if (roleId == null || !roleId.equals(1L)) {
-        //     mv.setViewName("usuarios/TelaEstoquista");
-        //     return mv;
+        // mv.setViewName("usuarios/TelaEstoquista");
+        // return mv;
         // }
 
         List<Usuario> usuarios = this.usuarioRepository.findAll();
@@ -76,7 +76,7 @@ public class UserController {
         if (roleId == 1) {
 
             return "redirect:/";
-        }else if(roleId == 2){
+        } else if (roleId == 2) {
             return "redirect:/estoquista";
         }
 
@@ -87,36 +87,44 @@ public class UserController {
     @PostMapping("/ListaUsuario")
     public String createUser(@Valid UserDto usuarioDto, BindingResult bindingResult, Model model) {
 
+         Usuario usuario = usuarioDto.toUsuario();
+        Long roleId = usuarioDto.getRole();
+        Role role = roleRepository.findById(roleId).orElse(null);
+
+        if (usuarioRepository.existsByCpf(usuario.getCpf())) {
+                bindingResult.rejectValue("cpf", "error.userDto", "CPF já cadastrado");
+                
+            }
+
+            if (usuario.getCpf() == null || usuario.getCpf().isEmpty()) {
+                bindingResult.rejectValue("cpf", "error.userDto", "Campo CPF é obrigatório");
+                
+            }
+
         if (bindingResult.hasErrors()) {
             System.out.println("Formulário com erros");
-            return "Erro"; // Substitua pelo nome da sua página
-        } else {
-            Usuario usuario = usuarioDto.toUsuario();
-
-            Long roleId = usuarioDto.getRole();
-
-            // Procura a função (role) com base no ID fornecido
-            Role role = roleRepository.findById(roleId).orElse(null);
-
-            if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())
-                    || usuarioRepository.existsByCpf(usuarioDto.getCpf())) {
-                model.addAttribute("passwordMismatch", true);
-                model.addAttribute("cpfMismatch", true);
-                return "usuarios/cadastro";
+            System.out.println(bindingResult.getAllErrors());
+            if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
+                bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
+            }
+            if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
+                bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
+            }
+            if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+                bindingResult.rejectValue("email", "error.userDto", "E-mail já cadastrado");
             }
 
-            if (role != null) {
-
-                usuario.setRole(role);
-
-                usuarioRepository.save(usuario);
-
-                return "redirect:/";
-
-            }
-            return "Erro";
+            return "usuarios/cadastro"; // Retorna a página de cadastro com os erros
         }
 
+        
+
+        if (role != null) {
+            usuario.setRole(role);
+            usuarioRepository.save(usuario);
+            return "redirect:/"; // Redireciona para a página inicial
+        }
+        return null;
     }
 
     @GetMapping("/usuarios/editar/{id}")
@@ -147,14 +155,10 @@ public class UserController {
             return "usuarios/Edit";
         }
 
-        // Verifique se a senha é nula ou vazia
-        // if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
-        // model.addAttribute("emailNull", true);
-        // return "Edit";
-        // }
-
         if (usuarioRepository.existsByCpf(usuario.getCpf())) {
             model.addAttribute("cpfMismatch", true);
+            bindingResult.rejectValue("cpf", "error.userDto", "CPF já cadastrado");
+
             return "usuarios/Edit";
         }
         if (usuarioRepository.existsByEmail(usuario.getEmail())) {

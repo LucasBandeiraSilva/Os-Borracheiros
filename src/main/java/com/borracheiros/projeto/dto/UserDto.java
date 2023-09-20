@@ -2,6 +2,8 @@ package com.borracheiros.projeto.dto;
 
 import java.time.LocalDate;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import com.borracheiros.projeto.users.entities.Usuario;
 
 import jakarta.validation.constraints.NotBlank;
@@ -20,6 +22,7 @@ public class UserDto {
     @NotBlank
     private String email;
     @NotBlank
+     @CPF(message = "CPF inválido")
     private String cpf;
     private Long role;
     private String confirmPassword;
