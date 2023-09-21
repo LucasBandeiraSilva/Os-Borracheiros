@@ -30,7 +30,7 @@
               class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
               style="height: 760px; width: 600px"
             >
-              <form  th:action="@{/ListaUsuario/salvar}" th:object="${usuario}" method="post" id="form" class="p-5">
+              <form  th:action="@{/ListaUsuario}" th:object="${usuario}" method="post" id="form" class="p-5">
                 <input type="hidden" th:field="*{id}" />
 
                 <div class="row">
@@ -44,7 +44,6 @@
                       placeholder="nome de usuario"
                       onchange="verificaNome()"
                     />
-                    
                 </div>
                
                   
@@ -70,8 +69,7 @@
                 <div class="mb-2">
                   <label for="cpf" class="form-label">cpf</label>
                   <input type="text" class="form-control inputs required" th:field="*{cpf}" id="cpf" aria-describedby="cpf" placeholder="cpf">
-                  <span th:if="${cpfMismatch}" class="text-danger">cpf ja cadastrado!!!</span>
-                  <span th:if="${cpfNull}" class="text-danger">preencha o campo cpf!!!</span>
+                  
                   
                 </div>
 

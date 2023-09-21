@@ -1,13 +1,10 @@
 package com.borracheiros.projeto.dto;
 
-import java.time.LocalDate;
-
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.borracheiros.projeto.users.entities.Usuario;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data

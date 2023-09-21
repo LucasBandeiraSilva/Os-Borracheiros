@@ -20,9 +20,9 @@
           <div class="col">
             <div
               class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
-              style="height: 600px; width: 600px"
+              style="height: 700px; width: 600px"
             >
-              <form  th:object="${userDto}" action="/ListaUsuario" method="post" id="form" class="p-5">
+              <form  th:object="${userDto}" action="/ListaUsuario" method="post" id="form">
                 <div class="row">
                   <div>
                     <label for="" class="form-label ">nome</label>
@@ -34,6 +34,8 @@
                       placeholder="nome de usuario"
                       onchange="verificaNome()"
                     />
+                      <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-danger"></span>
+                  </div>
                 </div>
                 
 
@@ -53,13 +55,13 @@
                   <span class="span-required"
                     >email invalido</span
                   >
-                  <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger">email ja cadastrado!!!</span>
+                  <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">CPF</label>
                   <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
                   <span th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}"
-                  class="text-danger">cpf ja cadastrado!!!</span>
+                  class="text-danger"></span>
                   
                 </div>
 
