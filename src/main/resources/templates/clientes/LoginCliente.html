@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/index.css" />
+
+    <title>Login</title>
+  </head>
+  <body>
+    <form action="/cliente/login" class="main-form" method="post">
+      <div class="container">
+        <div class="form-header">
+          <h5>Login</h5>
+        </div>
+        <div class="form-body">
+          <input type="text" name="email" id="email" placeholder="email" />
+          <input type="password" name="senha" id="senha" placeholder="senha" />
+        </div>
+        <span th:if="${loginMismatch}">email e/ou senha incorretos!</span>
+        <p>Não possui cadastro? <a th:href="@{/cliente/cadastrar}" target="_blank" rel="noopener noreferrer">Faça seu Cadastro agora</a></p>
+        <div class="form-button">
+          <button type="submit">Login</button>
+        </div>
+
+      </div>
+    </form>
+  </body>
+</html>

@@ -37,16 +37,14 @@ public class UserController {
     private UsuarioService usuarioService;
 
     @GetMapping("/ListaUsuario")
-    public ModelAndView ListaUsuario() {
+    public ModelAndView ListaUsuario(HttpSession session) {
 
         ModelAndView mv = new ModelAndView();
-
-        // Long roleId = (Long) session.getAttribute("roleId");
-
-        // if (roleId == null || !roleId.equals(1L)) {
-        // mv.setViewName("usuarios/TelaEstoquista");
-        // return mv;
-        // }
+        Long roleId = (Long) session.getAttribute("roleId");
+        if (roleId == null) {
+            mv.setViewName("aviso");
+            return mv;
+        }
 
         List<Usuario> usuarios = this.usuarioRepository.findAll();
         mv.setViewName("usuarios/ListaUsuario");
@@ -66,21 +64,25 @@ public class UserController {
 
         Usuario usuario = usuarioRepository.findByEmail(email);
 
-        // if (usuario != null && senha.equals(usuario.getSenha())) {
+        if (usuario != null && senha.equals(usuario.getSenha())) {
+            usuarioDto.setRole(usuario.getRole().getId());
 
-        System.out.println("roleId: " + usuarioDto.getRole());
-        session.setAttribute("roleId", usuario.getRole().getId());
-        Long roleId = (Long) session.getAttribute("roleId");
+            System.out.println("roleId: " + usuarioDto.getRole());
+            session.setAttribute("roleId", usuario.getRole().getId());
+            Long roleId = (Long) session.getAttribute("roleId");
 
-        if (roleId == 1) {
 
-            return "redirect:/";
-        } else if (roleId == 2) {
-            return "redirect:/estoquista";
+            if (roleId == 1) {
+
+                return "redirect:/";
+            }else if(roleId == 2){
+                return "redirect:/estoquista";
+            }
+        } else {
+            model.addAttribute("loginMismatch", true);
+            return "Login";
         }
-
-        model.addAttribute("loginMismatch", true);
-        return "index";
+        return null;
     }
 
     @PostMapping("/ListaUsuario")
@@ -103,17 +105,16 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             System.out.println("Formulário com erros");
             System.out.println(bindingResult.getAllErrors());
-            if(usuario.getNome() == null){
+            if (usuario.getNome() == null) {
                 bindingResult.rejectValue("nome", "error.nome", "");
             }
             if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
                 bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
             }
-            
+
             if (usuarioRepository.existsByEmail(usuario.getEmail())) {
                 bindingResult.rejectValue("email", "error.userDto", "E-mail já cadastrado");
             }
-            
 
             return "usuarios/cadastro"; // Retorna a página de cadastro com os erros
         }

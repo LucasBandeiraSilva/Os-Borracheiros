@@ -32,7 +32,11 @@
               style="width: 70vw"
             />
           </div>
-           <a name="" id="" class="btn btn-success me-auto" th:href="@{/cliente/cadastrar}" role="button">Login</a>
+          <div class="welcome-message" th:if="${nomeUsuario}">
+            Bem-vindo, <span th:text="${nomeUsuario}"></span>!
+        </div>
+        
+           <a name="" id="" class="btn btn-success me-auto" th:href="@{/cliente/login}" role="button">Login</a>
           <div class="d-flex justify-content-end">
             <a
               th:href="@{/}"
