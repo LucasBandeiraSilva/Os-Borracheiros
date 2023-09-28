@@ -61,7 +61,7 @@
       <tr th:each="produto : ${produtos}">
         <th class="col-1" th:text="${produto.id}"></th>
         <th class="col-2" th:text="${produto.nome}"></th>
-        <th class="col-3"><img th:src="@{/imagem/{id}(id=${produto.id})}" alt="imagem do produto"
+        <th class="col-3"><img th:src="@{/imagem/{ids}(ids=${produto.id})}" alt="imagem do produto"
             style="height: 100px; width: 100px;"></th>
         <th class="col-4" th:text="${produto.descricao}"></th>
         <th id="status" class="col-5" th:text="${produto.preco}"></th>

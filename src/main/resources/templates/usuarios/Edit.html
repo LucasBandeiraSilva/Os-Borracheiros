@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/cadastro.css" />
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
-    <title>Cadastro Funcionario</title>
+    <title>Editar Dados</title>
   </head>
   <body>
     <header>
@@ -30,8 +30,8 @@
               class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
               style="height: 760px; width: 600px"
             >
-              <form  th:action="@{/ListaUsuario}" th:object="${usuario}" method="post" id="form" class="p-5">
-                <input type="hidden" th:field="*{id}" />
+            <form th:action="@{/ListaUsuario}" th:object="${usuario}" method="post" id="form" class="p-5">
+              <input type="hidden" th:field="*{id}" />
 
                 <div class="row">
                   <div>
@@ -41,6 +41,7 @@
                       class="form-control inputs required"
                       th:field="*{nome}"
                       id="nome"
+                      name="nome"
                       placeholder="nome de usuario"
                       onchange="verificaNome()"
                     />
@@ -55,9 +56,13 @@
                     class="form-control inputs required"
                     th:field="*{email}"
                     id="email"
+                    name="email"
                     aria-describedby="helpId"
                     placeholder="digite seu email"
                     oninput="nameValidate()"
+                    disabled
+                    
+
 
                   />
                   <span class="span-required"
@@ -68,9 +73,9 @@
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">cpf</label>
-                  <input type="text" class="form-control inputs required" th:field="*{cpf}" id="cpf" aria-describedby="cpf" placeholder="cpf">
-                  
-                  
+                  <input type="text" class="form-control inputs required" th:field="*{cpf}" id="cpf" aria-describedby="cpf" placeholder="cpf" >
+                  <span th:if="${cpf}" class="text-danger">email ja existente!!!</span>
+
                 </div>
 
                 <div class="mb-2">

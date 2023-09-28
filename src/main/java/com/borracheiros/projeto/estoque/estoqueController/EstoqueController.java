@@ -2,6 +2,7 @@ package com.borracheiros.projeto.estoque.estoqueController;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,14 +38,19 @@ public class EstoqueController {
     public String cadastroProduto(HttpSession session) {
         Long roleId = (Long) session.getAttribute("roleId");
 
-        if (roleId == null) {
+        if (roleId == null|| roleId == 3) {
             return "aviso";
         }
         return "produtos/CadastraProduto";
     }
 
     @GetMapping("/listasProdutos")
-    public ModelAndView showProducts() {
+    public ModelAndView showProducts(HttpSession session) {
+
+        Long roleId = (Long) session.getAttribute("roleId");
+        if (roleId == null || roleId == 3) {
+            return new ModelAndView("aviso");
+        }
         ModelAndView mv = new ModelAndView();
         List<Estoque> produtos = this.estoqueRepository.findAll();
 
@@ -56,7 +62,7 @@ public class EstoqueController {
 
     @PostMapping("/listasProdutos")
     public String createProduct(@Valid EstoqueDto produtoDTO, BindingResult bindingResult,
-            @RequestParam("fileProduto") MultipartFile file, Model model) {
+            @RequestParam("fileProduto") List<MultipartFile> files, Model model) {
 
         if (bindingResult.hasErrors()) {
             System.out.println("form com erros");
@@ -65,7 +71,11 @@ public class EstoqueController {
         }
 
         try {
-            produtoDTO.setImagem(file.getBytes());
+            List<byte[]> imagens = new ArrayList<>();
+            for (MultipartFile file : files) {
+                imagens.add(file.getBytes());
+            }
+            produtoDTO.setImagem(imagens);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,7 +90,7 @@ public class EstoqueController {
     @GetMapping("/imagem/{id}")
     @ResponseBody
     public byte[] exibirImagem(Model model, @PathVariable("id") long id) {
-        Estoque estoque = this.estoqueRepository.getOne(id);
+        Estoque estoque = this.estoqueRepository.getReferenceById(id);
         return estoque.getImagem();
     }
 
@@ -111,12 +121,12 @@ public class EstoqueController {
             return "produtos/EditProduto";
 
         }
-        if ( estoque.getPreco() == null||estoque.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
+        if (estoque.getPreco() == null || estoque.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
             model.addAttribute("precoError", true);
             return "produtos/EditProduto";
 
         }
-        if (file == null ||file.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             model.addAttribute("imgError", true);
             return "produtos/EditProduto";
 

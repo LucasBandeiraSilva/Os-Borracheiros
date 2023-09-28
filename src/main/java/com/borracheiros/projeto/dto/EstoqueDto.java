@@ -1,6 +1,7 @@
 package com.borracheiros.projeto.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.borracheiros.projeto.estoque.entities.Estoque;
 
@@ -17,7 +18,8 @@ public class EstoqueDto {
     private String descricaoDetalhada;
     private String descricao;
     @Lob
-    private byte[] imagem;
+
+    private List<byte[]> imagem; 
 
     public Estoque toEstoque() {
         Estoque estoque = new Estoque();
@@ -27,7 +29,9 @@ public class EstoqueDto {
         estoque.setAvaliacao(this.avaliacao);
         estoque.setDescricaoDetalhada(this.descricaoDetalhada);
         estoque.setDescricao(this.descricao);
-        estoque.setImagem(this.imagem);
+        if (this.imagem != null && !this.imagem.isEmpty()) {
+            estoque.setImagem(this.imagem.get(0));
+        }
         estoque.setQuantidadeEstoque(this.quantidadeEstoque);
         return estoque;
     }

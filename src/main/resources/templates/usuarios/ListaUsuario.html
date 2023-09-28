@@ -32,7 +32,9 @@
         Buscar
       </button>
       <button class="btn btn-success my-2 my-sm-0 mr-2" type="submit">
-        <a class="text-decoration-none text-white" th:href="@{/cadastro}">Novo</a>
+        <a class="text-decoration-none text-white" th:href="@{/cadastro}"
+          >Novo</a
+        >
       </button>
       <button class="btn btn-primary my-2 my-sm-0" type="submit">
         <a class="text-decoration-none text-white" th:href="@{/}">home</a>
@@ -54,24 +56,37 @@
       <tbody id="tabela">
         <tr th:each="usuario : ${usuarios}">
           <th class="col-2" th:text="${usuario.nome}"></th>
+         
           <th class="col-3" th:text="${usuario.email}"></th>
           <th
             id="status"
             class="col-4 status"
             th:text="${usuario.StatusUsuario}"
           ></th>
-          <th class="col-5" th:text="${usuario.role.id}"></th>
+          <th
+            class="col-5"
+            th:if="${usuario.role != null}"
+            th:text="${usuario.role.nome}"
+          ></th>
+          <th class="col-5" th:unless="${usuario.role != null}">
+            <span class="text-danger">N/A</span>
+          </th>
           <th class="col-5">
             <a th:href="@{usuarios/editar/{id}(id=${usuario.id})}">Alterar</a>
           </th>
           <th class="col-4">
             <form th:action="@{usuario/status}" method="post">
-            <label class="switch">
-              <input type="hidden" name="id" th:value="${usuario.id}">
-              <input type="checkbox" name="StatusUsuario" th:checked="${usuario.StatusUsuario}"  onclick="alert()"/>
-              <span class="slider"></span>
-            </label>
-          </form>
+              <label class="switch">
+                <input type="hidden" name="id" th:value="${usuario.id}" />
+                <input
+                  type="checkbox"
+                  name="StatusUsuario"
+                  th:checked="${usuario.StatusUsuario}"
+                  onclick="alert()"
+                />
+                <span class="slider"></span>
+              </label>
+            </form>
           </th>
         </tr>
       </tbody>

@@ -8,10 +8,12 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
 @Entity
+@ToString
 @NoArgsConstructor
 @Table(name = "tipo_users")
 public class Role {

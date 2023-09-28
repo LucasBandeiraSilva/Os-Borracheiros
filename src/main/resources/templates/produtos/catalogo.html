@@ -13,9 +13,9 @@
   <body>
     <header>
       <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-        <a class="navbar-brand ms-4" href="#">Logo aqui</a>
+        <a class="navbar-brand ms-4" href="#">aaaa</a>
         <button
-          class="navbar-toggler d-lg-none"
+          class="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#collapsibleNavId"
@@ -54,7 +54,7 @@
         <div th:each="produto : ${produtos}" class="col-md-4">
           <div class="card">
             <img
-              th:src="@{/imagem/{id}(id=${produto.getId()})}"
+              th:src="@{/imagem/{ids}(ids=${produto.id})}"
               class="card-img-top"
               alt="Imagem  Produto"
             />

@@ -71,11 +71,10 @@ public class UserController {
             session.setAttribute("roleId", usuario.getRole().getId());
             Long roleId = (Long) session.getAttribute("roleId");
 
-
             if (roleId == 1) {
 
                 return "redirect:/";
-            }else if(roleId == 2){
+            } else if (roleId == 2) {
                 return "redirect:/estoquista";
             }
         } else {
@@ -91,6 +90,40 @@ public class UserController {
         Usuario usuario = usuarioDto.toUsuario();
         Long roleId = usuarioDto.getRole();
         Role role = roleRepository.findById(roleId).orElse(null);
+
+        if (usuarioDto.getId() != null) {
+            Optional<Usuario> optionalUsuario = usuarioRepository.findById(usuarioDto.getId());
+
+            // Se o usuário existir, atualize os campos com os valores do formulário
+            if (optionalUsuario.isPresent()) {
+                Usuario usuarioExistente = optionalUsuario.get();
+
+                usuarioExistente.setRole(role);
+
+                if (usuario.getEmail() != null && !usuario.getEmail().isEmpty()) {
+                    usuarioExistente.setEmail(usuario.getEmail());
+                }
+                if (usuario.getNome() != null && !usuario.getNome().isEmpty()) {
+                    usuarioExistente.setNome(usuario.getNome());
+                }
+                if (usuario.getCpf() != null && !usuario.getCpf().isEmpty()) {
+                    usuarioExistente.setCpf(usuario.getCpf());
+
+                }
+
+                if (usuario.getStatusUsuario() != null) {
+                    usuarioExistente.setStatusUsuario(usuario.getStatusUsuario());
+                }
+                if (!usuarioExistente.getCpf().equals(usuario.getCpf())) {
+                    if (usuarioRepository.existsByCpf(usuario.getCpf())) {
+                        return "usuarios/ErroCPF";
+                    }
+                }
+                usuarioRepository.save(usuarioExistente);
+                return "redirect:/";
+            }
+
+        }
 
         if (usuarioRepository.existsByCpf(usuario.getCpf())) {
             bindingResult.rejectValue("cpf", "error.userDto", "CPF já cadastrado");
@@ -112,10 +145,6 @@ public class UserController {
                 bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
             }
 
-            if (usuarioRepository.existsByEmail(usuario.getEmail())) {
-                bindingResult.rejectValue("email", "error.userDto", "E-mail já cadastrado");
-            }
-
             return "usuarios/cadastro"; // Retorna a página de cadastro com os erros
         }
 
@@ -130,9 +159,11 @@ public class UserController {
     @GetMapping("/usuarios/editar/{id}")
     public String alterar(@PathVariable("id") Long id, Model model) {
         Optional<Usuario> optional = this.usuarioRepository.findById(id);
-
-        model.addAttribute("usuario", optional.get());
-        return "usuarios/Edit";
+        if (optional.isPresent()) {
+            model.addAttribute("usuario", optional.get());
+            return "usuarios/Edit";
+        }
+        return "Erro";
     }
 
     // para atualizar o status do usuario
