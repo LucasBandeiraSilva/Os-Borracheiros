@@ -34,6 +34,17 @@
       label {
         color: #f0f0f0;
       }
+
+      .thumbnail {
+    width: 100px; 
+    height: auto;
+    margin: 5px;
+    border: 2px solid transparent;
+}
+
+.selected {
+    border: 2px solid blue;
+}
       
     </style>
   </head>
@@ -94,6 +105,7 @@
             ></textarea>
           </div>
           <div class="mb-3">
+<<<<<<< HEAD
             <label for="" class="form-label">Imagem</label>
             <input
               type="file"
@@ -105,8 +117,25 @@
               multiple
               accept="image/*"
             />
+=======
+            <!-- <label for="" class="form-label">Imagem</label>
+            <input type="file" class="form-control" name="fileProduto" id="imagem" placeholder="" aria-describedby="fileHelpId"/>
+>>>>>>> 2355d4ee91525e8b5494f18a584d47b48c99b10c
             <div id="fileHelpId" class="form-text text-white">
-              Informe a imagem do produto
+              Informe a imagem do produto -->
+              <h1>Selecionar e Exibir Imagens</h1>
+              <form action="#" method="post" enctype="multipart/form-data">
+                  <input type="file" name="images[]" id="imageInput" multiple accept="image/*">
+                  <input type="submit" value="Enviar Imagens">
+              </form>
+          
+              <div id="thumbnails">
+              </div>
+          
+              <h2>Selecionar Imagem Principal</h2>
+              <select id="mainImageSelect">
+              </select>
+
             </div>
           </div>
           <label for="preco">Preço do produto</label>
@@ -186,5 +215,51 @@
       integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
       crossorigin="anonymous"
     ></script>
+    <script>
+      function displayThumbnails(input) {
+          var thumbnailsDiv = document.getElementById("thumbnails");
+          var mainImageSelect = document.getElementById("mainImageSelect");
+
+          thumbnailsDiv.innerHTML = ""; 
+          mainImageSelect.innerHTML = ""; 
+
+          for (var i = 0; i < input.files.length; i++) {
+              var file = input.files[i];
+              if (file.type.match('image.*')) {
+                  var reader = new FileReader();
+
+                  reader.onload = function (e) {
+                      var thumbnail = document.createElement("img");
+                      thumbnail.classList.add("thumbnail");
+                      thumbnail.src = e.target.result;
+                      thumbnailsDiv.appendChild(thumbnail);
+
+                      var option = document.createElement("option");
+                      option.text = "Imagem " + (i + 1);
+                      mainImageSelect.appendChild(option);
+                  };
+
+                  reader.readAsDataURL(file);
+              }
+          }
+      }
+
+      document.getElementById("imageInput").addEventListener("change", function () {
+          displayThumbnails(this);
+      });
+
+      document.getElementById("mainImageSelect").addEventListener("change", function () {
+          var thumbnails = document.querySelectorAll(".thumbnail");
+          var selectedIndex = this.selectedIndex;
+
+          thumbnails.forEach(function (thumbnail, index) {
+              if (index === selectedIndex) {
+                  thumbnail.classList.add("selected");
+              } else {
+                  thumbnail.classList.remove("selected");
+              }
+          });
+      });
+  </script>
   </body>
 </html>
