@@ -41,32 +41,29 @@
       </button>
     </form>
     <br />
-
+   
   <table class="table table-striped">
     <thead>
       <tr class="thead-dark">
         <th scope="col">Id</th>
         <th scope="col">Nome</th>
         <th scope="col">Imagem</th>
-        <th scope="col">Descrição</th>
         <th scope="col">Preço</th>
         <th scope="col">Quantidade Estoque</th>
-        <th scope="col">Avaliacao</th>
         <th scope="col">Visualizar Produtos</th>
         <th scope="col">Alterar</th>
         <th scope="col">Alterar status</th>
       </tr>
     </thead>
+   
     <tbody id="tabela">
       <tr th:each="produto : ${produtos}">
         <th class="col-1" th:text="${produto.id}"></th>
         <th class="col-2" th:text="${produto.nome}"></th>
         <th class="col-3"><img th:src="@{/imagem/{ids}(ids=${produto.id})}" alt="imagem do produto"
             style="height: 100px; width: 100px;"></th>
-        <th class="col-4" th:text="${produto.descricao}"></th>
         <th id="status" class="col-5" th:text="${produto.preco}"></th>
         <th class="col-6" th:text="${produto.quantidadeEstoque}"></th>
-        <th class="col-7" th:text="${produto.avaliacao}"></th>
         <th class="col-9">
           <a th:href="@{/produto/{id}(id=${produto.getId()})}">Visualizar produto</a>
         </th>
@@ -83,6 +80,16 @@
     </tbody>
   </table>
 
+  <nav aria-label="...">
+    <ul class="pagination pagination-sm">
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">1</span>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+    </ul>
+  </nav>
+  
   <!-- Modal -->
   <div class="modal fade" id="produtoModal" tabindex="-1" role="dialog" aria-labelledby="produtoModalLabel"
     aria-hidden="true">
