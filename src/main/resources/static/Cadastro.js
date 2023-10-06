@@ -1,15 +1,20 @@
 const form = document.getElementById("form");
 const campos = document.querySelectorAll(".required");
 const spans = document.querySelectorAll(".span-required");
-const email =
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-form.addEventListener("submit", (Event) => {
-   
+form.addEventListener("submit", (event) => {
   nameValidate();
-  emailRegex();
+  emailRegexValidation();
   validateMainPassword();
   comparePassword();
+
+  const hasErrors = document.querySelectorAll(".span-required").length > 0;
+
+  if (hasErrors) {
+    event.preventDefault(); // Somente previne a submissão se houver erros
+  }
+});
 
 function setError(indice) {
   campos[indice].style.border = "2px solid  #9e082d";
@@ -29,32 +34,26 @@ function nameValidate() {
   }
 }
 
-function emailRegex() {
-  if (email.test(campos[1].value)) {
-    removeError(1);
-  }else{
-  setError(1);
+function emailRegexValidation() {
+  if (emailRegex.test(campos[2].value)) {
+    removeError(2);
+  } else {
+    setError(2);
   }
 }
 
 function validateMainPassword() {
-  if (campos[2].value.length < 8) {
-    setError(2);
-  } else {
-    removeError(2);
-  }
-}
-function comparePassword() {
-  if (campos[3].value === campos[4].value && campos[4].value.length > 5) {
-    removeError(4);
-  } else {
+  if (campos[4].value.length < 6) {
     setError(4);
+  } else {
+    removeError(4);
   }
 }
-const hasErrors = document.querySelectorAll(".span-required").length > 0;
 
-  if (!hasErrors) {
-    // Todas as validações passaram, então podemos enviar o formulário
-    form.submit();
+function comparePassword() {
+  if (campos[4].value === campos[5].value && campos[5].value.length > 5) {
+    removeError(5);
+  } else {
+    setError(5);
   }
-})
+}

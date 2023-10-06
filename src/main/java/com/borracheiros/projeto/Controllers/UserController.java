@@ -1,4 +1,4 @@
-package com.borracheiros.projeto.users.userController;
+package com.borracheiros.projeto.Controllers;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.dto.UserDto;
+import com.borracheiros.projeto.repositories.RoleRepository;
+import com.borracheiros.projeto.repositories.UsuarioRepository;
 import com.borracheiros.projeto.service.UsuarioService;
-import com.borracheiros.projeto.users.UsuarioRepository;
 import com.borracheiros.projeto.users.entities.Role;
-import com.borracheiros.projeto.users.entities.RoleRepository;
 import com.borracheiros.projeto.users.entities.Usuario;
 
 import jakarta.servlet.http.HttpSession;
@@ -109,6 +109,9 @@ public class UserController {
                 if (usuario.getCpf() != null && !usuario.getCpf().isEmpty()) {
                     usuarioExistente.setCpf(usuario.getCpf());
 
+                }
+                if(usuario.getSenha() != usuarioDto.getConfirmPassword()){
+                    return "Erro";
                 }
 
                 if (usuario.getStatusUsuario() != null) {

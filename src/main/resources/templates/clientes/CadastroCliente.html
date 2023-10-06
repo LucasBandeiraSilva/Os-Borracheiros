@@ -23,7 +23,7 @@
               style="height: 600px; width: 600px"
             >
           
-          <form  th:object="${userDto}"  action="/cliente/catalogo" method="post" id="form">
+          <form  th:object="${clientDto}"  action="/cliente/catalogo" method="post" id="form">
                 <div class="row">
                   <div>
                     <label for="" class="form-label ">nome</label>
@@ -35,10 +35,13 @@
                       placeholder="nome de usuario"
                       onchange="verificaNome()"
                     />
-                      <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-danger"></span>
+                      <span th:if="${#fields.hasErrors('nome')}"  class="text-danger"></span>
                   </div>
                 </div>
-                
+                <div class="mb-2">
+                  <label for="dataNascimento">data de nascimento</label>
+                  <input class="form-control" type="date" name="dataAniversario" id="dataAniversario">
+                </div>
 
                  
 
@@ -56,14 +59,12 @@
                   <span class="span-required"
                     >email invalido</span
                   >
-                  <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
+                  <span th:if="${#fields.hasErrors('email')}"  class="text-danger"></span>
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">CPF</label>
                   <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
-                  <span th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}"
-                  class="text-danger"></span>
-                  
+                  <!-- <div th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}" class="error-message"></div> -->
                 </div>
 
                 <div class="mb-2">
@@ -117,10 +118,17 @@
                       <option value="3" selected>Cliente</option>
                     </select>
                   </div>
-                  
+                  <div class="mb-2">
+                    <label class="form-label" for="">genero</label>
+                      <select class="form-select" name="genero" id="genero">
+                        <option selected disabled>Selecione seu genero</option>
+                      <option value="masculino">masculino</option>
+                      <option value="feminino">feminino</option>
+                      
+                    </select>
+                  </div>
                 </div>
                 <button class="btn btn-primary mt-3  w-100"type="submit">Enviar</button>
-                <p></p>
               </div>
             </form>
           </div>

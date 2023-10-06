@@ -1,4 +1,4 @@
-package com.borracheiros.projeto.estoque.estoqueController;
+package com.borracheiros.projeto.Controllers;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -21,8 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.dto.EstoqueDto;
 import com.borracheiros.projeto.dto.UserDto;
-import com.borracheiros.projeto.estoque.EstoqueRepository;
 import com.borracheiros.projeto.estoque.entities.Estoque;
+import com.borracheiros.projeto.repositories.EstoqueRepository;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;

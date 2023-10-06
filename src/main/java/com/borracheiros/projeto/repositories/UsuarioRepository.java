@@ -1,4 +1,4 @@
-package com.borracheiros.projeto.users;
+package com.borracheiros.projeto.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.borracheiros.projeto.users.entities.Usuario;

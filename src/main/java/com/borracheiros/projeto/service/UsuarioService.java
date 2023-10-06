@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.borracheiros.projeto.users.UsuarioRepository;
+import com.borracheiros.projeto.repositories.UsuarioRepository;
 import com.borracheiros.projeto.users.entities.Usuario;
 
 import jakarta.persistence.EntityNotFoundException;

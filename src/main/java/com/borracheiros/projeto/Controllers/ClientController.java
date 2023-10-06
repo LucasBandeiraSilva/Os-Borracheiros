@@ -13,12 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.borracheiros.projeto.client.Cliente;
+import com.borracheiros.projeto.client.endereco.Endereco;
+import com.borracheiros.projeto.dto.ClientDto;
+import com.borracheiros.projeto.dto.EnderecoDto;
 import com.borracheiros.projeto.dto.UserDto;
-import com.borracheiros.projeto.estoque.EstoqueRepository;
 import com.borracheiros.projeto.estoque.entities.Estoque;
-import com.borracheiros.projeto.users.UsuarioRepository;
+import com.borracheiros.projeto.repositories.ClienteRepository;
+import com.borracheiros.projeto.repositories.EnderecoRepository;
+import com.borracheiros.projeto.repositories.EstoqueRepository;
+import com.borracheiros.projeto.repositories.RoleRepository;
+import com.borracheiros.projeto.repositories.UsuarioRepository;
 import com.borracheiros.projeto.users.entities.Role;
-import com.borracheiros.projeto.users.entities.RoleRepository;
 import com.borracheiros.projeto.users.entities.Usuario;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,7 +39,9 @@ public class ClientController {
     @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
-    private RoleRepository roleRepository;
+    private ClienteRepository clienteRepository;
+    @Autowired
+    private EnderecoRepository enderecoRepository;
 
     @GetMapping("/catalogo")
     public String visualizarProduto(Model model) {
@@ -57,7 +65,9 @@ public class ClientController {
     }
 
     @GetMapping("/cadastrar")
-    public String clienteCadastro(UserDto usuarioDto) {
+    public String clienteCadastro(Model model) {
+        ClientDto clientDto = new ClientDto();
+        model.addAttribute("clientDto", clientDto);
         return "clientes/CadastroCliente";
     }
 
@@ -66,7 +76,6 @@ public class ClientController {
             UserDto usuarioDto, HttpSession session, Model model) {
 
         Usuario usuario = usuarioRepository.findByEmail(email);
-        
 
         if (usuario != null && senha.equals(usuario.getSenha())) {
             usuarioDto.setRole(usuario.getRole().getId());
@@ -75,60 +84,51 @@ public class ClientController {
             session.setAttribute("roleId", usuario.getRole().getId());
             Long roleId = (Long) session.getAttribute("roleId");
 
-
             if (roleId == 3) {
                 System.out.println(usuario.getNome());
                 // model.addAttribute("nomeUsuario", true);
                 model.addAttribute("nomeUsuario", usuario.getNome()); // Adiciona o nome do usuário ao modelo
 
                 return "redirect:/cliente/catalogo";
-            
+
+            }
         }
-    }
-    model.addAttribute("loginMismatch", true);
-    return "clientes/LoginCliente";
+        model.addAttribute("loginMismatch", true);
+        return "clientes/LoginCliente";
     }
 
     @PostMapping("/catalogo")
-    public String createUser(@Valid UserDto usuarioDto, BindingResult bindingResult, Model model) {
+    public String createUser(@Valid ClientDto clientDto, @Valid EnderecoDto enderecoDto, BindingResult bindingResult,
+            Model model) {
 
-        Usuario usuario = usuarioDto.toUsuario();
-        Long roleId = usuarioDto.getRole();
-        Role role = roleRepository.findById(roleId).orElse(null);
+        Cliente cliente = clientDto.toCliente();
+        Endereco endereco = enderecoDto.toEndereco();
 
-        if (usuarioRepository.existsByCpf(usuario.getCpf())) {
-            bindingResult.rejectValue("cpf", "error.userDto", "CPF já cadastrado");
-
-        }
-
-        if (usuario.getCpf() == null || usuario.getCpf().isEmpty()) {
-            bindingResult.rejectValue("cpf", "error.userDto", "Campo CPF é obrigatório");
+        if (clienteRepository.existsByCpf(cliente.getCpf())) {
+            return "ErroCPF";
 
         }
 
-        if (bindingResult.hasErrors()) {
+        if (cliente.getCpf() == null) {
+            System.out.println(cliente.getCpf());
+            return "ErroCPF";
+        }
+
+        
             System.out.println("Formulário com erros");
             System.out.println(bindingResult.getAllErrors());
-            if (usuario.getNome() == null) {
+            if (cliente.getNome() == null) {
                 bindingResult.rejectValue("nome", "error.nome", "");
             }
-            if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
-                bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
-            }
 
-            if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            if (clienteRepository.existsByEmail(cliente.getEmail())) {
                 bindingResult.rejectValue("email", "error.userDto", "E-mail já cadastrado");
             }
-
-            return "clientes/CadastroCliente"; // Retorna a página de cadastro com os erros
-        }
-
-        if (role != null) {
-            usuario.setRole(role);
-            usuarioRepository.save(usuario);
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            return "redirect:/cliente/catalogo";
-        }
-        return null;
+            // return "clientes/CadastroCliente"; // Retorna a página de cadastro com os erros
+        
+        clienteRepository.save(cliente);
+        endereco.setCliente(cliente);
+        enderecoRepository.save(endereco);
+        return "/login";
     }
 }
