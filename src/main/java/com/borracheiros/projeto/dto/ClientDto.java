@@ -21,8 +21,10 @@ public class ClientDto {
      @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     @Column(unique = true)
     private String email;
+    @NotBlank
     @CPF(message = "CPF inválido")
     private String cpf;
     @DateTimeFormat(pattern = "yyyy-MM-dd") 

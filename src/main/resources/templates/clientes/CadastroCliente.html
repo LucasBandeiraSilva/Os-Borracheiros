@@ -35,6 +35,9 @@
                       placeholder="nome de usuario"
                       onchange="verificaNome()"
                     />
+                    <span class="span-required"
+                    >nome invalido</span
+                  >
                       <span th:if="${#fields.hasErrors('nome')}"  class="text-danger"></span>
                   </div>
                 </div>
@@ -63,9 +66,11 @@
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">CPF</label>
-                  <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
-                  <!-- <div th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}" class="error-message"></div> -->
+                  <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf" oninput="cpfNullValidator()">
                 </div>
+                <span class="span-required"
+                    >O cpf não deve ficar em branco</span
+                  >
 
                 <div class="mb-2">
                   <label for="password" class="form-label">Senha</label>

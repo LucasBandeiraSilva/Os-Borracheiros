@@ -6,19 +6,23 @@ const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-
 form.addEventListener("submit", (event) => {
   nameValidate();
   emailRegexValidation();
+  cpfNullValidator()
   validateMainPassword();
   comparePassword();
 
   const hasErrors = document.querySelectorAll(".span-required").length > 0;
 
   if (hasErrors) {
-    event.preventDefault(); // Somente previne a submissão se houver erros
+    event.preventDefault();
+    alert("errrro") // Somente previne a submissão se houver erros
   }
 });
 
 function setError(indice) {
   campos[indice].style.border = "2px solid  #9e082d";
   spans[indice].style.display = "block";
+  console.log('Erro definido para o campo', indice);
+
 }
 
 function removeError(indice) {
@@ -39,6 +43,13 @@ function emailRegexValidation() {
     removeError(2);
   } else {
     setError(2);
+  }
+}
+function cpfNullValidator(){
+  if(campos[3].value.trim() == ''){
+    removeError(3)
+  }else{
+    setError(3)
   }
 }
 

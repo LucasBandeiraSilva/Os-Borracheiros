@@ -3,6 +3,7 @@ package com.borracheiros.projeto.Controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,15 +18,10 @@ import com.borracheiros.projeto.client.Cliente;
 import com.borracheiros.projeto.client.endereco.Endereco;
 import com.borracheiros.projeto.dto.ClientDto;
 import com.borracheiros.projeto.dto.EnderecoDto;
-import com.borracheiros.projeto.dto.UserDto;
 import com.borracheiros.projeto.estoque.entities.Estoque;
 import com.borracheiros.projeto.repositories.ClienteRepository;
 import com.borracheiros.projeto.repositories.EnderecoRepository;
 import com.borracheiros.projeto.repositories.EstoqueRepository;
-import com.borracheiros.projeto.repositories.RoleRepository;
-import com.borracheiros.projeto.repositories.UsuarioRepository;
-import com.borracheiros.projeto.users.entities.Role;
-import com.borracheiros.projeto.users.entities.Usuario;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -36,12 +32,12 @@ public class ClientController {
 
     @Autowired
     private EstoqueRepository estoqueRepository;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+
     @Autowired
     private ClienteRepository clienteRepository;
     @Autowired
     private EnderecoRepository enderecoRepository;
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @GetMapping("/catalogo")
     public String visualizarProduto(Model model) {
@@ -72,30 +68,19 @@ public class ClientController {
     }
 
     @PostMapping("/login")
-    public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha,
-            UserDto usuarioDto, HttpSession session, Model model) {
+public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha,
+        HttpSession session, Model model) {
 
-        Usuario usuario = usuarioRepository.findByEmail(email);
+    Cliente cliente = clienteRepository.findByEmail(email);
 
-        if (usuario != null && senha.equals(usuario.getSenha())) {
-            usuarioDto.setRole(usuario.getRole().getId());
-
-            System.out.println("roleId: " + usuarioDto.getRole());
-            session.setAttribute("roleId", usuario.getRole().getId());
-            Long roleId = (Long) session.getAttribute("roleId");
-
-            if (roleId == 3) {
-                System.out.println(usuario.getNome());
-                // model.addAttribute("nomeUsuario", true);
-                model.addAttribute("nomeUsuario", usuario.getNome()); // Adiciona o nome do usuário ao modelo
-
-                return "redirect:/cliente/catalogo";
-
-            }
-        }
+    if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
+        model.addAttribute("nomeUsuario", cliente.getNome());
+        return "redirect:/cliente/catalogo";
+    } else {
         model.addAttribute("loginMismatch", true);
         return "clientes/LoginCliente";
     }
+}
 
     @PostMapping("/catalogo")
     public String createUser(@Valid ClientDto clientDto, @Valid EnderecoDto enderecoDto, BindingResult bindingResult,
@@ -105,30 +90,33 @@ public class ClientController {
         Endereco endereco = enderecoDto.toEndereco();
 
         if (clienteRepository.existsByCpf(cliente.getCpf())) {
-            return "ErroCPF";
+            
+            return "usuarios/ErroCPF";
 
         }
 
         if (cliente.getCpf() == null) {
             System.out.println(cliente.getCpf());
-            return "ErroCPF";
+            return "usuarios/ErroCPF";
         }
 
-        
-            System.out.println("Formulário com erros");
-            System.out.println(bindingResult.getAllErrors());
-            if (cliente.getNome() == null) {
-                bindingResult.rejectValue("nome", "error.nome", "");
-            }
+        System.out.println("Formulário com erros");
+        System.out.println(bindingResult.getAllErrors());
+        if (cliente.getNome() == null) {
+            bindingResult.rejectValue("nome", "error.nome", "");
+        }
 
-            if (clienteRepository.existsByEmail(cliente.getEmail())) {
-                bindingResult.rejectValue("email", "error.userDto", "E-mail já cadastrado");
-            }
-            // return "clientes/CadastroCliente"; // Retorna a página de cadastro com os erros
-        
+        if (clienteRepository.existsByEmail(cliente.getEmail())) {
+            bindingResult.rejectValue("email", "error.userDto", "E-mail já cadastrado");
+        }
+        // return "clientes/CadastroCliente"; // Retorna a página de cadastro com os
+        // erros
+        String senhaCriptografada = encoder.encode(cliente.getSenha());
+        cliente.setSenha(senhaCriptografada);
+
         clienteRepository.save(cliente);
         endereco.setCliente(cliente);
         enderecoRepository.save(endereco);
-        return "/login";
+        return "redirect:/cliente/login";
     }
 }
