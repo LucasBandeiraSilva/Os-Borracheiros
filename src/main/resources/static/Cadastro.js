@@ -6,7 +6,6 @@ const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-
 form.addEventListener("submit", (event) => {
   nameValidate();
   emailRegexValidation();
-  cpfNullValidator()
   validateMainPassword();
   comparePassword();
 
@@ -45,13 +44,13 @@ function emailRegexValidation() {
     setError(2);
   }
 }
-function cpfNullValidator(){
-  if(campos[3].value.trim() == ''){
-    removeError(3)
-  }else{
-    setError(3)
-  }
-}
+// function cpfNullValidator(){
+//   if(campos[3].value.trim() == ''){
+//     removeError(3)
+//   }else{
+//     setError(3)
+//   }
+// }
 
 function validateMainPassword() {
   if (campos[4].value.length < 6) {

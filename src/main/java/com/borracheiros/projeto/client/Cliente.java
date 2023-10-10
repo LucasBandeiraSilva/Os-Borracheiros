@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
@@ -22,8 +23,8 @@ public class Cliente {
     private Long id;
     @Column(unique = true)
     private String email;
-    @CPF
-    @Column(unique = true)
+    @NotBlank(message = "O CPF não pode estar em branco")
+    @CPF(message = "CPF inválido")
     private String cpf;
     private Date dataAniversario;
     private String genero;
