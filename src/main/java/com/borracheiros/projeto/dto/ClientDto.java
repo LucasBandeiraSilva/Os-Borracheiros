@@ -25,7 +25,7 @@ public class ClientDto {
     @Column(unique = true)
     private String email;
     @NotBlank
-    @CPF(message = "CPF inválido")
+    // @CPF(message = "CPF inválido")
     private String cpf;
     @DateTimeFormat(pattern = "yyyy-MM-dd") 
     private Date dataAniversario;

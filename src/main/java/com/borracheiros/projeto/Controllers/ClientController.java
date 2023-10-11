@@ -68,49 +68,48 @@ public class ClientController {
     }
 
     @PostMapping("/login")
-public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha,
-        HttpSession session, Model model) {
+    public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha,
+            HttpSession session, Model model) {
 
-    Cliente cliente = clienteRepository.findByEmail(email);
+        Cliente cliente = clienteRepository.findByEmail(email);
 
-    if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
-        model.addAttribute("nomeUsuario", cliente.getNome());
-        return "redirect:/cliente/catalogo";
-    } else {
-        model.addAttribute("loginMismatch", true);
-        return "clientes/LoginCliente";
+        if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
+            model.addAttribute("nomeUsuario", cliente.getNome());
+            return "redirect:/cliente/catalogo";
+        } else {
+            model.addAttribute("loginMismatch", true);
+            return "redirect:/cliente/cadastrar";
+        }
     }
-}
 
     @PostMapping("/catalogo")
-    public String createUser(@Valid ClientDto clientDto, @Valid EnderecoDto enderecoDto, BindingResult bindingResult,
+    public String createUser(ClientDto clientDto, EnderecoDto enderecoDto, BindingResult bindingResult,
             Model model) {
 
         Cliente cliente = clientDto.toCliente();
         Endereco endereco = enderecoDto.toEndereco();
 
         if (clienteRepository.existsByCpf(cliente.getCpf())) {
-            
+
             return "usuarios/ErroCPF";
 
         }
-
-        if (cliente.getCpf() == null) {
-            System.out.println(cliente.getCpf());
-            return "usuarios/ErroCPF";
+        if (cliente.getCpf().isBlank()) {
+            return "clientes/CadastroCliente";
         }
 
-        System.out.println("Formulário com erros");
-        System.out.println(bindingResult.getAllErrors());
-        if (cliente.getNome() == null) {
-            bindingResult.rejectValue("nome", "error.nome", "");
+        if (bindingResult.hasFieldErrors()) {
+            if (cliente.getNome().isBlank()) {
+                bindingResult.rejectValue("nome", "error.nome", "iiiiiiiiiiiiiiiiiiiiiii");
+                return "clientes/CadastroCliente";
+            }
+
+            if (clienteRepository.existsByEmail(cliente.getEmail())) {
+                bindingResult.rejectValue("email", "error.userDto", "E-mail já cadastrado");
+            }
+            return "clientes/CadastroCliente";
         }
 
-        if (clienteRepository.existsByEmail(cliente.getEmail())) {
-            bindingResult.rejectValue("email", "error.userDto", "E-mail já cadastrado");
-        }
-        // return "clientes/CadastroCliente"; // Retorna a página de cadastro com os
-        // erros
         String senhaCriptografada = encoder.encode(cliente.getSenha());
         cliente.setSenha(senhaCriptografada);
 

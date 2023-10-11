@@ -3,6 +3,7 @@ package com.borracheiros.projeto.client.endereco;
 import com.borracheiros.projeto.client.Cliente;
 import com.borracheiros.projeto.users.entities.Usuario;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,7 +30,7 @@ public class Endereco {
     private boolean statusEndereco;
     private String enderecoPadrao;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "usuario_id")
     private Cliente cliente;
 }
