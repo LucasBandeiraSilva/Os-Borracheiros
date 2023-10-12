@@ -4,29 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/cadastro.css" />
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
+    />
     <title>Cadastro de Clientes</title>
   </head>
+  <style>
+    @media only screen and (max-width: 770px) {
+      #container {
+        height: 70vh;
+      }
+    }
+    @media only screen and (min-width: 1024px) {
+      #container {
+        height: 700px;
+      }
+    }
+  </style>
   <body>
     <main>
       <div class="container">
         <div class="row">
-          <div
-            class="col h2 text-white d-flex align-items-center justify-content-center"
-          >
-            <p>Cadastre-se em nossa loja!</p>
+          <div class="col-md-6 offset-md-3 text-center mb-4">
+            <h2 class="text-white">Cadastre-se em nossa loja!</h2>
           </div>
-          
-          <div class="col">
+
+          <div class="col-md-6 offset-md-3">
             <div
-              class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
-              style="height: 705px; width: 600px"
+              class="border container d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
+              id="container"
             >
-          
-          <form  th:object="${clientDto}"  action="/cliente/catalogo" method="post" id="form">
+              <form
+                th:object="${clientDto}"
+                action="/cliente/catalogo"
+                method="post"
+                id="form"
+              >
                 <div class="row">
-                  <div>
-                    <label for="nome" class="form-label ">nome</label>
+                  <div class="col-md-6">
+                    <label for="nome" class="form-label">nome</label>
                     <input
                       type="text"
                       class="form-control inputs required"
@@ -35,84 +52,177 @@
                       placeholder="nome de usuario"
                       oninput="nameValidate()"
                     />
-                    <span class="span-required"
-                    >nome invalido</span
-                  >
+                    <span class="span-required">nome invalido</span>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <label for="dataAniversario">data de nascimento</label>
+                    <input
+                      class="form-control inputs required"
+                      type="date"
+                      name="dataAniversario"
+                      id="dataAniversario"
+                      oninput="dateValidation()"
+                    />
+                    <span class="span-required">data não deve ser vazia</span>
                   </div>
                 </div>
-                <div class="mb-2">
-                  <label for="dataAniversario">data de nascimento</label>
-                  <input class="form-control" type="date" name="dataAniversario" id="dataAniversario">
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-control inputs required"
+                      name="email"
+                      id="email"
+                      aria-describedby="helpId"
+                      placeholder="Digite seu email"
+                      oninput="emailRegexValidation()"
+                    />
+                    <span class="span-required">email invalido</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="cpf" class="form-label">CPF</label>
+                    <input
+                      type="text"
+                      class="form-control inputs required"
+                      name="cpf"
+                      id="cpf"
+                      aria-describedby="cpf"
+                      placeholder="cpf"
+                      oninput="cpfValidator()"
+                    />
+                    <span class="span-required">cpf invalido</span>
+                  </div>
                 </div>
 
-                <div class="mb-2">
-                  <label for="email" class="form-label">Email</label>
-                  <input
-                    type="email"
-                    class="form-control inputs required"
-                    name="email"
-                    id="email"
-                    aria-describedby="helpId"
-                    placeholder="Digite seu email"
-                    oninput="emailRegexValidation()"
-                  />
-                  <span class="span-required"
-                    >email invalido</span
-                  >
-                </div>
-                <div class="mb-2">
-                  <label for="cpf" class="form-label">CPF</label>
-                  <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf" oninput="cpfValidator()">
-                  <span class="span-required"
-                      >cpf invalido</span
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input
+                      type="password"
+                      class="form-control inputs required"
+                      name="senha"
+                      id="senha"
+                      aria-describedby="helpId"
+                      placeholder="Senha"
+                      oninput="validateMainPassword()"
+                    />
+                    <span class="span-required"
+                      >Senha deve ter no mínimo 6 caracteres</span
                     >
-                </div>
-                <div class="mb-2"> 
-                  <label for="senha" class="form-label">Senha</label>
-                  
-                  <input
-                    type="password"
-                    class="form-control inputs required"
-                    name="senha"
-                    id="senha"
-                    aria-describedby="helpId"
-                    placeholder="Senha"
-                    oninput="validateMainPassword()"
-                  />
-                  <span class="span-required"
-                    >Senha deve ter no mínimo 6 caracteres</span
-                  >
+                  </div>
+                  <div class="col-md-6">
+                    <label for="newPassword" class="form-label"
+                      >Digite Novamente a senha</label
+                    >
+                    <input
+                      type="password"
+                      class="form-control inputs required"
+                      name="confirmPassword"
+                      id="newPassword"
+                      aria-describedby="helpId"
+                      placeholder="Nova Senha"
+                      oninput="comparePassword()"
+                    />
+                    <span class="span-required">As senhas não conferem</span>
+                  </div>
                 </div>
 
-                <div class="mb-2">
-                  <label for="newPassword" class="form-label"
-                    >Digite Novamente a senha</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control inputs required"
-                    name="confirmPassword"
-                    id="newPassword"
-                    aria-describedby="helpId"
-                    placeholder="Nova Senha"
-                    oninput="comparePassword()"
-                  />
-                  <span class="span-required">As senhas não conferem</span>
-
-                  
-                  <div class="mb-2">
+                <div class="row">
+                  <div class="col-md-6">
                     <label class="form-label" for="genero">genero</label>
-                      <select class="form-select" name="genero" id="genero">
-                        <option selected disabled>Selecione seu genero</option>
+                    <select class="form-select" name="genero" id="genero">
+                      <option selected disabled>Selecione seu genero</option>
                       <option value="masculino">masculino</option>
                       <option value="feminino">feminino</option>
-                      
                     </select>
                   </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="cep">Cep</label>
+                    <input
+                      class="inputs required form-control"
+                      type="number"
+                      name="cep"
+                      id="cep"
+                      placeholder="Somente numeros"
+                    />
+                    <span class="span-required">o cep não é valido!!!</span>
+                  </div>
                 </div>
-                <button class="btn btn-primary mt-3  w-100"type="submit">Enviar</button>
-              </div>
-            </form>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="form-label" for="Loradouro">Logradouro</label>
+                    <input
+                      class="inputs required form-control"
+                      type="text"
+                      name="logradouro"
+                      id="logradouro"
+                      placeholder="logradouro"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="bairro">bairro</label>
+                    <input
+                      class="inputs required form-control"
+                      type="text"
+                      name="bairro"
+                      id="bairro"
+                      placeholder="bairro"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="form-label" for="cidade">cidade</label>
+                    <input
+                      class="inputs required form-control"
+                      type="text"
+                      name="cidade"
+                      id="cidade"
+                      placeholder="cidade"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="estado">estado</label>
+                    <input
+                      class="inputs required form-control"
+                      type="text"
+                      name="estado"
+                      id="estado"
+                      placeholder="estado"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="numero">numero</label>
+                    <input
+                      class="inputs required form-control"
+                      type="number"
+                      name="numero"
+                      id="numero"
+                      placeholder="numero"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="endereco">endereço</label>
+                    <input
+                      class="inputs required form-control"
+                      type="text"
+                      name="endereco"
+                      id="endereco"
+                      placeholder="endereco"
+                    />
+                  </div>
+                </div>
+
+                <button class="btn btn-primary mt-3 w-100" type="submit">
+                  Enviar
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

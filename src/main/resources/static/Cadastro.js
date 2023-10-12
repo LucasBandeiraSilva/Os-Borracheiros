@@ -3,21 +3,25 @@ const campos = document.querySelectorAll(".required");
 const spans = document.querySelectorAll(".span-required");
 const emailRegex =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-  let isValidCpf = false
+let isValidCpf = false;
+let isValidCep = false;
+
+const cepInput = document.getElementById("cep");
+
+
+
 form.addEventListener("submit", (event) => {
   nameValidate();
+  dateValidation()
   emailRegexValidation();
   cpfValidator();
   validateMainPassword();
   comparePassword();
 
-  
-
-  if(!isValidCpf){
-    alert("ze da manga")
-    event.preventDefault()
+  if (!isValidCpf) {
+    alert("ze da manga");
+    event.preventDefault();
   }
-
 });
 
 function setError(indice) {
@@ -40,14 +44,23 @@ function nameValidate() {
     removeError(0);
   }
 }
+function dateValidation(){
+  const date = document.getElementById("dataAniversario").value
+
+  if(date === '' || date === null){
+    setError(1)
+  }else{
+    removeError(1);
+  }
+}
 
 function emailRegexValidation() {
   const email = document.getElementById("email").value;
 
   if (!emailRegex.test(email)) {
-    setError(1);
+    setError(2);
   } else {
-    removeError(1);
+    removeError(2);
   }
 }
 function CpfValido(cpf) {
@@ -82,25 +95,62 @@ function cpfValidator() {
   const cpf = document.getElementById("cpf").value;
 
   if (!CpfValido(cpf)) {
-    setError(2);
-    isValidCpf = false
+    setError(3);
+    isValidCpf = false;
   } else {
-    removeError(2);
-    isValidCpf = true
+    removeError(3);
+    isValidCpf = true;
   }
 }
 
 function validateMainPassword() {
-  if (campos[3].value.length < 6) {
-    setError(3);
+  if (campos[4].value.length < 6) {
+    setError(4);
   } else {
-    removeError(3);
+    removeError(4);
   }
 }
 function comparePassword() {
-  if (campos[3].value === campos[4].value) {
-    removeError(4);
+  if (campos[4].value === campos[5].value) {
+    removeError(5);
   } else {
-    setError(4);
+    setError(5);
+  }
+}async function getCEPInfo(cep) {
+  try {
+    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const data = await response.json();
+    if (data.erro) {
+      return null; // CEP inválido
+    }
+    return {
+      logradouro: data.logradouro,
+      bairro: data.bairro,
+      localidade: data.localidade,
+      uf: data.uf,
+    };
+  } catch (error) {
+    console.error('Erro ao obter informações do CEP:', error);
+    return null;
   }
 }
+
+cepInput.addEventListener('input', async () => {
+  const cep = cepInput.value.replace(/\D/g, '');
+  if (cep.length === 8) {
+    const cepInfo = await getCEPInfo(cep);
+    if (cepInfo) {
+      document.getElementById('logradouro').value = cepInfo.logradouro;
+      document.getElementById('bairro').value = cepInfo.bairro;
+      document.getElementById('cidade').value = cepInfo.localidade;
+      document.getElementById('estado').value = cepInfo.uf;
+
+      removeError(6);
+      isValidCep = false;
+    } 
+  }
+  else {
+    setError(6);
+    isValidCep = true;
+  }
+});
