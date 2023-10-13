@@ -51,6 +51,32 @@ public class ClientController {
         return "clientes/LoginCliente";
     }
 
+    @GetMapping("/sair")
+    public String sair(HttpSession session){
+        session.invalidate();
+        return "clientes/Deslogar";
+    }
+
+    @GetMapping("/logado")
+    private ModelAndView clienteLogado(HttpSession session) {
+
+        ModelAndView mv = new ModelAndView();
+        if(session.getAttribute("nomeUsuario") == null){
+            mv.setViewName("clientes/SecaoInvalida");
+            return mv;
+        }
+
+        List<Estoque> produtos = estoqueRepository.findAll();
+
+        mv.setViewName("clientes/CatalogoClienteLogado");
+        mv.addObject("produtos", produtos);
+        mv.addObject("nomeUsuario", session.getAttribute("nomeUsuario"));
+
+        return mv;
+        // return "clientes/catalogo";
+        // return "clientes/CatalogoClienteLogado";
+    }
+
     @GetMapping("/verProduto/{id}")
     private ModelAndView descProduto(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView();
@@ -74,8 +100,10 @@ public class ClientController {
         Cliente cliente = clienteRepository.findByEmail(email);
 
         if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
-            model.addAttribute("nomeUsuario", cliente.getNome());
-            return "redirect:/cliente/catalogo";
+            // model.addAttribute("nomeUsuario", cliente.getNome());
+            session.setAttribute("nomeUsuario", cliente.getNome());
+            System.out.println("nome do cliente" + cliente.getNome());
+            return "redirect:/cliente/logado";
         } else {
             model.addAttribute("loginMismatch", true);
             return "redirect:/cliente/cadastrar";
