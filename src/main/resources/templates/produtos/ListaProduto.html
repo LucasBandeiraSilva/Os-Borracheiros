@@ -17,6 +17,25 @@
     <link rel="stylesheet" href="ListaUsuario.css" />
     <title>Lista Produtos</title>
   </head>
+  <style>
+thead {
+  display: flex;
+  flex-direction: row;
+}
+
+thead th {
+  flex: 1; 
+  padding: 2.75rem;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 2px solid #dee2e6;
+  background-color: #343a40;
+  color: #fff;
+  text-align: center; 
+}
+thead th:nth-child(3) {
+  flex: 2;
+}
+  </style>
   <body>
     <h1>Lista de Produtos</h1>
     <hr />
@@ -41,54 +60,50 @@
       </button>
     </form>
     <br />
+
    
-  <table class="table table-striped">
+  <table>
     <thead>
-      <tr class="thead-dark">
-        <th scope="col">Id</th>
-        <th scope="col">Nome</th>
-        <th scope="col">Imagem</th>
-        <th scope="col">Preço</th>
-        <th scope="col">Quantidade Estoque</th>
-        <th scope="col">Visualizar Produtos</th>
-        <th scope="col">Alterar</th>
-        <th scope="col">Alterar status</th>
+      <tr>
+        <th scope="col-1">Id</th>
+        <th scope="col-1">Nome</th>
+        <th scope="col-1">Imagem</th>
+        <th scope="col-1">Preço</th>
+        <th scope="col-1">Quantidade Estoque</th>
+        <th scope="col-1">Visualizar Produtos</th>
+        <th scope="col-1">Alterar</th>
+        <th scope="col-1">Alterar status</th>
       </tr>
     </thead>
-   
-    <tbody id="tabela">
+
+    <tbody id="iproduto">
       <tr th:each="produto : ${produtos}">
-        <th class="col-1" th:text="${produto.id}"></th>
-        <th class="col-2" th:text="${produto.nome}"></th>
-        <th class="col-3"><img th:src="@{/imagem/{ids}(ids=${produto.id})}" alt="imagem do produto"
-            style="height: 100px; width: 100px;"></th>
-        <th id="status" class="col-5" th:text="${produto.preco}"></th>
-        <th class="col-6" th:text="${produto.quantidadeEstoque}"></th>
-        <th class="col-9">
+        <td class="col-1" th:text="${produto.id}"></td>
+        <td class="col-1" th:text="${produto.nome}"></td>
+        <td class="col-1"><img th:src="@{/imagem/{ids}(ids=${produto.id})}" alt="imagem do produto"
+            style="height: 100px; width: 100px;"></td>
+        <td class="col-1" th:text="${produto.preco}"></td>
+        <td class="col-1" th:text="${produto.quantidadeEstoque}"></td>
+        <td class="col-1">
           <a th:href="@{/produto/{id}(id=${produto.getId()})}">Visualizar produto</a>
-        </th>
-        <th class="col-9">
+        </td>
+        <td class="col-1">
           <a th:href="@{produto/editar/{id}(id=${produto.id})}">Alterar</a>
-        </th>
-        <th class="col-10">
+        </td>
+        <td class="col-1">
           <label class="switch">
             <input type="checkbox" onclick="alert()" />
             <span class="slider"></span>
           </label>
-        </th>
+        </td>
       </tr>
     </tbody>
   </table>
 
-  <nav aria-label="...">
-    <ul class="pagination pagination-sm">
-      <li class="page-item active" aria-current="page">
-        <span class="page-link">1</span>
-      </li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-    </ul>
-  </nav>
+  <div id="pagination">
+    <button id="prevPage">Anterior</button>
+    <button id="nextPage">Próxima</button>
+</div>
   
   <!-- Modal -->
   <div class="modal fade" id="produtoModal" tabindex="-1" role="dialog" aria-labelledby="produtoModalLabel"
