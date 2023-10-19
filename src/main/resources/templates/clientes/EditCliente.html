@@ -8,7 +8,7 @@
       rel="stylesheet"
       th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
     />
-    <title>Cadastro de Clientes</title>
+    <title>Editar dados</title>
   </head>
   <style>
     @media only screen and (max-width: 770px) {
@@ -27,7 +27,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6 offset-md-3 text-center mb-4">
-            <h2 class="text-white">Cadastre-se em nossa loja!</h2>
+            <h2 class="text-white">Edite seus dados!</h2>
           </div>
 
           <div class="col-md-6 offset-md-3">
@@ -36,11 +36,13 @@
               id="container"
             >
               <form
-                th:object="${clientDto}"
                 action="/cliente/catalogo"
                 method="post"
                 id="form"
+                th:object="${cliente}"
               >
+                <input type="hidden" th:field="*{id}" />
+
                 <div class="row">
                   <div class="col-md-6">
                     <label for="nome" class="form-label">nome</label>
@@ -50,6 +52,7 @@
                       name="nome"
                       id="nome"
                       placeholder="nome de usuario"
+                      th:field="*{nome}"
                       oninput="nameValidate()"
                     />
                     <span class="span-required">nome invalido</span>
@@ -67,7 +70,7 @@
                   </div>
                 </div>
 
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
                     <input
@@ -80,21 +83,22 @@
                       oninput="emailRegexValidation()"
                     />
                     <span class="span-required">email invalido</span>
+                    <div class="col-md-6">
+                      <label for="cpf" class="form-label">CPF</label>
+                      <input
+                        type="text"
+                        class="form-control inputs required"
+                        name="cpf"
+                        id="cpf"
+                        aria-describedby="cpf"
+                        placeholder="cpf somente numeros"
+                        th:field="*{cpf}"
+                        oninput="cpfValidator()"
+                      />
+                      <span class="span-required">cpf invalido</span>
+                    </div>
                   </div>
-                  <div class="col-md-6">
-                    <label for="cpf" class="form-label">CPF</label>
-                    <input
-                      type="text"
-                      class="form-control inputs required"
-                      name="cpf"
-                      id="cpf"
-                      aria-describedby="cpf"
-                      placeholder="cpf"
-                      oninput="cpfValidator()"
-                    />
-                    <span class="span-required">cpf invalido</span>
-                  </div>
-                </div>
+                </div> -->
 
                 <div class="row">
                   <div class="col-md-6">
@@ -213,25 +217,8 @@
                       type="text"
                       name="endereco"
                       id="endereco"
-                      placeholder="endereço"
+                      placeholder="endereco"
                     />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label" for="endereco">endereço faturamento</label>
-                    <input
-                      class="inputs required form-control"
-                      type="text"
-                      name="enderecoFaturamento"
-                      id="enderecoFaturamento"
-                      placeholder="endereço de faturamento"
-                    />
-                  </div>
-                  <div class="col-md-6 d-none">
-                    <label class="form-label " for="">Status</label>
-                    <select class="form-select" name="statusEndereco" id="statusEndereco">
-                    <option value="true" selected>ATIVO</option>
-                    <option value="false">INATIVO</option>
-                    </select>
                   </div>
                 </div>
 
@@ -244,6 +231,6 @@
         </div>
       </div>
     </main>
-    <script src="/Cadastro.js"></script>
+    <script src="/EditarCliente.js"></script>
   </body>
 </html>

@@ -1,6 +1,7 @@
 package com.borracheiros.projeto.Controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +23,7 @@ import com.borracheiros.projeto.estoque.entities.Estoque;
 import com.borracheiros.projeto.repositories.ClienteRepository;
 import com.borracheiros.projeto.repositories.EnderecoRepository;
 import com.borracheiros.projeto.repositories.EstoqueRepository;
+import com.borracheiros.projeto.users.entities.Usuario;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -52,7 +54,7 @@ public class ClientController {
     }
 
     @GetMapping("/sair")
-    public String sair(HttpSession session){
+    public String sair(HttpSession session) {
         session.invalidate();
         return "clientes/Deslogar";
     }
@@ -61,7 +63,7 @@ public class ClientController {
     private ModelAndView clienteLogado(HttpSession session) {
 
         ModelAndView mv = new ModelAndView();
-        if(session.getAttribute("nomeUsuario") == null){
+        if (session.getAttribute("nomeUsuario") == null) {
             mv.setViewName("clientes/SecaoInvalida");
             return mv;
         }
@@ -70,6 +72,7 @@ public class ClientController {
 
         mv.setViewName("clientes/CatalogoClienteLogado");
         mv.addObject("produtos", produtos);
+        mv.addObject("cliente", session.getAttribute("cliente"));
         mv.addObject("nomeUsuario", session.getAttribute("nomeUsuario"));
 
         return mv;
@@ -100,14 +103,26 @@ public class ClientController {
         Cliente cliente = clienteRepository.findByEmail(email);
 
         if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
-            // model.addAttribute("nomeUsuario", cliente.getNome());
+            session.setAttribute("idCliente", cliente.getId());
+            session.setAttribute("cliente", cliente);
             session.setAttribute("nomeUsuario", cliente.getNome());
-            System.out.println("nome do cliente" + cliente.getNome());
+            System.out.println("ID do cliente: " + cliente.getId());
+            System.out.println("Nome do cliente: " + cliente.getNome());
             return "redirect:/cliente/logado";
         } else {
             model.addAttribute("loginMismatch", true);
-            return "redirect:/cliente/cadastrar";
+            return "clientes/LoginCliente";
         }
+    }
+
+    @GetMapping("/editar/{id}")
+    public String alterar(@PathVariable("id") Long id, Model model) {
+        Optional<Cliente> optional = this.clienteRepository.findById(id);
+        if (optional.isPresent()) {
+            model.addAttribute("cliente", optional.get());
+            return "clientes/EditCliente";
+        }
+        return "Erro";
     }
 
     @PostMapping("/catalogo")
@@ -117,14 +132,44 @@ public class ClientController {
         Cliente cliente = clientDto.toCliente();
         Endereco endereco = enderecoDto.toEndereco();
 
+        if (clientDto.getId() != null) {
+            Optional<Cliente> optionalCliente = clienteRepository.findById(clientDto.getId());
+
+            if (optionalCliente.isPresent()) {
+                Cliente clienteExistente = optionalCliente.get();
+                // return"Erro";
+                if (cliente.getCpf() != null && !cliente.getCpf().isEmpty()) {
+                    clienteExistente.setCpf(cliente.getCpf());
+                }
+                if (cliente.getEmail() != null && !cliente.getEmail().isEmpty()) {
+                    clienteExistente.setEmail(cliente.getEmail());
+                }
+                if (cliente.getNome() != null && !cliente.getNome().isEmpty()) {
+                    clienteExistente.setNome(cliente.getNome());
+                }
+                if (cliente.getSenha() != null && !cliente.getSenha().isEmpty()) {
+                    String senhaAtualizada = encoder.encode(cliente.getSenha());
+                    clienteExistente.setSenha(senhaAtualizada);
+
+                }
+
+                clienteRepository.save(clienteExistente);
+
+                endereco.setCliente(clienteExistente); // Atualize o cliente no endereço também
+                enderecoRepository.save(endereco);
+                return "redirect:/cliente/login";
+
+            }
+        }
+
         if (clienteRepository.existsByCpf(cliente.getCpf())) {
 
             return "usuarios/ErroCPF";
 
         }
-        if (cliente.getCpf().isBlank()) {
-            return "clientes/CadastroCliente";
-        }
+        // if (cliente.getCpf().isBlank()) {
+        // return "clientes/CadastroCliente";
+        // }
 
         if (bindingResult.hasFieldErrors()) {
             if (cliente.getNome().isBlank()) {

@@ -2,7 +2,6 @@ package com.borracheiros.projeto.dto;
 
 import java.util.Date;
 
-import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.borracheiros.projeto.client.Cliente;
@@ -18,7 +17,7 @@ import lombok.Getter;
 @Data
 @Getter
 public class ClientDto {
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
@@ -27,13 +26,13 @@ public class ClientDto {
     @NotBlank
     // @CPF(message = "CPF inválido")
     private String cpf;
-    @DateTimeFormat(pattern = "yyyy-MM-dd") 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dataAniversario;
     private String genero;
     private String senha;
     private String nome;
 
-    public Cliente toCliente(){
+    public Cliente toCliente() {
         Cliente cliente = new Cliente();
         cliente.setEmail(this.email);
         cliente.setCpf(this.cpf);

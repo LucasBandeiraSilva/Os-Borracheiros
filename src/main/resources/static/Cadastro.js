@@ -144,6 +144,8 @@ cepInput.addEventListener('input', async () => {
       document.getElementById('bairro').value = cepInfo.bairro;
       document.getElementById('cidade').value = cepInfo.localidade;
       document.getElementById('estado').value = cepInfo.uf;
+      document.getElementById('endereco').value = cepInfo.logradouro
+      document.getElementById('enderecoFaturamento').value = cepInfo.logradouro
 
       removeError(6);
       isValidCep = false;

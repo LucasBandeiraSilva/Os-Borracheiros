@@ -10,12 +10,19 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
     />
     <style>
-      a{
-        text-decoration: dotted;
+      @media (min-width: 1440px) {
+        #search {
+          width: 50vw;
+        }
       }
-      a:hover{
-        text-decoration: underline;
-        color: #ffff;
+      @media (max-width: 768px) {
+        #search {
+          width: 30vw;
+        }
+        #shoes{
+           width: 50px;
+           height: 50px; 
+          }
       }
     </style>
   </head>
@@ -24,6 +31,7 @@
       <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
         <a class="navbar-brand ms-4" href="#"
           ><img
+            id="shoes"
             src="/shoes.png"
             alt="Logo For Shoe Store@clipartmax.com"
             style="width: 200px; height: 100px"
@@ -41,16 +49,18 @@
           <div class="d-flex mx-auto justify-content-evenly">
             <input
               class="form-control me-sm-2"
+              id="search"
               type="text"
               placeholder="pesquise o produto"
-              style="width: 70vw"
             />
           </div>
           <div
             class="welcome-message me-auto h3 text-white"
             th:if="${nomeUsuario}"
           >
-            Olá, <a class="text-white" th:href="@{url}"><span th:text="${nomeUsuario}"></span></a>!
+            Olá,
+
+            <span th:text="${nomeUsuario}"></span>!
             <button class="btn btn-warning ms-3">
               <a
                 class="text-white p"
@@ -59,6 +69,13 @@
                 target="_self"
                 rel="noopener noreferrer"
                 >sair?</a
+              >
+            </button>
+            <button class="btn btn-success">
+              <a
+                class="text-white text-decoration-none"
+                th:href="@{/cliente/editar/{id}(id=${cliente.id})}"
+                >Editar dados</a
               >
             </button>
           </div>

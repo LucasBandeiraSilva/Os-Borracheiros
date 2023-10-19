@@ -110,7 +110,7 @@ public class UserController {
                     usuarioExistente.setCpf(usuario.getCpf());
 
                 }
-                if(usuario.getSenha() != usuarioDto.getConfirmPassword()){
+                if (usuario.getSenha() != usuarioDto.getConfirmPassword()) {
                     return "Erro";
                 }
 
