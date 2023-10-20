@@ -133,6 +133,7 @@ public class ClientController {
         Endereco endereco = enderecoDto.toEndereco();
 
         if (clientDto.getId() != null) {
+            System.out.println("editando.....");
             Optional<Cliente> optionalCliente = clienteRepository.findById(clientDto.getId());
 
             if (optionalCliente.isPresent()) {
@@ -152,9 +153,25 @@ public class ClientController {
                     clienteExistente.setSenha(senhaAtualizada);
 
                 }
+                
+                // List<Endereco> enderecos = cliente.getEnderecos();
+
+                // if (!enderecos.isEmpty()) {
+                //     System.out.println("Endereços do Cliente " + cliente.getNome() + ":");
+                //     for (Endereco adress : enderecos) {
+                //         System.out.println("ID: " + adress.getId());
+                //         System.out.println("CEP: " + adress.getCep());
+                //         System.out.println("Logradouro: " + adress.getLogradouro());
+                //         // Adicione mais detalhes conforme necessário
+
+                //         System.out.println(); // Adiciona uma linha em branco para separar os endereços
+                //     }
+                // } else {
+                //     System.out.println("O cliente " + cliente.getNome() + " não possui endereços cadastrados.");
+                // }
 
                 clienteRepository.save(clienteExistente);
-
+                    System.out.println("\n \n \n usuario atualizado.................");
                 endereco.setCliente(clienteExistente); // Atualize o cliente no endereço também
                 enderecoRepository.save(endereco);
                 return "redirect:/cliente/login";
@@ -162,26 +179,18 @@ public class ClientController {
             }
         }
 
-        if (clienteRepository.existsByCpf(cliente.getCpf())) {
-
-            return "usuarios/ErroCPF";
-
-        }
-        // if (cliente.getCpf().isBlank()) {
-        // return "clientes/CadastroCliente";
-        // }
-
-        if (bindingResult.hasFieldErrors()) {
-            if (cliente.getNome().isBlank()) {
-                bindingResult.rejectValue("nome", "error.nome", "iiiiiiiiiiiiiiiiiiiiiii");
-                return "clientes/CadastroCliente";
+        if (clienteRepository.existsByCpf(cliente.getCpf()) || clienteRepository.existsByEmail(cliente.getEmail())) {
+            if (clienteRepository.existsByCpf(cliente.getCpf())) {
+                model.addAttribute("cpfMismatch", true);
             }
-
             if (clienteRepository.existsByEmail(cliente.getEmail())) {
-                bindingResult.rejectValue("email", "error.userDto", "E-mail já cadastrado");
+                model.addAttribute("emailMismatch", true);
             }
+
             return "clientes/CadastroCliente";
         }
+
+        // List<Endereco> enderecos = cliente.getEnderecos();
 
         String senhaCriptografada = encoder.encode(cliente.getSenha());
         cliente.setSenha(senhaCriptografada);

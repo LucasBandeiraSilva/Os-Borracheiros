@@ -8,7 +8,7 @@
       rel="stylesheet"
       th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
     />
-    <title>Editar dados</title>
+    <title>edição</title>
   </head>
   <style>
     @media only screen and (max-width: 770px) {
@@ -27,7 +27,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6 offset-md-3 text-center mb-4">
-            <h2 class="text-white">Edite seus dados!</h2>
+            <h2 class="text-white">editar dados!</h2>
           </div>
 
           <div class="col-md-6 offset-md-3">
@@ -36,12 +36,12 @@
               id="container"
             >
               <form
+              th:object="${cliente}"
                 action="/cliente/catalogo"
                 method="post"
                 id="form"
-                th:object="${cliente}"
               >
-                <input type="hidden" th:field="*{id}" />
+              <input type="hidden" th:field="*{id}" />
 
                 <div class="row">
                   <div class="col-md-6">
@@ -70,7 +70,7 @@
                   </div>
                 </div>
 
-                <!-- <div class="row">
+                <div class="row">
                   <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
                     <input
@@ -80,25 +80,34 @@
                       id="email"
                       aria-describedby="helpId"
                       placeholder="Digite seu email"
+                      th:field="*{email}"
                       oninput="emailRegexValidation()"
+                      disabled
                     />
                     <span class="span-required">email invalido</span>
-                    <div class="col-md-6">
-                      <label for="cpf" class="form-label">CPF</label>
-                      <input
-                        type="text"
-                        class="form-control inputs required"
-                        name="cpf"
-                        id="cpf"
-                        aria-describedby="cpf"
-                        placeholder="cpf somente numeros"
-                        th:field="*{cpf}"
-                        oninput="cpfValidator()"
-                      />
-                      <span class="span-required">cpf invalido</span>
-                    </div>
+                    <span class="text-danger" th:if="${emailMismatch}"
+                      >ja existe um cadastro com este e-mail!</span
+                    >
                   </div>
-                </div> -->
+                  <div class="col-md-6">
+                    <label for="cpf" class="form-label">CPF</label>
+                    <input
+                      type="text"
+                      class="form-control inputs required"
+                      name="cpf"
+                      id="cpf"
+                      aria-describedby="cpf"
+                      placeholder="cpf"
+                      oninput="cpfValidator()"
+                      th:field="*{cpf}"
+                      disabled
+                    />
+                    <span class="span-required">cpf invalido</span>
+                    <span class="text-danger" th:if="${cpfMismatch}"
+                      >ja existe um cadastro com este e-mail!</span
+                    >
+                  </div>
+                </div>
 
                 <div class="row">
                   <div class="col-md-6">
@@ -136,7 +145,12 @@
                 <div class="row">
                   <div class="col-md-6">
                     <label class="form-label" for="genero">genero</label>
-                    <select class="form-select" name="genero" id="genero">
+                    <select
+                      class="form-select"
+                      name="genero"
+                      id="genero"
+                      required
+                    >
                       <option selected disabled>Selecione seu genero</option>
                       <option value="masculino">masculino</option>
                       <option value="feminino">feminino</option>
@@ -160,7 +174,7 @@
                   <div class="col-md-6">
                     <label class="form-label" for="Loradouro">Logradouro</label>
                     <input
-                      class="inputs required form-control"
+                      class="form-control"
                       type="text"
                       name="logradouro"
                       id="logradouro"
@@ -170,7 +184,7 @@
                   <div class="col-md-6">
                     <label class="form-label" for="bairro">bairro</label>
                     <input
-                      class="inputs required form-control"
+                      class="form-control"
                       type="text"
                       name="bairro"
                       id="bairro"
@@ -183,7 +197,7 @@
                   <div class="col-md-6">
                     <label class="form-label" for="cidade">cidade</label>
                     <input
-                      class="inputs required form-control"
+                      class="form-control"
                       type="text"
                       name="cidade"
                       id="cidade"
@@ -193,7 +207,7 @@
                   <div class="col-md-6">
                     <label class="form-label" for="estado">estado</label>
                     <input
-                      class="inputs required form-control"
+                      class="form-control"
                       type="text"
                       name="estado"
                       id="estado"
@@ -208,17 +222,44 @@
                       name="numero"
                       id="numero"
                       placeholder="numero"
+                      oninput="houseNumberValidation()"
                     />
+                    <span class="span-required"
+                      >você precisa digitar um numero valido</span
+                    >
                   </div>
                   <div class="col-md-6">
                     <label class="form-label" for="endereco">endereço</label>
                     <input
-                      class="inputs required form-control"
+                      class=" form-control"
                       type="text"
                       name="endereco"
                       id="endereco"
-                      placeholder="endereco"
+                      placeholder="endereço"
                     />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="endereco"
+                      >endereço faturamento</label
+                    >
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="enderecoFaturamento"
+                      id="enderecoFaturamento"
+                      placeholder="endereço de faturamento"
+                    />
+                  </div>
+                  <div class="col-md-6 d-none">
+                    <label class="form-label" for="">Status</label>
+                    <select
+                      class="form-select"
+                      name="statusEndereco"
+                      id="statusEndereco"
+                    >
+                      <option value="true" selected>ATIVO</option>
+                      <option value="false">INATIVO</option>
+                    </select>
                   </div>
                 </div>
 

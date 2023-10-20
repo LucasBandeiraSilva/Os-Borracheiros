@@ -7,6 +7,8 @@ let isValidCpf = false;
 let isValidCep = false;
 let isValidName = false;
 let isValidDate = false;
+let isValidNumber = false;
+let isValidPassword = false;
 
 const cepInput = document.getElementById("cep");
 
@@ -15,9 +17,10 @@ form.addEventListener("submit", (event) => {
   dateValidation();
   validateMainPassword();
   comparePassword();
+  houseNumberValidation()
 
-  if (!isValidName || !isValidDate || !isValidCep) {
-    alert("ze da manga");
+  if (!isValidName || !isValidDate || !isValidCep || !isValidNumber || !isValidPassword) {
+    alert("erros no formulario, corrija");
     event.preventDefault();
   }
 });
@@ -55,19 +58,30 @@ function dateValidation() {
     removeError(1);
   }
 }
+function emailRegexValidation() {
+  const email = document.getElementById("email").value;
 
-function validateMainPassword() {
-  if (campos[2].value.length < 6) {
+  if (!emailRegex.test(email)) {
     setError(2);
   } else {
     removeError(2);
   }
 }
-function comparePassword() {
-  if (campos[2].value === campos[3].value) {
-    removeError(3);
+
+function validateMainPassword() {
+  if (campos[4].value.length < 6) {
+    setError(4);
   } else {
-    setError(3);
+    removeError(4);
+  }
+}
+function comparePassword() {
+  if (campos[4].value === campos[5].value) {
+    isValidPassword = true;
+    removeError(5);
+  } else {
+    isValidPassword = false;
+    setError(5);
   }
 }
 async function getCEPInfo(cep) {
@@ -99,12 +113,26 @@ cepInput.addEventListener("input", async () => {
       document.getElementById("bairro").value = cepInfo.bairro;
       document.getElementById("cidade").value = cepInfo.localidade;
       document.getElementById("estado").value = cepInfo.uf;
+      document.getElementById("endereco").value = cepInfo.logradouro;
+      document.getElementById("enderecoFaturamento").value = cepInfo.logradouro;
 
          isValidCep = true;
-      removeError(4);
+      removeError(6);
     }
   } else {
       isValidCep = false;
-    setError(4);
+    setError(6);
   }
 });
+
+function houseNumberValidation() {
+  const numero = campos[7].value; // Corrigido para campos[6]
+
+  if (numero === '' || numero === null || numero < 1) {
+    isValidNumber = false;
+    setError(7); // Corrigido para 6
+  } else {
+    isValidNumber = true;
+    removeError(7); // Corrigido para 6
+  }
+}

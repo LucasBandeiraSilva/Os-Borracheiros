@@ -3,8 +3,11 @@ const campos = document.querySelectorAll(".required");
 const spans = document.querySelectorAll(".span-required");
 const emailRegex =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-let isValidCpf = false;
-let isValidCep = false;
+  let isValidCpf = false;
+  let isValidCep = false;
+  let isValidName = false;
+  let isValidDate = false;
+  let isValidNumber = false;
 
 const cepInput = document.getElementById("cep");
 
@@ -17,8 +20,10 @@ form.addEventListener("submit", (event) => {
   cpfValidator();
   validateMainPassword();
   comparePassword();
+  houseNumberValidation()
 
-  if (!isValidCpf) {
+
+  if (!isValidCpf || !isValidDate || !isValidCep || !isValidNumber) {
     alert("ze da manga");
     event.preventDefault();
   }
@@ -144,15 +149,27 @@ cepInput.addEventListener('input', async () => {
       document.getElementById('bairro').value = cepInfo.bairro;
       document.getElementById('cidade').value = cepInfo.localidade;
       document.getElementById('estado').value = cepInfo.uf;
-      document.getElementById('endereco').value = cepInfo.logradouro
-      document.getElementById('enderecoFaturamento').value = cepInfo.logradouro
+      document.getElementById("endereco").value = cepInfo.logradouro;
+      document.getElementById("enderecoFaturamento").value = cepInfo.logradouro;
 
-      removeError(6);
-      isValidCep = false;
+      removeError(5);
+      isValidCep = true;
     } 
   }
   else {
-    setError(6);
-    isValidCep = true;
+    setError(5);
+    isValidCep = false;
   }
 });
+function houseNumberValidation(){
+  const numero = campos[6].value;
+
+  if(numero === '' || numero === null || numero < 1){
+    isValidNumber = false
+    setError(6)
+  }
+  else{
+    isValidNumber = true;
+    removeError(6)
+  }
+}

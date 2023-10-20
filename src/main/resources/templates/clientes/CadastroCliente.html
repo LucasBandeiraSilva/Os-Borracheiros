@@ -53,6 +53,8 @@
                       oninput="nameValidate()"
                     />
                     <span class="span-required">nome invalido</span>
+                    <span class="text-danger" th:if="${nameMismatch}">ja existe um cadastro com este e-mail!</span>
+
                   </div>
                   <div class="col-md-6 mt-2">
                     <label for="dataAniversario">data de nascimento</label>
@@ -80,6 +82,8 @@
                       oninput="emailRegexValidation()"
                     />
                     <span class="span-required">email invalido</span>
+                    <span class="text-danger" th:if="${emailMismatch}">ja existe um cadastro com este e-mail!</span>
+
                   </div>
                   <div class="col-md-6">
                     <label for="cpf" class="form-label">CPF</label>
@@ -93,6 +97,8 @@
                       oninput="cpfValidator()"
                     />
                     <span class="span-required">cpf invalido</span>
+                    <span class="text-danger" th:if="${cpfMismatch}">ja existe um cadastro com este <h1>CPF!</h1></span>
+
                   </div>
                 </div>
 
@@ -132,7 +138,7 @@
                 <div class="row">
                   <div class="col-md-6">
                     <label class="form-label" for="genero">genero</label>
-                    <select class="form-select" name="genero" id="genero">
+                    <select class="form-select" name="genero" id="genero" required>
                       <option selected disabled>Selecione seu genero</option>
                       <option value="masculino">masculino</option>
                       <option value="feminino">feminino</option>
@@ -156,7 +162,7 @@
                   <div class="col-md-6">
                     <label class="form-label" for="Loradouro">Logradouro</label>
                     <input
-                      class="inputs required form-control"
+                      class="form-control"
                       type="text"
                       name="logradouro"
                       id="logradouro"
@@ -166,7 +172,7 @@
                   <div class="col-md-6">
                     <label class="form-label" for="bairro">bairro</label>
                     <input
-                      class="inputs required form-control"
+                      class="form-control"
                       type="text"
                       name="bairro"
                       id="bairro"
@@ -179,7 +185,7 @@
                   <div class="col-md-6">
                     <label class="form-label" for="cidade">cidade</label>
                     <input
-                      class="inputs required form-control"
+                      class="form-control"
                       type="text"
                       name="cidade"
                       id="cidade"
@@ -189,7 +195,7 @@
                   <div class="col-md-6">
                     <label class="form-label" for="estado">estado</label>
                     <input
-                      class="inputs required form-control"
+                      class="form-control"
                       type="text"
                       name="estado"
                       id="estado"
@@ -204,7 +210,10 @@
                       name="numero"
                       id="numero"
                       placeholder="numero"
+                      oninput="houseNumberValidation()"
                     />
+                    <span class="span-required">você precisa digitar um numero valido</span>
+
                   </div>
                   <div class="col-md-6">
                     <label class="form-label" for="endereco">endereço</label>
