@@ -36,4 +36,16 @@ public class EnderecoDto {
         endereco.setEnderecoFaturamento(this.enderecoFaturamento);
         return endereco;
     }
+    // public void fromEndereco(Endereco endereco){
+    //     this.cep = getCep();
+    //     this.logradouro = getLogradouro();
+    //     this.complemento = getComplemento();
+    //     this.Bairro = getBairro();
+    //     this.numero = getNumero();
+    //     this.cidade = getCidade();
+    //     this.endereco = getEndereco();
+    //     this.statusEndereco = isStatusEndereco();
+    //     this.enderecoPadrao = getEnderecoPadrao();
+    //     this.enderecoFaturamento = getEnderecoFaturamento();
+    // }
 }

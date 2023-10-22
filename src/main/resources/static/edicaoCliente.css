@@ -1,0 +1,12 @@
+main{
+    display: flex;
+    height: 110vh;
+    background: linear-gradient(rgb(7, 7, 162),rgb(0, 0, 0));
+        
+}
+
+.span-required{
+    display: none;
+    font-size: 1rem;
+    color: #9e082d;
+}

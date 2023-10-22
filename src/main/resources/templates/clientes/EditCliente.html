@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
   <head>
+    <link rel="stylesheet" href="/edicaoCliente.css" />
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/cadastro.css" />
     <link
       rel="stylesheet"
       th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
@@ -18,7 +19,8 @@
     }
     @media only screen and (min-width: 1024px) {
       #container {
-        height: 700px;
+        margin-top: 20%;
+        height: 500px;
       }
     }
   </style>
@@ -26,23 +28,18 @@
     <main>
       <div class="container">
         <div class="row">
-          <div class="col-md-6 offset-md-3 text-center mb-4">
-            <h2 class="text-white">editar dados!</h2>
-          </div>
-
-          <div class="col-md-6 offset-md-3">
+          <div class="col-md-6">
             <div
               class="border container d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
               id="container"
             >
               <form
-              th:object="${cliente}"
+                th:object="${cliente}"
                 action="/cliente/catalogo"
                 method="post"
                 id="form"
               >
-              <input type="hidden" th:field="*{id}" />
-
+                <input type="hidden" th:field="*{id}" />
                 <div class="row">
                   <div class="col-md-6">
                     <label for="nome" class="form-label">nome</label>
@@ -64,12 +61,12 @@
                       type="date"
                       name="dataAniversario"
                       id="dataAniversario"
+                      th:field="*{dataAniversario}"
                       oninput="dateValidation()"
                     />
                     <span class="span-required">data não deve ser vazia</span>
                   </div>
                 </div>
-
                 <div class="row">
                   <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
@@ -108,7 +105,6 @@
                     >
                   </div>
                 </div>
-
                 <div class="row">
                   <div class="col-md-6">
                     <label for="senha" class="form-label">Senha</label>
@@ -141,7 +137,6 @@
                     <span class="span-required">As senhas não conferem</span>
                   </div>
                 </div>
-
                 <div class="row">
                   <div class="col-md-6">
                     <label class="form-label" for="genero">genero</label>
@@ -156,111 +151,6 @@
                       <option value="feminino">feminino</option>
                     </select>
                   </div>
-
-                  <div class="col-md-6">
-                    <label class="form-label" for="cep">Cep</label>
-                    <input
-                      class="inputs required form-control"
-                      type="number"
-                      name="cep"
-                      id="cep"
-                      placeholder="Somente numeros"
-                    />
-                    <span class="span-required">o cep não é valido!!!</span>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-6">
-                    <label class="form-label" for="Loradouro">Logradouro</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      name="logradouro"
-                      id="logradouro"
-                      placeholder="logradouro"
-                    />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label" for="bairro">bairro</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      name="bairro"
-                      id="bairro"
-                      placeholder="bairro"
-                    />
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-6">
-                    <label class="form-label" for="cidade">cidade</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      name="cidade"
-                      id="cidade"
-                      placeholder="cidade"
-                    />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label" for="estado">estado</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      name="estado"
-                      id="estado"
-                      placeholder="estado"
-                    />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label" for="numero">numero</label>
-                    <input
-                      class="inputs required form-control"
-                      type="number"
-                      name="numero"
-                      id="numero"
-                      placeholder="numero"
-                      oninput="houseNumberValidation()"
-                    />
-                    <span class="span-required"
-                      >você precisa digitar um numero valido</span
-                    >
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label" for="endereco">endereço</label>
-                    <input
-                      class=" form-control"
-                      type="text"
-                      name="endereco"
-                      id="endereco"
-                      placeholder="endereço"
-                    />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label" for="endereco"
-                      >endereço faturamento</label
-                    >
-                    <input
-                      class="form-control"
-                      type="text"
-                      name="enderecoFaturamento"
-                      id="enderecoFaturamento"
-                      placeholder="endereço de faturamento"
-                    />
-                  </div>
-                  <div class="col-md-6 d-none">
-                    <label class="form-label" for="">Status</label>
-                    <select
-                      class="form-select"
-                      name="statusEndereco"
-                      id="statusEndereco"
-                    >
-                      <option value="true" selected>ATIVO</option>
-                      <option value="false">INATIVO</option>
-                    </select>
-                  </div>
                 </div>
 
                 <button class="btn btn-primary mt-3 w-100" type="submit">
@@ -269,9 +159,55 @@
               </form>
             </div>
           </div>
+          <div class="col-md-6 mt-auto mb-auto">
+            <div class="bg-light rounded p-4">
+              <h2 class="text-center">Endereços associados</h2>
+              <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th>Logradouro</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="endereco : ${cliente.enderecos}">
+                    <td th:text="${endereco.logradouro}"></td>
+                    <td>
+                      <!-- <a
+                        th:href="@{'/cliente/adicionar-endereco/' + ${endereco.id}}"
+                        class="btn btn-success ms-3"
+                        >adicionar</a
+                      > -->
+                      <a
+                        th:href="@{'/cliente/excluir-endereco/' + ${endereco.id}}"
+                        class="btn btn-danger ms-3"
+                        onclick="confirmarExcluir()"
+                        >Excluir</a
+                      >
+                      <a
+                        th:href="@{'/definir-padrao/' + ${endereco.id}}"
+                        class="btn btn-primary ms-3"
+                        >Definir Padrão</a
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <a
+                th:href="@{'/cliente/adicionar-endereco/' + ${cliente.id}}"
+                class="btn btn-success ms-3"
+                >Adicionar Endereço</a
+              >
+            </div>
+          </div>
         </div>
       </div>
     </main>
     <script src="/EditarCliente.js"></script>
+    <!-- <script>
+      function confirmarExcluir() {
+       return confirm("Tem certeza dessa escolha? Pois a ação não pode ser desfeita.");
+      }
+    </script> -->
   </body>
 </html>

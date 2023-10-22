@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,9 @@ import com.borracheiros.projeto.estoque.entities.Estoque;
 import com.borracheiros.projeto.repositories.ClienteRepository;
 import com.borracheiros.projeto.repositories.EnderecoRepository;
 import com.borracheiros.projeto.repositories.EstoqueRepository;
-import com.borracheiros.projeto.users.entities.Usuario;
+import com.borracheiros.projeto.service.ClienteService;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/cliente")
@@ -39,7 +39,10 @@ public class ClientController {
     private ClienteRepository clienteRepository;
     @Autowired
     private EnderecoRepository enderecoRepository;
+
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    @Autowired
+    private ClienteService clienteService;
 
     @GetMapping("/catalogo")
     public String visualizarProduto(Model model) {
@@ -129,75 +132,58 @@ public class ClientController {
     public String createUser(ClientDto clientDto, EnderecoDto enderecoDto, BindingResult bindingResult,
             Model model) {
 
-        Cliente cliente = clientDto.toCliente();
-        Endereco endereco = enderecoDto.toEndereco();
-
-        if (clientDto.getId() != null) {
-            System.out.println("editando.....");
-            Optional<Cliente> optionalCliente = clienteRepository.findById(clientDto.getId());
-
-            if (optionalCliente.isPresent()) {
-                Cliente clienteExistente = optionalCliente.get();
-                // return"Erro";
-                if (cliente.getCpf() != null && !cliente.getCpf().isEmpty()) {
-                    clienteExistente.setCpf(cliente.getCpf());
-                }
-                if (cliente.getEmail() != null && !cliente.getEmail().isEmpty()) {
-                    clienteExistente.setEmail(cliente.getEmail());
-                }
-                if (cliente.getNome() != null && !cliente.getNome().isEmpty()) {
-                    clienteExistente.setNome(cliente.getNome());
-                }
-                if (cliente.getSenha() != null && !cliente.getSenha().isEmpty()) {
-                    String senhaAtualizada = encoder.encode(cliente.getSenha());
-                    clienteExistente.setSenha(senhaAtualizada);
-
-                }
-                
-                // List<Endereco> enderecos = cliente.getEnderecos();
-
-                // if (!enderecos.isEmpty()) {
-                //     System.out.println("Endereços do Cliente " + cliente.getNome() + ":");
-                //     for (Endereco adress : enderecos) {
-                //         System.out.println("ID: " + adress.getId());
-                //         System.out.println("CEP: " + adress.getCep());
-                //         System.out.println("Logradouro: " + adress.getLogradouro());
-                //         // Adicione mais detalhes conforme necessário
-
-                //         System.out.println(); // Adiciona uma linha em branco para separar os endereços
-                //     }
-                // } else {
-                //     System.out.println("O cliente " + cliente.getNome() + " não possui endereços cadastrados.");
-                // }
-
-                clienteRepository.save(clienteExistente);
-                    System.out.println("\n \n \n usuario atualizado.................");
-                endereco.setCliente(clienteExistente); // Atualize o cliente no endereço também
-                enderecoRepository.save(endereco);
-                return "redirect:/cliente/login";
-
-            }
-        }
-
-        if (clienteRepository.existsByCpf(cliente.getCpf()) || clienteRepository.existsByEmail(cliente.getEmail())) {
-            if (clienteRepository.existsByCpf(cliente.getCpf())) {
-                model.addAttribute("cpfMismatch", true);
-            }
-            if (clienteRepository.existsByEmail(cliente.getEmail())) {
-                model.addAttribute("emailMismatch", true);
-            }
-
-            return "clientes/CadastroCliente";
-        }
-
-        // List<Endereco> enderecos = cliente.getEnderecos();
-
-        String senhaCriptografada = encoder.encode(cliente.getSenha());
-        cliente.setSenha(senhaCriptografada);
-
-        clienteRepository.save(cliente);
-        endereco.setCliente(cliente);
-        enderecoRepository.save(endereco);
-        return "redirect:/cliente/login";
+        return clienteService.createUser(clientDto, enderecoDto, bindingResult, model);
     }
+
+    @GetMapping("/excluir-endereco/{id}")
+    public String destroyAdress(@PathVariable Long id) {
+
+        Optional<Endereco> optional = this.enderecoRepository.findById(id);
+        if (optional.isPresent()) {
+            Endereco endereco = optional.get();
+            Cliente cliente = endereco.getCliente();
+            if (cliente.getEnderecos().size() == 1) {
+                return "clientes/AvisoEndereco";
+            }
+            enderecoRepository.deleteById(id);
+            return "clientes/EnderecoExcluido";
+        }
+        return null;
+    }
+
+    @GetMapping("adicionar-endereco/{id}")
+    public ModelAndView updateEndereco(@PathVariable("id") Long id, Model model) {
+        ModelAndView mv = new ModelAndView();
+        Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+            Endereco endereco = new Endereco();
+            endereco.setCliente(cliente);
+            mv.addObject("endereco", endereco);
+            mv.addObject("clienteId", cliente.getId()); // Adicione o clienteId ao modelo
+            mv.setViewName("clientes/adicionarEndereco");
+            return mv;
+        }
+
+        return mv;
+    }
+
+    @PostMapping("/adicionar-endereco")
+    public String addEndereco(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
+            @RequestParam("clienteId") Long clienteId) {
+        Optional<Cliente> clienteOptional = clienteRepository.findById(clienteId);
+
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+
+            Endereco endereco = enderecoDto.toEndereco();
+
+            endereco.setCliente(cliente);
+
+            enderecoRepository.save(endereco);
+        }
+
+        return "redirect:/cliente/editar/" + clienteId;
+    }
+
 }

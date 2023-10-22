@@ -3,28 +3,25 @@ const campos = document.querySelectorAll(".required");
 const spans = document.querySelectorAll(".span-required");
 const emailRegex =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-  let isValidCpf = false;
-  let isValidCep = false;
-  let isValidName = false;
-  let isValidDate = false;
-  let isValidNumber = false;
+let isValidCpf = false;
+let isValidCep = false;
+let isValidName = false;
+let isValidDate = false;
+let isValidNumber = false;
 
 const cepInput = document.getElementById("cep");
 
-
-
 form.addEventListener("submit", (event) => {
   nameValidate();
-  dateValidation()
+  dateValidation();
   emailRegexValidation();
   cpfValidator();
   validateMainPassword();
   comparePassword();
-  houseNumberValidation()
+  houseNumberValidation();
 
-
-  if (!isValidCpf || !isValidDate || !isValidCep || !isValidNumber) {
-    alert("ze da manga");
+  if (!isValidCpf || !isValidCep || !isValidNumber) {
+    alert("Dados com erro, corrija antes de enviar");
     event.preventDefault();
   }
 });
@@ -49,12 +46,12 @@ function nameValidate() {
     removeError(0);
   }
 }
-function dateValidation(){
-  const date = document.getElementById("dataAniversario").value
+function dateValidation() {
+  const date = document.getElementById("dataAniversario").value;
 
-  if(date === '' || date === null){
-    setError(1)
-  }else{
+  if (date === "" || date === null) {
+    setError(1);
+  } else {
     removeError(1);
   }
 }
@@ -121,7 +118,8 @@ function comparePassword() {
   } else {
     setError(5);
   }
-}async function getCEPInfo(cep) {
+}
+async function getCEPInfo(cep) {
   try {
     const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
     const data = await response.json();
@@ -135,41 +133,39 @@ function comparePassword() {
       uf: data.uf,
     };
   } catch (error) {
-    console.error('Erro ao obter informações do CEP:', error);
+    console.error("Erro ao obter informações do CEP:", error);
     return null;
   }
 }
 
-cepInput.addEventListener('input', async () => {
-  const cep = cepInput.value.replace(/\D/g, '');
+cepInput.addEventListener("input", async () => {
+  const cep = cepInput.value.replace(/\D/g, "");
   if (cep.length === 8) {
     const cepInfo = await getCEPInfo(cep);
     if (cepInfo) {
-      document.getElementById('logradouro').value = cepInfo.logradouro;
-      document.getElementById('bairro').value = cepInfo.bairro;
-      document.getElementById('cidade').value = cepInfo.localidade;
-      document.getElementById('estado').value = cepInfo.uf;
+      document.getElementById("logradouro").value = cepInfo.logradouro;
+      document.getElementById("bairro").value = cepInfo.bairro;
+      document.getElementById("cidade").value = cepInfo.localidade;
+      document.getElementById("estado").value = cepInfo.uf;
       document.getElementById("endereco").value = cepInfo.logradouro;
       document.getElementById("enderecoFaturamento").value = cepInfo.logradouro;
 
       removeError(5);
       isValidCep = true;
-    } 
-  }
-  else {
+    }
+  } else {
     setError(5);
     isValidCep = false;
   }
 });
-function houseNumberValidation(){
+function houseNumberValidation() {
   const numero = campos[6].value;
 
-  if(numero === '' || numero === null || numero < 1){
-    isValidNumber = false
-    setError(6)
-  }
-  else{
+  if (numero === "" || numero === null || numero < 1) {
+    isValidNumber = false;
+    setError(6);
+  } else {
     isValidNumber = true;
-    removeError(6)
+    removeError(6);
   }
 }
