@@ -1,8 +1,8 @@
 package com.borracheiros.projeto.client;
 
-import java.util.Date;
 import java.util.List;
 
+import com.borracheiros.projeto.carrinho.Carrinho;
 import com.borracheiros.projeto.client.endereco.Endereco;
 
 import jakarta.persistence.Column;
@@ -24,14 +24,14 @@ public class Cliente {
     private Long id;
     @Column(unique = true)
     private String email;
-    // @NotBlank(message = "O CPF não pode estar em branco")
-    // @CPF(message = "CPF inválido")
     private String cpf;
-    private Date dataAniversario;
+    private java.sql.Date dataAniversario;
     private String genero;
     private String senha;
     private String nome;
     @OneToMany(mappedBy = "cliente")
     private List<Endereco> enderecos;
+    @OneToMany(mappedBy = "cliente")
+    private List<Carrinho> carrinho;
 
 }

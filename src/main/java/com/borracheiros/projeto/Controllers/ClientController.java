@@ -1,7 +1,6 @@
 package com.borracheiros.projeto.Controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,17 +13,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.borracheiros.projeto.client.Cliente;
-import com.borracheiros.projeto.client.endereco.Endereco;
 import com.borracheiros.projeto.dto.ClientDto;
 import com.borracheiros.projeto.dto.EnderecoDto;
 import com.borracheiros.projeto.estoque.entities.Estoque;
-import com.borracheiros.projeto.repositories.ClienteRepository;
-import com.borracheiros.projeto.repositories.EnderecoRepository;
 import com.borracheiros.projeto.repositories.EstoqueRepository;
+import com.borracheiros.projeto.service.CarrinhoService;
 import com.borracheiros.projeto.service.ClienteService;
+import com.borracheiros.projeto.service.EndereçoService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -36,19 +34,19 @@ public class ClientController {
     private EstoqueRepository estoqueRepository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
-    @Autowired
-    private EnderecoRepository enderecoRepository;
+    private CarrinhoService carrinhoService;
 
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private EndereçoService endereçoService;
 
     @GetMapping("/catalogo")
     public String visualizarProduto(Model model) {
         List<Estoque> produtos = estoqueRepository.findAll();
         model.addAttribute("produtos", produtos);
-        return "clientes/catalogo"; // Alterado o retorno para o caminho correto
+        return "clientes/catalogo";
     }
 
     @GetMapping("/login")
@@ -79,53 +77,52 @@ public class ClientController {
         mv.addObject("nomeUsuario", session.getAttribute("nomeUsuario"));
 
         return mv;
-        // return "clientes/catalogo";
-        // return "clientes/CatalogoClienteLogado";
+
     }
 
     @GetMapping("/verProduto/{id}")
-    private ModelAndView descProduto(@PathVariable Long id) {
+    private ModelAndView descProduto(@PathVariable Long id, HttpSession session) {
+        System.out.println("acessando produtos.......");
         ModelAndView mv = new ModelAndView();
         Estoque produto = estoqueRepository.findById(id).orElse(null);
-        mv.setViewName("clientes/DescProduto");
-        mv.addObject("produto", produto);
-        return mv;
+        if (session.getAttribute("nomeUsuario") != null) {
+
+            System.out.println("\n \n \n usuario possui sessão aqui");
+            mv.setViewName("clientes/DescProduto_ClienteLogado");
+            mv.addObject("cliente", session.getAttribute("cliente"));
+            mv.addObject("nomeUsuario", session.getAttribute("nomeUsuario"));
+            mv.addObject("produto", produto);
+            return mv;
+        } else {
+
+            mv.setViewName("clientes/DescProduto");
+            mv.addObject("produto", produto);
+            // mv.addObject("cliente", cliente); // Certifique-se de que 'cliente' não seja
+            // nulo
+
+            return mv;
+        }
     }
 
     @GetMapping("/cadastrar")
-    public String clienteCadastro(Model model) {
+    public ModelAndView clienteCadastro() {
+        ModelAndView mv = new ModelAndView();
         ClientDto clientDto = new ClientDto();
-        model.addAttribute("clientDto", clientDto);
-        return "clientes/CadastroCliente";
+        mv.addObject("clientDto", clientDto);
+        mv.setViewName("clientes/CadastroCliente");
+        return mv;
     }
 
     @PostMapping("/login")
-    public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha,
+    public String validacaoLogin(@RequestParam("email") String email, @RequestParam("senha") String senha,
             HttpSession session, Model model) {
 
-        Cliente cliente = clienteRepository.findByEmail(email);
-
-        if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
-            session.setAttribute("idCliente", cliente.getId());
-            session.setAttribute("cliente", cliente);
-            session.setAttribute("nomeUsuario", cliente.getNome());
-            System.out.println("ID do cliente: " + cliente.getId());
-            System.out.println("Nome do cliente: " + cliente.getNome());
-            return "redirect:/cliente/logado";
-        } else {
-            model.addAttribute("loginMismatch", true);
-            return "clientes/LoginCliente";
-        }
+        return clienteService.validacaoLogin(email, senha, session, model);
     }
 
     @GetMapping("/editar/{id}")
     public String alterar(@PathVariable("id") Long id, Model model) {
-        Optional<Cliente> optional = this.clienteRepository.findById(id);
-        if (optional.isPresent()) {
-            model.addAttribute("cliente", optional.get());
-            return "clientes/EditCliente";
-        }
-        return "Erro";
+        return clienteService.alterar(id, model);
     }
 
     @PostMapping("/catalogo")
@@ -136,54 +133,26 @@ public class ClientController {
     }
 
     @GetMapping("/excluir-endereco/{id}")
-    public String destroyAdress(@PathVariable Long id) {
+    public String deletarEnderecoPorId(@PathVariable Long id) {
 
-        Optional<Endereco> optional = this.enderecoRepository.findById(id);
-        if (optional.isPresent()) {
-            Endereco endereco = optional.get();
-            Cliente cliente = endereco.getCliente();
-            if (cliente.getEnderecos().size() == 1) {
-                return "clientes/AvisoEndereco";
-            }
-            enderecoRepository.deleteById(id);
-            return "clientes/EnderecoExcluido";
-        }
-        return null;
+        return endereçoService.deletarEnderecoPorId(id);
     }
 
     @GetMapping("adicionar-endereco/{id}")
     public ModelAndView updateEndereco(@PathVariable("id") Long id, Model model) {
-        ModelAndView mv = new ModelAndView();
-        Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
-        if (clienteOptional.isPresent()) {
-            Cliente cliente = clienteOptional.get();
-            Endereco endereco = new Endereco();
-            endereco.setCliente(cliente);
-            mv.addObject("endereco", endereco);
-            mv.addObject("clienteId", cliente.getId()); // Adicione o clienteId ao modelo
-            mv.setViewName("clientes/adicionarEndereco");
-            return mv;
-        }
-
-        return mv;
+        return endereçoService.updateEndereco(id, model);
     }
 
     @PostMapping("/adicionar-endereco")
     public String addEndereco(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
             @RequestParam("clienteId") Long clienteId) {
-        Optional<Cliente> clienteOptional = clienteRepository.findById(clienteId);
+        return endereçoService.addEndereco(enderecoDto, clienteId);
+    }
 
-        if (clienteOptional.isPresent()) {
-            Cliente cliente = clienteOptional.get();
-
-            Endereco endereco = enderecoDto.toEndereco();
-
-            endereco.setCliente(cliente);
-
-            enderecoRepository.save(endereco);
-        }
-
-        return "redirect:/cliente/editar/" + clienteId;
+    @GetMapping("/adicionar-carrinho/{id}")
+    @ResponseBody
+    public String adicionaCarrinho(@PathVariable("id") Long id, HttpSession session) {
+        return carrinhoService.adicionaProdutoCarrinho(id, session);
     }
 
 }

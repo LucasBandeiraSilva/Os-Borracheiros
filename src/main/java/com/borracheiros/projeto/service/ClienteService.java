@@ -1,20 +1,29 @@
 package com.borracheiros.projeto.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.borracheiros.projeto.carrinho.Carrinho;
 import com.borracheiros.projeto.client.Cliente;
 import com.borracheiros.projeto.client.endereco.Endereco;
 import com.borracheiros.projeto.dto.ClientDto;
 import com.borracheiros.projeto.dto.EnderecoDto;
+import com.borracheiros.projeto.repositories.CarrinhoRepository;
 import com.borracheiros.projeto.repositories.ClienteRepository;
 import com.borracheiros.projeto.repositories.EnderecoRepository;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Service
 public class ClienteService {
@@ -24,10 +33,13 @@ public class ClienteService {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    @Autowired
+    private CarrinhoRepository carrinhoRepository;
 
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public String createUser(ClientDto clientDto, EnderecoDto enderecoDto, BindingResult bindingResult,
+    public String createUser(@Valid @ModelAttribute("clientDto") ClientDto clientDto, EnderecoDto enderecoDto,
+            BindingResult bindingResult,
             Model model) {
 
         Cliente cliente = clientDto.toCliente();
@@ -39,7 +51,6 @@ public class ClienteService {
 
             if (optionalCliente.isPresent()) {
                 Cliente clienteExistente = optionalCliente.get();
-                // return"Erro";
                 if (cliente.getCpf() != null && !cliente.getCpf().isEmpty()) {
                     clienteExistente.setCpf(cliente.getCpf());
                 }
@@ -54,13 +65,13 @@ public class ClienteService {
                     clienteExistente.setSenha(senhaAtualizada);
 
                 }
-                
-                
+
+                clienteExistente.setDataAniversario(cliente.getDataAniversario());
+
+                System.out.println(cliente.getDataAniversario());
 
                 clienteRepository.save(clienteExistente);
-                //     System.out.println("\n \n \n usuario atualizado.................");
-                // endereco.setCliente(clienteExistente); // Atualize o cliente no endereço também
-                // enderecoRepository.save(endereco);
+
                 return "redirect:/cliente/login";
 
             }
@@ -73,10 +84,8 @@ public class ClienteService {
             if (clienteRepository.existsByEmail(cliente.getEmail())) {
                 model.addAttribute("emailMismatch", true);
             }
-
             return "clientes/CadastroCliente";
         }
-
 
         String senhaCriptografada = encoder.encode(cliente.getSenha());
         cliente.setSenha(senhaCriptografada);
@@ -84,6 +93,54 @@ public class ClienteService {
         clienteRepository.save(cliente);
         endereco.setCliente(cliente);
         enderecoRepository.save(endereco);
+        System.out.println(cliente.getDataAniversario());
         return "redirect:/cliente/login";
+    }
+
+    public String alterar(@PathVariable("id") Long id, Model model) {
+        Optional<Cliente> optional = this.clienteRepository.findById(id);
+        if (optional.isPresent()) {
+            model.addAttribute("cliente", optional.get());
+            return "clientes/EditCliente";
+        }
+        return "Erro";
+    }
+
+    public String validacaoLogin(@RequestParam("email") String email, @RequestParam("senha") String senha,
+            HttpSession session, Model model) {
+
+        Cliente cliente = clienteRepository.findByEmail(email);
+
+        if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
+            Long carrinhoNaoAutenticadoID = (Long) session.getAttribute("carrinhoNaoAutenticadoID");
+
+            if (carrinhoNaoAutenticadoID != null) {
+                System.out.println("vOU SALVAR O CARRINHO!");
+                // Recupere o carrinho não autenticado pelo ID
+                Carrinho carrinhoNaoAutenticado = carrinhoRepository.findById(carrinhoNaoAutenticadoID).orElse(null);
+
+                if (carrinhoNaoAutenticado != null) {
+                    // Defina o cliente associado ao carrinho como o cliente logado
+                    carrinhoNaoAutenticado.setCliente(cliente);
+
+                    // Salve o carrinho atualizado no banco de dados
+                    carrinhoRepository.save(carrinhoNaoAutenticado);
+
+                    // Remova o ID do carrinho não autenticado da sessão
+                    session.removeAttribute("carrinhoNaoAutenticadoID");
+                }
+            }
+            System.out.println("vOU SALVAR O CARRINHO!");
+
+            session.setAttribute("idCliente", cliente.getId());
+            session.setAttribute("cliente", cliente);
+            session.setAttribute("nomeUsuario", cliente.getNome());
+            System.out.println("ID do cliente: " + cliente.getId());
+            System.out.println("Nome do cliente: " + cliente.getNome());
+            return "redirect:/cliente/logado";
+        } else {
+            model.addAttribute("loginMismatch", true);
+            return "clientes/LoginCliente";
+        }
     }
 }

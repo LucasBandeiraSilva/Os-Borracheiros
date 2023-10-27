@@ -59,12 +59,17 @@
                   <div class="col-md-6 mt-2">
                     <label for="dataAniversario">data de nascimento</label>
                     <input
-                      class="form-control inputs required"
+                      class="form-control inputs required "
                       type="date"
                       name="dataAniversario"
                       id="dataAniversario"
                       oninput="dateValidation()"
+                      th:field="*{dataAniversario}"
+                      th:errorclass="is-invalid"
                     />
+                    <span class="invalid-feedback" th:errors="*{dataAniversario}"></span>
+                    <span class="is-invalid" th:if="${dateInFuture}">você infelizmente não pode nascer no futuro</span>
+
                     <span class="span-required">data não deve ser vazia</span>
                   </div>
                 </div>
@@ -80,8 +85,12 @@
                       aria-describedby="helpId"
                       placeholder="Digite seu email"
                       oninput="emailRegexValidation()"
+                      th:field="*{email}"
+                      th:errorclass="is-invalid"
                     />
                     <span class="span-required">email invalido</span>
+                    <span class="invalid-feedback" th:errors="*{email}"></span>
+
                     <span class="text-danger" th:if="${emailMismatch}">ja existe um cadastro com este e-mail!</span>
 
                   </div>
@@ -95,8 +104,12 @@
                       aria-describedby="cpf"
                       placeholder="cpf"
                       oninput="cpfValidator()"
+                      th:field="*{cpf}"
+                      th:errorclass="is-invalid"
                     />
                     <span class="span-required">cpf invalido</span>
+                    <span class="invalid-feedback" th:errors="*{cpf}"></span>
+
                     <span class="text-danger" th:if="${cpfMismatch}">ja existe um cadastro com este <h1>CPF!</h1></span>
 
                   </div>
@@ -253,6 +266,6 @@
         </div>
       </div>
     </main>
-    <script src="/Cadastro.js"></script>
+    <!-- <script src="/Cadastro.js"></script> -->
   </body>
 </html>

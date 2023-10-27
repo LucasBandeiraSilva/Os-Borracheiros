@@ -150,11 +150,11 @@ cepInput.addEventListener("input", async () => {
       document.getElementById("endereco").value = cepInfo.logradouro;
       document.getElementById("enderecoFaturamento").value = cepInfo.logradouro;
 
-      removeError(5);
+      removeError(6);
       isValidCep = true;
     }
   } else {
-    setError(5);
+    setError(6);
     isValidCep = false;
   }
 });
@@ -163,9 +163,9 @@ function houseNumberValidation() {
 
   if (numero === "" || numero === null || numero < 1) {
     isValidNumber = false;
-    setError(6);
+    setError(7);
   } else {
     isValidNumber = true;
-    removeError(6);
+    removeError(7);
   }
 }

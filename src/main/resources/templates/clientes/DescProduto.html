@@ -81,7 +81,11 @@
               <h3 style="margin-top: 10vh" th:text="${produto.nome}"></h3>
               <div class="card-body d-flex flex-column justify-content-center">
                 <h3 class="card-title" th:text="'R$ ' + ${produto.preco}"></h3>
-                <button class="disabled btn btn-success mt-5">comprar</button>
+                <a
+                class="btn btn-success ms-3"
+                th:href="@{'/cliente/adicionar-carrinho/' + ${produto.id}}"
+                >comprar</a
+              >
               </div>
             </div>
           </div>

@@ -1,9 +1,5 @@
 package com.borracheiros.projeto.dto;
 
-import java.util.Date;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.borracheiros.projeto.client.Cliente;
 
 import jakarta.persistence.Column;
@@ -11,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 
@@ -24,10 +21,9 @@ public class ClientDto {
     @Column(unique = true)
     private String email;
     @NotBlank
-    // @CPF(message = "CPF inválido")
     private String cpf;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dataAniversario;
+    private java.sql.Date dataAniversario;
+
     private String genero;
     private String senha;
     private String nome;

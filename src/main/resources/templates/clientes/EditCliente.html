@@ -55,7 +55,7 @@
                     <span class="span-required">nome invalido</span>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <label for="dataAniversario">data de nascimento</label>
+                    <label class="form-label" for="dataAniversario">data de nascimento</label>
                     <input
                       class="form-control inputs required"
                       type="date"
@@ -64,6 +64,7 @@
                       th:field="*{dataAniversario}"
                       oninput="dateValidation()"
                     />
+                    <span  th:errors="*{dataAniversario}"></span>
                     <span class="span-required">data não deve ser vazia</span>
                   </div>
                 </div>
@@ -181,7 +182,6 @@
                       <a
                         th:href="@{'/cliente/excluir-endereco/' + ${endereco.id}}"
                         class="btn btn-danger ms-3"
-                        onclick="confirmarExcluir()"
                         >Excluir</a
                       >
                       <a
