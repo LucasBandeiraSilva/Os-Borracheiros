@@ -130,7 +130,7 @@ public class ClienteService {
                     session.removeAttribute("carrinhoNaoAutenticadoID");
                 }
             }
-            System.out.println("vOU SALVAR O CARRINHO!");
+           
 
             session.setAttribute("idCliente", cliente.getId());
             session.setAttribute("cliente", cliente);

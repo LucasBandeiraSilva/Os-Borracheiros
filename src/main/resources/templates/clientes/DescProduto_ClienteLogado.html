@@ -95,16 +95,16 @@
 
           <div class="d-flex justify-content-end">
             <a
-              th:href="@{/}"
+              th:href="@{/cliente/carrinho/{id}(id=${cliente.id})}"
               target="_blank"
               rel="noopener noreferrer"
-              style="pointer-events: none"
               class="mt-auto mb-auto me-4"
               ><i
                 class="fa-solid fa-cart-shopping fa-xl"
                 style="color: #f1f2f3"
-              ></i
-            ></a>
+              ></i>
+            </a>
+            <span class="me-4 text-light" id="cart-item-count">0</span>
           </div>
         </div>
       </nav>
@@ -170,5 +170,6 @@
       src="https://kit.fontawesome.com/de8b5f1e6f.js"
       crossorigin="anonymous"
     ></script>
+    <script src="/Carrinho.js"></script>
   </body>
 </html>

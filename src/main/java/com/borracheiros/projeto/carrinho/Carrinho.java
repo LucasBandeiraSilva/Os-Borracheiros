@@ -18,10 +18,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @NoArgsConstructor
+
 public class Carrinho {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

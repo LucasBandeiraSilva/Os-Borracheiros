@@ -1,13 +1,18 @@
 package com.borracheiros.projeto.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.carrinho.Carrinho;
+import com.borracheiros.projeto.client.Cliente;
 import com.borracheiros.projeto.estoque.entities.Estoque;
 import com.borracheiros.projeto.repositories.CarrinhoRepository;
+import com.borracheiros.projeto.repositories.ClienteRepository;
 import com.borracheiros.projeto.repositories.EstoqueRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -16,12 +21,16 @@ import jakarta.servlet.http.HttpSession;
 public class CarrinhoService {
 
     @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
     private EstoqueRepository estoqueRepository;
     @Autowired
     private CarrinhoRepository carrinhoRepository;
 
-    public String adicionaProdutoCarrinho(Long id, HttpSession session) {
+    public ModelAndView adicionaProdutoCarrinho(Long id, HttpSession session) {
 
+        ModelAndView mv = new ModelAndView();
         Optional<Estoque> estoqueOptional = this.estoqueRepository.findById(id);
     
         if (estoqueOptional.isPresent()) {
@@ -47,10 +56,37 @@ public class CarrinhoService {
             }
             session.setAttribute("carrinhoNaoAutenticadoID", carrinho.getId());
             carrinhoRepository.save(carrinho);
-            return "Produto adicionado ao carrinho";
+            
+            List<Estoque> produtos = estoqueRepository.findAll();
+            mv.addObject("produtos", produtos);
+           // mv.addObject("qtde", Cliente);
+            mv.setViewName("clientes/catalogo");
+            return mv;
+
         }
     
         return null;
     }
-    
+    public ModelAndView verCarrinho(@PathVariable Long id){
+        ModelAndView mv = new ModelAndView();
+        Optional<Cliente> clienteOptional = this.clienteRepository.findById(id); 
+        if(clienteOptional.isPresent()){
+            Cliente cliente = clienteOptional.get();
+            List<Carrinho> pedidos = cliente.getCarrinho();
+            mv.addObject("cliente", cliente);
+            mv.addObject("pedidos", pedidos);
+            System.out.println("cliente id: " + cliente.getId());
+            for (Carrinho carrinho : pedidos) {
+                System.out.println("carrinho id" + carrinho.getId());
+            }
+            mv.setViewName("clientes/EnderecoExcluido"); 
+            /*
+            tela de endereço excluido somente para testes em breve será substituida por uma tela mais adequada
+            */ 
+            return mv;
+        }else{
+            mv.setViewName("Erro");
+            return mv;
+        }
+    }
 }

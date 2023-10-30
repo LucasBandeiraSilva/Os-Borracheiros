@@ -150,9 +150,13 @@ public class ClientController {
     }
 
     @GetMapping("/adicionar-carrinho/{id}")
-    @ResponseBody
-    public String adicionaCarrinho(@PathVariable("id") Long id, HttpSession session) {
+    public ModelAndView adicionaCarrinho(@PathVariable("id") Long id, HttpSession session) {
+        session.setAttribute("lastClickedButtonIndex", session.getAttribute("lastClickedButton"));
         return carrinhoService.adicionaProdutoCarrinho(id, session);
+    }
+    @GetMapping("/carrinho/{id}")
+    public ModelAndView verCarrinho(@PathVariable Long id){
+        return carrinhoService.verCarrinho(id);
     }
 
 }
