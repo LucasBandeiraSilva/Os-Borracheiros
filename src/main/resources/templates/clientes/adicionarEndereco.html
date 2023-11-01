@@ -126,16 +126,18 @@
                     />
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" for="endereco"
-                      >endereço faturamento</label
+                    <label class="form-label" for="Tipo endereço"
+                      >Tipo endereço</label
                     >
-                    <input
-                      class="inputs required form-control"
-                      type="text"
-                      name="enderecoFaturamento"
-                      id="enderecoFaturamento"
-                      placeholder="endereço de faturamento"
-                    />
+                    <select
+                      class="form-select"
+                      name="tipoEndereco"
+                      id="tipoEndereco"
+                      required
+                    >
+                      <option value="entrega">Entrega</option>
+                      <option value="Faturamento">Faturamento</option>
+                    </select>
                   </div>
                   <div class="col-md-6 d-none">
                     <label class="form-label" for="">Status</label>

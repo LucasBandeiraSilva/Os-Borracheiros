@@ -138,7 +138,7 @@ async function getCEPInfo(cep) {
   }
 }
 
-cepInput.addEventListener("input", async () => {
+cepInput.addEventListener("input", async () => {  
   const cep = cepInput.value.replace(/\D/g, "");
   if (cep.length === 8) {
     const cepInfo = await getCEPInfo(cep);
@@ -148,7 +148,6 @@ cepInput.addEventListener("input", async () => {
       document.getElementById("cidade").value = cepInfo.localidade;
       document.getElementById("estado").value = cepInfo.uf;
       document.getElementById("endereco").value = cepInfo.logradouro;
-      document.getElementById("enderecoFaturamento").value = cepInfo.logradouro;
 
       removeError(6);
       isValidCep = true;
@@ -159,7 +158,7 @@ cepInput.addEventListener("input", async () => {
   }
 });
 function houseNumberValidation() {
-  const numero = campos[6].value;
+  const numero = campos[7].value;
 
   if (numero === "" || numero === null || numero < 1) {
     isValidNumber = false;

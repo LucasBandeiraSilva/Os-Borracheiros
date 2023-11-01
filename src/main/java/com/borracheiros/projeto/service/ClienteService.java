@@ -1,7 +1,5 @@
 package com.borracheiros.projeto.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +36,13 @@ public class ClienteService {
 
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public String createUser(@Valid @ModelAttribute("clientDto") ClientDto clientDto, EnderecoDto enderecoDto,
+    public String createUser(@Valid @ModelAttribute("clientDto") ClientDto clientDto,EnderecoDto enderecoDto,
             BindingResult bindingResult,
             Model model) {
 
         Cliente cliente = clientDto.toCliente();
         Endereco endereco = enderecoDto.toEndereco();
+        
 
         if (clientDto.getId() != null) {
             System.out.println("editando.....");

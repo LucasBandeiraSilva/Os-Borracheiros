@@ -12,14 +12,14 @@ import lombok.Setter;
 public class EnderecoDto {
     private int cep;
     private String logradouro;
-    private int complemento;
+    private String complemento;
     private String Bairro;
     private int numero;
     private String cidade;
     private String endereco;
     private boolean statusEndereco;
     private String enderecoPadrao;
-    private String enderecoFaturamento;
+    private String tipoEndereco;
 
 
     public Endereco toEndereco(){
@@ -33,7 +33,7 @@ public class EnderecoDto {
         endereco.setEndereco(this.endereco);
         endereco.setStatusEndereco(this.statusEndereco);
         endereco.setEnderecoPadrao(this.enderecoPadrao);
-        endereco.setEnderecoFaturamento(this.enderecoFaturamento);
+        endereco.setTipoEndereco(this.tipoEndereco);
         return endereco;
     }
     // public void fromEndereco(Endereco endereco){

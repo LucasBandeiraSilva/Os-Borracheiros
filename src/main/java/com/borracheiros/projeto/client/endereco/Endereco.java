@@ -20,12 +20,12 @@ public class Endereco {
     private Long id;
     private int cep;
     private String logradouro;
-    private int complemento;
+    private String complemento;
     private String Bairro;
     private int numero;
     private String cidade;
     private String endereco;
-    private String enderecoFaturamento;
+    private String tipoEndereco;
     private boolean statusEndereco;
     private String enderecoPadrao;
 

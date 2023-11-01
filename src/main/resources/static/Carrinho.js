@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sessionStorage.setItem('itemCount', itemCount);
   }
 
-  const buyButtons = document.querySelectorAll("a.btn.btn-success");
+  const buyButtons = document.querySelectorAll("a.btn.btn-success.add-to-cart");
   buyButtons.forEach((button, index) => {
     button.addEventListener("click", function() {
       addItemToCart();

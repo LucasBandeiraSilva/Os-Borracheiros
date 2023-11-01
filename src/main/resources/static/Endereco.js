@@ -58,7 +58,6 @@ cepInput.addEventListener("input", async () => {
       document.getElementById("cidade").value = cepInfo.localidade;
       document.getElementById("estado").value = cepInfo.uf;
       document.getElementById("endereco").value = cepInfo.logradouro;
-      document.getElementById("enderecoFaturamento").value = cepInfo.logradouro;
 
       removeError(0);
       isValidCep = true;

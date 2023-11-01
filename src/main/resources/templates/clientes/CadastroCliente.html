@@ -26,10 +26,6 @@
     <main>
       <div class="container">
         <div class="row">
-          <div class="col-md-6 offset-md-3 text-center mb-4">
-            <h2 class="text-white">Cadastre-se em nossa loja!</h2>
-          </div>
-
           <div class="col-md-6 offset-md-3">
             <div
               class="border container d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
@@ -41,6 +37,7 @@
                 method="post"
                 id="form"
               >
+                <h3>Cadastre-se em nossa loja</h3>
                 <div class="row">
                   <div class="col-md-6">
                     <label for="nome" class="form-label">nome</label>
@@ -53,13 +50,14 @@
                       oninput="nameValidate()"
                     />
                     <span class="span-required">nome invalido</span>
-                    <span class="text-danger" th:if="${nameMismatch}">ja existe um cadastro com este e-mail!</span>
-
+                    <span class="text-danger" th:if="${nameMismatch}"
+                      >ja existe um cadastro com este e-mail!</span
+                    >
                   </div>
                   <div class="col-md-6 mt-2">
                     <label for="dataAniversario">data de nascimento</label>
                     <input
-                      class="form-control inputs required "
+                      class="form-control inputs required"
                       type="date"
                       name="dataAniversario"
                       id="dataAniversario"
@@ -67,8 +65,13 @@
                       th:field="*{dataAniversario}"
                       th:errorclass="is-invalid"
                     />
-                    <span class="invalid-feedback" th:errors="*{dataAniversario}"></span>
-                    <span class="is-invalid" th:if="${dateInFuture}">você infelizmente não pode nascer no futuro</span>
+                    <span
+                      class="invalid-feedback"
+                      th:errors="*{dataAniversario}"
+                    ></span>
+                    <span class="is-invalid" th:if="${dateInFuture}"
+                      >você infelizmente não pode nascer no futuro</span
+                    >
 
                     <span class="span-required">data não deve ser vazia</span>
                   </div>
@@ -91,8 +94,9 @@
                     <span class="span-required">email invalido</span>
                     <span class="invalid-feedback" th:errors="*{email}"></span>
 
-                    <span class="text-danger" th:if="${emailMismatch}">ja existe um cadastro com este e-mail!</span>
-
+                    <span class="text-danger" th:if="${emailMismatch}"
+                      >ja existe um cadastro com este e-mail!</span
+                    >
                   </div>
                   <div class="col-md-6">
                     <label for="cpf" class="form-label">CPF</label>
@@ -110,8 +114,10 @@
                     <span class="span-required">cpf invalido</span>
                     <span class="invalid-feedback" th:errors="*{cpf}"></span>
 
-                    <span class="text-danger" th:if="${cpfMismatch}">ja existe um cadastro com este <h1>CPF!</h1></span>
-
+                    <span class="text-danger" th:if="${cpfMismatch}"
+                      >ja existe um cadastro com este
+                      <h1>CPF!</h1></span
+                    >
                   </div>
                 </div>
 
@@ -151,7 +157,12 @@
                 <div class="row">
                   <div class="col-md-6">
                     <label class="form-label" for="genero">genero</label>
-                    <select class="form-select" name="genero" id="genero" required>
+                    <select
+                      class="form-select"
+                      name="genero"
+                      id="genero"
+                      required
+                    >
                       <option selected disabled>Selecione seu genero</option>
                       <option value="masculino">masculino</option>
                       <option value="feminino">feminino</option>
@@ -225,8 +236,9 @@
                       placeholder="numero"
                       oninput="houseNumberValidation()"
                     />
-                    <span class="span-required">você precisa digitar um numero valido</span>
-
+                    <span class="span-required"
+                      >você precisa digitar um numero valido</span
+                    >
                   </div>
                   <div class="col-md-6">
                     <label class="form-label" for="endereco">endereço</label>
@@ -239,22 +251,43 @@
                     />
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" for="endereco">endereço faturamento</label>
+                    <label class="form-label" for="complemento"
+                      >Complemento</label
+                    >
                     <input
                       class="inputs required form-control"
                       type="text"
-                      name="enderecoFaturamento"
-                      id="enderecoFaturamento"
-                      placeholder="endereço de faturamento"
+                      name="complemento"
+                      id="complemento"
+                      placeholder="EX: casa"
                     />
                   </div>
-                  <div class="col-md-6 d-none">
-                    <label class="form-label " for="">Status</label>
-                    <select class="form-select" name="statusEndereco" id="statusEndereco">
-                    <option value="true" selected>ATIVO</option>
-                    <option value="false">INATIVO</option>
+                  <div class="col-md-6">
+                    <label class="form-label" for="Tipo endereço"
+                      >Tipo endereço</label
+                    >
+                    <select
+                      class="form-select"
+                      name="tipoEndereco"
+                      id="tipoEndereco"
+                      required
+                    >
+                      <option value="entrega">Entrega</option>
+                      <option value="Faturamento">Faturamento</option>
                     </select>
                   </div>
+                </div>
+
+                <div class="col-md-6 d-none">
+                  <label class="form-label" for="">Status</label>
+                  <select
+                    class="form-select"
+                    name="statusEndereco"
+                    id="statusEndereco"
+                  >
+                    <option value="true" selected>ATIVO</option>
+                    <option value="false">INATIVO</option>
+                  </select>
                 </div>
 
                 <button class="btn btn-primary mt-3 w-100" type="submit">
@@ -266,6 +299,6 @@
         </div>
       </div>
     </main>
-    <!-- <script src="/Cadastro.js"></script> -->
+    <script src="/Cadastro.js"></script>
   </body>
 </html>
