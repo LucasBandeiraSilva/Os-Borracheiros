@@ -32,15 +32,15 @@ public class CarrinhoService {
 
         ModelAndView mv = new ModelAndView();
         Optional<Estoque> estoqueOptional = this.estoqueRepository.findById(id);
-    
+
         if (estoqueOptional.isPresent()) {
-            //session.setAttribute("carrinhoNaoAutenticado", carrinhoNaoAutenticado);
+            // session.setAttribute("carrinhoNaoAutenticado", carrinhoNaoAutenticado);
             Estoque estoque = estoqueOptional.get();
             String nomeProduto = estoque.getNome();
-    
+
             // Verifique se o produto já está no carrinho
             Carrinho carrinho = carrinhoRepository.findByNome(nomeProduto);
-    
+
             if (carrinho == null) {
                 // Se não estiver no carrinho, crie um novo Carrinho
                 carrinho = new Carrinho();
@@ -56,21 +56,37 @@ public class CarrinhoService {
             }
             session.setAttribute("carrinhoNaoAutenticadoID", carrinho.getId());
             carrinhoRepository.save(carrinho);
-            
+
             List<Estoque> produtos = estoqueRepository.findAll();
             mv.addObject("produtos", produtos);
-           // mv.addObject("qtde", Cliente);
+            if (session.getAttribute("nomeUsuario") != null) { // verifica se o cliente ta logado
+                mv.addObject("cliente", session.getAttribute("cliente"));
+                mv.addObject("nomeUsuario", session.getAttribute("nomeUsuario"));
+                mv.addObject("produtos", produtos);
+                mv.setViewName("clientes/CatalogoClienteLogado");
+                return mv;
+            }
+
+            if (session.getAttribute("nomeUsuario") == null) {
+                mv.setViewName("clientes/SecaoInvalida");
+                return mv;
+                /*
+                 * verifica se o cliente ainda possui sessão em caso de refresh da aplicação
+                 */
+            }
+
             mv.setViewName("clientes/catalogo");
             return mv;
 
         }
-    
+
         return null;
     }
-    public ModelAndView verCarrinho(@PathVariable Long id){
+
+    public ModelAndView verCarrinho(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView();
-        Optional<Cliente> clienteOptional = this.clienteRepository.findById(id); 
-        if(clienteOptional.isPresent()){
+        Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
+        if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
             List<Carrinho> pedidos = cliente.getCarrinho();
             mv.addObject("cliente", cliente);
@@ -79,12 +95,13 @@ public class CarrinhoService {
             for (Carrinho carrinho : pedidos) {
                 System.out.println("carrinho id" + carrinho.getId());
             }
-            mv.setViewName("clientes/EnderecoExcluido"); 
+            mv.setViewName("clientes/EnderecoExcluido");
             /*
-            tela de endereço excluido somente para testes em breve será substituida por uma tela mais adequada
-            */ 
+             * tela de endereço excluido somente para testes em breve será substituida por
+             * uma tela mais adequada
+             */
             return mv;
-        }else{
+        } else {
             mv.setViewName("Erro");
             return mv;
         }

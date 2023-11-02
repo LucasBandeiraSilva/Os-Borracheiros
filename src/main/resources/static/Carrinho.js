@@ -9,11 +9,12 @@ document.addEventListener("DOMContentLoaded", function () {
     sessionStorage.setItem('itemCount', itemCount);
   }
 
-  const buyButtons = document.querySelectorAll("a.btn.btn-success.add-to-cart");
+  const buyButtons = document.querySelectorAll("a.btn.btn-success");
   buyButtons.forEach((button, index) => {
     button.addEventListener("click", function() {
       addItemToCart();
       sessionStorage.setItem('lastClickedButton', index); // Armazena o índice do botão clicado
+      alert("adicionado.....")
     });
   });
 });
