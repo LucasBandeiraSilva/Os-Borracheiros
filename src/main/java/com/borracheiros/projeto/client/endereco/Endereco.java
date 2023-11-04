@@ -27,7 +27,7 @@ public class Endereco {
     private String endereco;
     private String tipoEndereco;
     private boolean statusEndereco;
-    private String enderecoPadrao;
+    private boolean enderecoPadrao;
 
     @ManyToOne()
     @JoinColumn(name = "usuario_id")

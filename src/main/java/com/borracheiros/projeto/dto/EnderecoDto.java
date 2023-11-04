@@ -18,7 +18,7 @@ public class EnderecoDto {
     private String cidade;
     private String endereco;
     private boolean statusEndereco;
-    private String enderecoPadrao;
+    private boolean enderecoPadrao;
     private String tipoEndereco;
 
 

@@ -158,4 +158,9 @@ public class ClientController {
         return carrinhoService.verCarrinho(id);
     }
 
+    @GetMapping("/endereco-padrao/{id}")
+    public ModelAndView definirEnderecoPadrao(@PathVariable Long id){
+        return endereçoService.definirEnderecoPadrao(id);
+    }
+
 }
