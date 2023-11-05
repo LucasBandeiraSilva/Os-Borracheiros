@@ -32,56 +32,73 @@ public class CarrinhoService {
 
         ModelAndView mv = new ModelAndView();
         Optional<Estoque> estoqueOptional = this.estoqueRepository.findById(id);
-
+    
         if (estoqueOptional.isPresent()) {
-            // session.setAttribute("carrinhoNaoAutenticado", carrinhoNaoAutenticado);
             Estoque estoque = estoqueOptional.get();
             String nomeProduto = estoque.getNome();
-
-            // Verifique se o produto já está no carrinho
-            Carrinho carrinho = carrinhoRepository.findByNome(nomeProduto);
-
-            if (carrinho == null) {
-                // Se não estiver no carrinho, crie um novo Carrinho
-                carrinho = new Carrinho();
-                carrinho.setPreco(estoque.getPreco());
-                carrinho.setNome(nomeProduto);
-                carrinho.getEstoques().add(estoque);
-                carrinho.setQuantidade(1);
-            } else {
-                // Se estiver no carrinho, atualize a quantidade e o preço
-                int novaQuantidade = carrinho.getQuantidade() + 1;
-                carrinho.setQuantidade(novaQuantidade);
-                carrinho.setPreco(carrinho.getPreco().add(estoque.getPreco()));
-            }
-            session.setAttribute("carrinhoNaoAutenticadoID", carrinho.getId());
-            carrinhoRepository.save(carrinho);
-
-            List<Estoque> produtos = estoqueRepository.findAll();
-            mv.addObject("produtos", produtos);
-            if (session.getAttribute("nomeUsuario") != null) { // verifica se o cliente ta logado
-                mv.addObject("cliente", session.getAttribute("cliente"));
-                mv.addObject("nomeUsuario", session.getAttribute("nomeUsuario"));
+    
+            // Verifique se o cliente está logado
+            Cliente cliente = (Cliente) session.getAttribute("cliente");
+    
+            if (cliente != null) {
+                // Verifique se o cliente já tem um carrinho
+                Carrinho carrinho;
+                if (!cliente.getCarrinho().isEmpty()) {
+                    carrinho = cliente.getCarrinho().get(0);
+                } else {
+                    carrinho = new Carrinho();
+                    carrinho.setCliente(cliente);
+                    carrinho.setPreco(estoque.getPreco());
+                    carrinho.setNome(nomeProduto);
+                    carrinho.getEstoques().add(estoque);
+                    carrinho.setQuantidade(1);
+                }
+    
+                if (carrinho == null) {
+                    // Se não estiver no carrinho, crie um novo Carrinho
+                    carrinho = new Carrinho();
+                    carrinho.setPreco(estoque.getPreco());
+                    carrinho.setNome(nomeProduto);
+                    carrinho.getEstoques().add(estoque);
+                    carrinho.setQuantidade(1);
+                } else {
+                    // Se estiver no carrinho, atualize a quantidade e o preço
+                    int novaQuantidade = carrinho.getQuantidade() + 1;
+                    carrinho.setQuantidade(novaQuantidade);
+                    carrinho.setPreco(carrinho.getPreco().add(estoque.getPreco()));
+                }
+                session.setAttribute("carrinhoNaoAutenticadoID", carrinho.getId());
+                carrinhoRepository.save(carrinho);
+    
+                List<Estoque> produtos = estoqueRepository.findAll();
                 mv.addObject("produtos", produtos);
-                mv.setViewName("clientes/CatalogoClienteLogado");
-                return mv;
+                if (session.getAttribute("cliente") != null) { // verifica se o cliente ta logado
+                    mv.addObject("cliente", session.getAttribute("cliente"));
+                    mv.addObject("nomeUsuario", session.getAttribute("nomeUsuario"));
+                    mv.addObject("produtos", produtos);
+                    mv.setViewName("clientes/CatalogoClienteLogado");
+                    return mv;
+                }
+    
+                if (session.getAttribute("cliente") == null) {
+                    mv.setViewName("clientes/SecaoInvalida");
+                    return mv;
+                    /*
+                     * verifica se o cliente ainda possui sessão em caso de refresh da aplicação
+                     */
+                }
+    
+                mv.setViewName("clientes/catalogo");
+    
             }
-
-            if (session.getAttribute("nomeUsuario") == null) {
-                mv.setViewName("clientes/SecaoInvalida");
-                return mv;
-                /*
-                 * verifica se o cliente ainda possui sessão em caso de refresh da aplicação
-                 */
-            }
-
-            mv.setViewName("clientes/catalogo");
-            return mv;
-
+    
+            return null;
         }
-
+    
         return null;
     }
+    
+    
 
     public ModelAndView verCarrinho(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView();
