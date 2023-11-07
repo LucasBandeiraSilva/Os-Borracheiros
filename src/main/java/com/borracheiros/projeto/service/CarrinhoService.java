@@ -1,5 +1,7 @@
 package com.borracheiros.projeto.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,98 +31,182 @@ public class CarrinhoService {
     private CarrinhoRepository carrinhoRepository;
 
     public ModelAndView adicionaProdutoCarrinho(Long id, HttpSession session) {
-
         ModelAndView mv = new ModelAndView();
         Optional<Estoque> estoqueOptional = this.estoqueRepository.findById(id);
-    
+
         if (estoqueOptional.isPresent()) {
             Estoque estoque = estoqueOptional.get();
             String nomeProduto = estoque.getNome();
-    
+
             // Verifique se o cliente está logado
             Cliente cliente = (Cliente) session.getAttribute("cliente");
-    
+
             if (cliente != null) {
+                Carrinho carrinho = null;
+
                 // Verifique se o cliente já tem um carrinho
-                Carrinho carrinho;
                 if (!cliente.getCarrinho().isEmpty()) {
                     carrinho = cliente.getCarrinho().get(0);
-                } else {
+                }
+
+                if (carrinho == null) {
+                    // Se não estiver no carrinho, crie um novo Carrinho
                     carrinho = new Carrinho();
                     carrinho.setCliente(cliente);
                     carrinho.setPreco(estoque.getPreco());
                     carrinho.setNome(nomeProduto);
                     carrinho.getEstoques().add(estoque);
                     carrinho.setQuantidade(1);
-                }
-    
-                if (carrinho == null) {
-                    // Se não estiver no carrinho, crie um novo Carrinho
-                    carrinho = new Carrinho();
-                    carrinho.setPreco(estoque.getPreco());
-                    carrinho.setNome(nomeProduto);
-                    carrinho.getEstoques().add(estoque);
-                    carrinho.setQuantidade(1);
                 } else {
-                    // Se estiver no carrinho, atualize a quantidade e o preço
+                    // Se estiver no carrinho, atualize a quantidade e adicione o preço original
                     int novaQuantidade = carrinho.getQuantidade() + 1;
                     carrinho.setQuantidade(novaQuantidade);
+                    // Atualize o preço do carrinho somente uma vez
                     carrinho.setPreco(carrinho.getPreco().add(estoque.getPreco()));
                 }
+
                 session.setAttribute("carrinhoNaoAutenticadoID", carrinho.getId());
                 carrinhoRepository.save(carrinho);
-    
+
                 List<Estoque> produtos = estoqueRepository.findAll();
                 mv.addObject("produtos", produtos);
-                if (session.getAttribute("cliente") != null) { // verifica se o cliente ta logado
+                if (session.getAttribute("cliente") != null) {
                     mv.addObject("cliente", session.getAttribute("cliente"));
                     mv.addObject("nomeUsuario", session.getAttribute("nomeUsuario"));
                     mv.addObject("produtos", produtos);
                     mv.setViewName("clientes/CatalogoClienteLogado");
                     return mv;
                 }
-    
+
                 if (session.getAttribute("cliente") == null) {
                     mv.setViewName("clientes/SecaoInvalida");
                     return mv;
-                    /*
-                     * verifica se o cliente ainda possui sessão em caso de refresh da aplicação
-                     */
                 }
-    
+
                 mv.setViewName("clientes/catalogo");
-    
             }
-    
-            return null;
         }
-    
         return null;
     }
-    
-    
 
-    public ModelAndView verCarrinho(@PathVariable Long id) {
-        ModelAndView mv = new ModelAndView();
+    public ModelAndView verCarrinho(Long id, HttpSession session) {
         Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
+
+        Cliente clienteSession = (Cliente) session.getAttribute("cliente");
+        if (clienteSession != null) {
+            System.out.println("eu to no carrinho");
+        }
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
-            List<Carrinho> pedidos = cliente.getCarrinho();
+            List<Carrinho> carrinhos = carrinhoRepository.findByCliente(cliente);
+
+            ModelAndView mv = new ModelAndView();
             mv.addObject("cliente", cliente);
-            mv.addObject("pedidos", pedidos);
-            System.out.println("cliente id: " + cliente.getId());
-            for (Carrinho carrinho : pedidos) {
-                System.out.println("carrinho id" + carrinho.getId());
+
+            mv.addObject("carrinhos", carrinhos);
+            List<Estoque> produtosComImagem = new ArrayList<>(); // Lista para armazenar produtos com imagem
+
+            for (Carrinho carrinho : carrinhos) {
+                for (Estoque estoque : carrinho.getEstoques()) {
+                    Estoque produtoComImagem = estoqueRepository.findById(estoque.getId()).orElse(null);
+                    if (produtoComImagem != null) {
+                        produtosComImagem.add(produtoComImagem);
+                    }
+
+                }
             }
-            mv.setViewName("clientes/EnderecoExcluido");
-            /*
-             * tela de endereço excluido somente para testes em breve será substituida por
-             * uma tela mais adequada
-             */
+            // Cálculo do total dos produtos
+            BigDecimal total = BigDecimal.ZERO;
+            for (Carrinho carrinho : carrinhos) {
+                total = total.add(carrinho.getPreco());
+            }
+            mv.addObject("totalItens", total); // Adiciona o total dos produtos para exibição na página
+
+            mv.addObject("produtosComImagem", produtosComImagem); // Adiciona os produtos com imagem para exibição
+
+            mv.setViewName("clientes/ResumoPedido");
+
             return mv;
         } else {
-            mv.setViewName("Erro");
-            return mv;
+            return null;
+        }
+
+    }
+
+    public ModelAndView adcionaUm(@PathVariable Long carrinhoId, HttpSession session) {
+        System.out.println("entrei no metodo");
+        Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(carrinhoId);
+
+        if (carrinhoOptional.isPresent()) {
+            Carrinho carrinho = carrinhoOptional.get();
+            System.out.println("adicionando +1");
+
+            // Incrementa a quantidade em 1
+            int novaQuantidade = carrinho.getQuantidade() + 1;
+            carrinho.setQuantidade(novaQuantidade);
+
+            // Atualiza o preço do carrinho somente uma vez
+            BigDecimal precoProduto = carrinho.getEstoques().get(0).getPreco(); // Assumindo que o carrinho só tem um
+                                                                                // item
+            BigDecimal novoPreco = precoProduto.multiply(BigDecimal.valueOf(carrinho.getQuantidade()));
+            carrinho.setPreco(novoPreco);
+
+            carrinhoRepository.save(carrinho);
+
+            System.out.println("o id do cliente é: " + carrinho.getCliente().getId());
+
+            // Redireciona de volta para a página do resumo do pedido
+            return new ModelAndView("redirect:/cliente/carrinho/" + carrinho.getCliente().getId());
+        } else {
+            System.out.println("Carrinho não encontrado");
+            // Redireciona para uma página de erro ou outra página adequada
+            return new ModelAndView("redirect:/pagina-de-erro");
+        }
+    }
+
+    public ModelAndView removeUM(@PathVariable Long carrinhoId, HttpSession session) {
+        System.out.println("entrei no metodo");
+        Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(carrinhoId);
+
+        if (carrinhoOptional.isPresent()) {
+            Carrinho carrinho = carrinhoOptional.get();
+            System.out.println("removendo 1");
+
+            // Incrementa a quantidade em 1
+            int novaQuantidade = carrinho.getQuantidade() - 1;
+            carrinho.setQuantidade(novaQuantidade);
+
+            // Atualiza o preço do carrinho somente uma vez
+            BigDecimal precoProduto = carrinho.getEstoques().get(0).getPreco();
+            // Assumindo que o carrinho só tem um
+            // item
+            BigDecimal novoPreco = precoProduto.multiply(BigDecimal.valueOf(carrinho.getQuantidade()));
+            carrinho.setPreco(novoPreco);
+
+            carrinhoRepository.save(carrinho);
+            if (novaQuantidade == 0) {
+                removeCarrinho(carrinhoId, session);
+            }
+
+            System.out.println("o id do cliente é: " + carrinho.getCliente().getId());
+
+            // Redireciona de volta para a página do resumo do pedido
+            return new ModelAndView("redirect:/cliente/carrinho/" + carrinho.getCliente().getId());
+        } else {
+            System.out.println("Carrinho não encontrado");
+            // Redireciona para uma página de erro ou outra página adequada
+            return new ModelAndView("redirect:/pagina-de-erro");
+        }
+    }
+
+    public ModelAndView removeCarrinho(@PathVariable Long carrinhoId, HttpSession session) {
+        Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(carrinhoId);
+        if (carrinhoOptional.isPresent()) {
+            Carrinho carrinho = carrinhoOptional.get();
+            carrinhoRepository.deleteById(carrinhoId);
+            return new ModelAndView("redirect:/cliente/carrinho/" + carrinho.getCliente().getId());
+        }else{
+            return new ModelAndView("Erro");
         }
     }
 }

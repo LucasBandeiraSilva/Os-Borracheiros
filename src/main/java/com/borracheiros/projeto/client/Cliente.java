@@ -32,7 +32,7 @@ public class Cliente {
     private String nome;
     @OneToMany(mappedBy = "cliente")
     private List<Endereco> enderecos;
-@OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<Carrinho> carrinho;
 
 }

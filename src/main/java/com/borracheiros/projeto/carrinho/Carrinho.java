@@ -7,12 +7,14 @@ import java.util.List;
 import com.borracheiros.projeto.client.Cliente;
 import com.borracheiros.projeto.estoque.entities.Estoque;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -44,6 +46,8 @@ public class Carrinho {
     @ManyToOne
     private Cliente cliente;
 
-    
+    @Lob
+    @Column(length = 5242880)
+    private byte[] imagem;    
 
 }

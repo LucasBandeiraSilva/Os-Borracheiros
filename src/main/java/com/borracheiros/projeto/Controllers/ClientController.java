@@ -154,8 +154,8 @@ public class ClientController {
         return carrinhoService.adicionaProdutoCarrinho(id, session);
     }
     @GetMapping("/carrinho/{id}")
-    public ModelAndView verCarrinho(@PathVariable Long id){
-        return carrinhoService.verCarrinho(id);
+    public ModelAndView verCarrinho(@PathVariable Long id, HttpSession session){
+        return carrinhoService.verCarrinho(id, session);
     }
 
     @GetMapping("/endereco-padrao/{id}")
@@ -163,4 +163,17 @@ public class ClientController {
         return endereçoService.definirEnderecoPadrao(id);
     }
 
+    @GetMapping("/adicionarUm/{id}")
+    public ModelAndView adicionarUm(@PathVariable Long id, HttpSession session){
+        return carrinhoService.adcionaUm(id, session);
+    }
+    @GetMapping("/removeUm/{id}")
+    public ModelAndView removeUm(@PathVariable Long id, HttpSession session){
+        return carrinhoService.removeUM(id, session);
+    }
+    @GetMapping("/deletar/{id}")
+    public ModelAndView deletar(@PathVariable Long id, HttpSession session){
+        return carrinhoService.removeCarrinho(id, session);
+    }
+    
 }

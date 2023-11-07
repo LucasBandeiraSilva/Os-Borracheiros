@@ -18,7 +18,6 @@ public class EstoqueDto {
     private String descricaoDetalhada;
     private String descricao;
     @Lob
-
     private List<byte[]> imagem; 
 
     public Estoque toEstoque() {
