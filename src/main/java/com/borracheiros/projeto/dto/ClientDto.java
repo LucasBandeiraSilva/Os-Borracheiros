@@ -1,5 +1,6 @@
 package com.borracheiros.projeto.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.borracheiros.projeto.client.Cliente;
@@ -39,7 +40,7 @@ public class ClientDto {
         cliente.setGenero(this.genero);
         cliente.setSenha(this.senha);
         cliente.setNome(this.nome);
-
+        
         return cliente;
     }
 }

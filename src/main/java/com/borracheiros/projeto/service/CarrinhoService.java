@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.carrinho.Carrinho;
@@ -112,6 +113,9 @@ public class CarrinhoService {
                     if (produtoComImagem != null) {
                         produtosComImagem.add(produtoComImagem);
                     }
+                    if (carrinho.getFrete() != null) {
+                        mv.addObject("totalFrete", carrinho.getFrete());
+                    }
 
                 }
             }
@@ -120,6 +124,9 @@ public class CarrinhoService {
             for (Carrinho carrinho : carrinhos) {
                 total = total.add(carrinho.getPreco());
             }
+
+            // Adiciona o valor do frete ao totalFrete
+
             mv.addObject("totalItens", total); // Adiciona o total dos produtos para exibição na página
 
             mv.addObject("produtosComImagem", produtosComImagem); // Adiciona os produtos com imagem para exibição
@@ -146,40 +153,33 @@ public class CarrinhoService {
             carrinho.setQuantidade(novaQuantidade);
 
             // Atualiza o preço do carrinho somente uma vez
-            BigDecimal precoProduto = carrinho.getEstoques().get(0).getPreco(); // Assumindo que o carrinho só tem um
-                                                                                // item
+            BigDecimal precoProduto = carrinho.getEstoques().get(0).getPreco();
+
             BigDecimal novoPreco = precoProduto.multiply(BigDecimal.valueOf(carrinho.getQuantidade()));
             carrinho.setPreco(novoPreco);
 
             carrinhoRepository.save(carrinho);
 
-            System.out.println("o id do cliente é: " + carrinho.getCliente().getId());
-
             // Redireciona de volta para a página do resumo do pedido
             return new ModelAndView("redirect:/cliente/carrinho/" + carrinho.getCliente().getId());
         } else {
-            System.out.println("Carrinho não encontrado");
+
             // Redireciona para uma página de erro ou outra página adequada
             return new ModelAndView("redirect:/pagina-de-erro");
         }
     }
 
     public ModelAndView removeUM(@PathVariable Long carrinhoId, HttpSession session) {
-        System.out.println("entrei no metodo");
         Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(carrinhoId);
 
         if (carrinhoOptional.isPresent()) {
             Carrinho carrinho = carrinhoOptional.get();
-            System.out.println("removendo 1");
 
-            // Incrementa a quantidade em 1
             int novaQuantidade = carrinho.getQuantidade() - 1;
             carrinho.setQuantidade(novaQuantidade);
 
-            // Atualiza o preço do carrinho somente uma vez
             BigDecimal precoProduto = carrinho.getEstoques().get(0).getPreco();
-            // Assumindo que o carrinho só tem um
-            // item
+
             BigDecimal novoPreco = precoProduto.multiply(BigDecimal.valueOf(carrinho.getQuantidade()));
             carrinho.setPreco(novoPreco);
 
@@ -188,12 +188,10 @@ public class CarrinhoService {
                 removeCarrinho(carrinhoId, session);
             }
 
-            System.out.println("o id do cliente é: " + carrinho.getCliente().getId());
-
             // Redireciona de volta para a página do resumo do pedido
             return new ModelAndView("redirect:/cliente/carrinho/" + carrinho.getCliente().getId());
         } else {
-            System.out.println("Carrinho não encontrado");
+
             // Redireciona para uma página de erro ou outra página adequada
             return new ModelAndView("redirect:/pagina-de-erro");
         }
@@ -205,8 +203,47 @@ public class CarrinhoService {
             Carrinho carrinho = carrinhoOptional.get();
             carrinhoRepository.deleteById(carrinhoId);
             return new ModelAndView("redirect:/cliente/carrinho/" + carrinho.getCliente().getId());
-        }else{
+        } else {
             return new ModelAndView("Erro");
         }
     }
+
+    public ModelAndView calcularFrete(@PathVariable Long id, @RequestParam("frete") String freteSelecionado) {
+        BigDecimal frete = new BigDecimal(freteSelecionado);
+
+        Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(id);
+        if (carrinhoOptional.isPresent()) {
+            Carrinho carrinho = carrinhoOptional.get();
+
+            BigDecimal valorTotal = carrinho.getPreco();
+
+            if (carrinho.getFrete() == null || !carrinho.getFrete().equals(frete)) {
+                BigDecimal freteAntigo = carrinho.getFrete();
+
+                if (freteAntigo != null) {
+                    // Subtrai o frete antigo do valor total
+                    valorTotal = valorTotal.subtract(freteAntigo);
+                }
+
+                // Adiciona o novo frete ao valor total
+                valorTotal = valorTotal.add(frete);
+
+                // Atualiza o frete no carrinho
+                carrinho.setFrete(frete);
+
+                // Atualiza o valor total no carrinho
+                carrinho.setPreco(valorTotal);
+
+                // Salva as alterações no carrinho
+                this.carrinhoRepository.saveAndFlush(carrinho);
+            }
+
+            // Redireciona para a página do carrinho do cliente
+            return new ModelAndView("redirect:/cliente/carrinho/" + carrinho.getCliente().getId());
+        }
+        return new ModelAndView("erro");
+    }
+
+    
 }
+

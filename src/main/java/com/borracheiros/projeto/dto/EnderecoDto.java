@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EnderecoDto {
-    private int cep;
+    private Long cep;
     private String logradouro;
     private String complemento;
     private String Bairro;
@@ -36,16 +36,5 @@ public class EnderecoDto {
         endereco.setTipoEndereco(this.tipoEndereco);
         return endereco;
     }
-    // public void fromEndereco(Endereco endereco){
-    //     this.cep = getCep();
-    //     this.logradouro = getLogradouro();
-    //     this.complemento = getComplemento();
-    //     this.Bairro = getBairro();
-    //     this.numero = getNumero();
-    //     this.cidade = getCidade();
-    //     this.endereco = getEndereco();
-    //     this.statusEndereco = isStatusEndereco();
-    //     this.enderecoPadrao = getEnderecoPadrao();
-    //     this.enderecoFaturamento = getEnderecoFaturamento();
-    // }
+    
 }

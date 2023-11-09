@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.carrinho.Carrinho;
 import com.borracheiros.projeto.client.Cliente;
@@ -36,13 +37,12 @@ public class ClienteService {
 
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public String createUser(@Valid @ModelAttribute("clientDto") ClientDto clientDto,EnderecoDto enderecoDto,
+    public String createUser(@Valid @ModelAttribute("clientDto") ClientDto clientDto, EnderecoDto enderecoDto,
             BindingResult bindingResult,
             Model model) {
 
         Cliente cliente = clientDto.toCliente();
         Endereco endereco = enderecoDto.toEndereco();
-        
 
         if (clientDto.getId() != null) {
             System.out.println("editando.....");
@@ -129,7 +129,6 @@ public class ClienteService {
                     session.removeAttribute("carrinhoNaoAutenticadoID");
                 }
             }
-           
 
             session.setAttribute("idCliente", cliente.getId());
             session.setAttribute("cliente", cliente);
@@ -142,4 +141,23 @@ public class ClienteService {
             return "clientes/LoginCliente";
         }
     }
+
+        public ModelAndView selecionarEndereco(@PathVariable Long id) {
+
+            
+            Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
+
+            if (clienteOptional.isPresent()) {
+                Cliente cliente = clienteOptional.get();
+                
+                ModelAndView mv = new ModelAndView("clientes/EnderecoCheckout");
+                mv.addObject("cliente", cliente);
+                mv.addObject("carrinhos", cliente.getCarrinho());
+                return mv;
+            }
+
+            return new ModelAndView("erro");
+        }
+
+    
 }

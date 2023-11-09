@@ -34,5 +34,5 @@ public class Cliente {
     private List<Endereco> enderecos;
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<Carrinho> carrinho;
-
+    
 }

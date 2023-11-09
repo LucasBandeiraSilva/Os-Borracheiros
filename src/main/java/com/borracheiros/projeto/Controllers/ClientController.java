@@ -1,5 +1,6 @@
 package com.borracheiros.projeto.Controllers;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,5 +176,12 @@ public class ClientController {
     public ModelAndView deletar(@PathVariable Long id, HttpSession session){
         return carrinhoService.removeCarrinho(id, session);
     }
-    
+    @PostMapping("/frete/{id}")
+    public ModelAndView calcularFrete(@PathVariable Long id,@RequestParam("frete") String freteSelecionado){
+        return carrinhoService.calcularFrete(id,freteSelecionado);
+    }
+    @GetMapping("/endereco/selecionar/{id}")
+    public ModelAndView selecionarEndereco(@PathVariable Long id){
+        return clienteService.selecionarEndereco(id);
+    }
 }

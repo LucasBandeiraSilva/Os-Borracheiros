@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.borracheiros.projeto.client.Cliente;
+import com.borracheiros.projeto.client.endereco.Endereco;
 import com.borracheiros.projeto.estoque.entities.Estoque;
 
 import jakarta.persistence.Column;
@@ -46,8 +47,12 @@ public class Carrinho {
     @ManyToOne
     private Cliente cliente;
 
-    @Lob
-    @Column(length = 5242880)
-    private byte[] imagem;    
+    private BigDecimal frete;
 
+    @ManyToOne
+    @JoinColumn(name = "endereco_id")
+    private Endereco endereco;
+
+
+    private Long codigoPedido;
 }
