@@ -23,23 +23,27 @@
           </tr>
         </thead>
         <tbody>
-            <tr th:each="endereco : ${cliente.enderecos}">
-              <td th:text="${endereco.logradouro}"></td>
-              <td th:text="${endereco.cidade}"></td>
-              <td th:text="${endereco.complemento}"></td>
-              <td>
-                <div th:each="carrinho : ${cliente.carrinho}">
-                  <a th:href="@{'/cliente/endereco/associarCarrinho/' + ${endereco.id} + '/associarCarrinho/' + ${carrinho.id}}" class="btn btn-outline-success">
-                    Escolher este
-                  </a>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-          
+          <tr th:each="endereco : ${cliente.enderecos}">
+            <td th:text="${endereco.logradouro}"></td>
+            <td th:text="${endereco.cidade}"></td>
+            <td th:text="${endereco.complemento}"></td>
+            <td>
+              <div th:each="carrinho : ${cliente.carrinho}">
+                <a
+                th:href="@{'/cliente/endereco/associarCarrinho/' + ${endereco.id} + '/' + ${cliente.carrinho[0].id}}"
+                  class="btn btn-outline-success"
+                >
+                  Escolher este
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
       </table>
 
-      <a th:href="@{'/cliente/carrinho/selecionar'}" class="btn btn-outline-warning"
+      <a
+        th:href="@{'/cliente/carrinho/selecionar'}"
+        class="btn btn-outline-warning"
         >Voltar para o Carrinho</a
       >
     </div>

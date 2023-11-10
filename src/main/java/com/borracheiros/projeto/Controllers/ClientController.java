@@ -1,6 +1,5 @@
 package com.borracheiros.projeto.Controllers;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,5 +182,21 @@ public class ClientController {
     @GetMapping("/endereco/selecionar/{id}")
     public ModelAndView selecionarEndereco(@PathVariable Long id){
         return clienteService.selecionarEndereco(id);
+    }
+    @GetMapping("/endereco/associarCarrinho/{enderecoId}/{carrinhoId}")
+    public ModelAndView associarCarrinhoEndereco(@PathVariable Long enderecoId, @PathVariable Long carrinhoId,HttpSession session){
+        return carrinhoService.associarEnderecoAoCarrinho(enderecoId, carrinhoId, session);
+    }
+    @PostMapping("/resumo/{id}")
+    public ModelAndView resumoPedido(@PathVariable Long id){
+        return carrinhoService.resumoPedido(id);
+    }
+    @GetMapping("/finalizado/{id}")
+    public ModelAndView concluirPedido(@PathVariable Long id){
+        return carrinhoService.concluirPedido(id);
+    }
+    @GetMapping("/compras/{id}")
+    public ModelAndView verPedido(@PathVariable Long id){
+        return carrinhoService.verPedido(id);
     }
 }

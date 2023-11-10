@@ -66,15 +66,15 @@
           >
             Olá,
 
-            <span th:text="${nomeUsuario}"></span>!
-            <button class="btn btn-warning ms-3">
+            <span class="" th:text="${nomeUsuario}"></span>!
+            <button class="btn btn-danger ms-3">
               <a
                 class="text-white p"
                 style="text-decoration: none"
                 th:href="@{/cliente/sair}"
                 target="_self"
                 rel="noopener noreferrer"
-                >sair?</a
+                >sair</a
               >
             </button>
             <button class="btn btn-success">
@@ -82,6 +82,13 @@
                 class="text-white text-decoration-none"
                 th:href="@{/cliente/editar/{id}(id=${cliente.id})}"
                 >Editar dados</a
+              >
+            </button>
+            <button class="btn btn-warning">
+              <a
+                class="text-white text-decoration-none"
+                th:href="@{/cliente/compras/{id}(id=${cliente.id})}"
+                >Meus pedidos</a
               >
             </button>
           </div>

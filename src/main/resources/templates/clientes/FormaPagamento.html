@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>Formulário de Pagamento</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Formulário de Pagamento</h1>
+      <h3 class="ms-3">
+       id
+        <span class="badge text-bg-primary" th:text="${id}"></span>
+      </h3>
+      <form th:action="@{'/cliente/resumo/'+ ${id}}" method="POST">
+        <div class="mb-3">
+          <label for="tipoPagamento" class="form-label"
+            >Escolha o tipo de pagamento</label
+          >
+          <select
+            name="tipoPagamento"
+            class="form-select"
+            id="tipoPagamento"
+            onchange="showPaymentForm()"
+            required
+          >
+            <option selected>selecione um meio de pagamento</option>
+            <option value="boleto">Boleto</option>
+            <option value="cartao">Cartão de Crédito</option>
+          </select>
+        </div>
+
+        <!-- Boleto -->
+        <div id="boletoForm" style="display: none">
+          <div class="mb-3">
+            <label for="campoBoleto" class="form-label">Número do Boleto</label>
+            <input type="text" class="form-control" id="campoBoleto" readonly />
+          </div>
+          <button
+            type="button"
+            class="btn btn-outline-warning mb-3"
+            onclick="gerarNumeroBoleto()"
+          >
+            Gerar Boleto
+          </button>
+        </div>
+
+        <!-- Cartão de Crédito -->
+        <div id="cartaoForm" style="display: none">
+          <div class="mb-3">
+            <label for="numeroCartao" class="form-label"
+              >Número do Cartão</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="numeroCartao"
+              placeholder="Número do Cartão"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="dataValidade" class="form-label"
+              >Data de Validade</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="dataValidade"
+              placeholder="MM/AAAA"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="cvv" class="form-label">CVV</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cvv"
+              placeholder="CVV"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="cvv" class="quantidade de parcelas"
+              >Selecione a quantidade de parcelas</label
+            >
+            <select
+              name="qtdeParcelas"
+              class="form-select"
+              id="tipoPagamento"
+              onchange="showPaymentForm()"
+              
+            >
+              <option selected >selecione a quantidade de parcelas</option>
+              <option value="0">a vista</option>
+              <option value="1">1 vez no cartão</option>
+              <option value="2">2 vezes no cartão</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">avançar</button>
+      </form>
+    </div>
+
+    <script src="/FormaPagamento.js"></script>
+  </body>
+</html>

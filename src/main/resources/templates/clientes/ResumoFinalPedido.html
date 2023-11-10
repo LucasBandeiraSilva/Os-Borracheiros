@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Resumo Final do Pedido</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="mb-4">Resumo Final do Pedido</h1>
+
+      <table class="table text-center">
+        <thead>
+          <tr>
+            <th scope="col">Nome do Produto</th>
+            <th scope="col">quantidade</th>
+            <th scope="col">imagem</th>
+            <th scope="col">Preço</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr th:each="pedido : ${pedidos}">
+            <td th:text="${pedido.nome}"></td>
+            <td th:text="${pedido.quantidade}"></td>
+            
+
+            <td>
+              <img
+                      th:each="produto : ${produtosComImagem}"
+                      th:if="${produto.nome == pedido.nome}"
+                      th:src="@{/imagem/{id}(id=${produto.id})}"
+                      alt="Imagem do Produto"
+                      style="height: 100px; width: 100px"
+              />
+          </td>
+            <td th:text="${pedido.preco}"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h5>
+        Total: R$
+        <span th:text="${valorTotal}"></span>
+      </h5>
+
+      <a class="btn btn-success mt-3" th:href="@{/cliente/finalizado/{id}(id=${idCarrinho})}">Concluir compra</a>
+
+    </div>
+  </body>
+</html>
