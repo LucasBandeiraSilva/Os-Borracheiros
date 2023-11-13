@@ -59,4 +59,7 @@ public class Carrinho {
     private String StatusPagamento;
 
     private BigDecimal valorTotal;
+
+    private java.sql.Date dataPedido;
+
 }

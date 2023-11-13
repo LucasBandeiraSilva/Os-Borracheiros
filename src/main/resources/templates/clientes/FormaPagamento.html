@@ -14,10 +14,7 @@
   <body>
     <div class="container mt-5">
       <h1>Formulário de Pagamento</h1>
-      <h3 class="ms-3">
-       id
-        <span class="badge text-bg-primary" th:text="${id}"></span>
-      </h3>
+     
       <form th:action="@{'/cliente/resumo/'+ ${id}}" method="POST">
         <div class="mb-3">
           <label for="tipoPagamento" class="form-label"
@@ -31,8 +28,8 @@
             required
           >
             <option selected>selecione um meio de pagamento</option>
-            <option value="boleto">Boleto</option>
-            <option value="cartao">Cartão de Crédito</option>
+            <option th:value="boleto">Boleto</option>
+            <option th:value="cartao">Cartão de Crédito</option>
           </select>
         </div>
 

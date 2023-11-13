@@ -9,6 +9,7 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="/endereco.css">
   </head>
   <body>
     <div class="container">
@@ -30,8 +31,9 @@
             <td>
               <div th:each="carrinho : ${cliente.carrinho}">
                 <a
-                th:href="@{'/cliente/endereco/associarCarrinho/' + ${endereco.id} + '/' + ${cliente.carrinho[0].id}}"
+                  th:href="@{'/cliente/endereco/associarCarrinho/' + ${endereco.id} + '/' + ${cliente.carrinho[0].id}}"
                   class="btn btn-outline-success"
+                  id="btn"
                 >
                   Escolher este
                 </a>
@@ -46,6 +48,46 @@
         class="btn btn-outline-warning"
         >Voltar para o Carrinho</a
       >
+      <a
+        th:href="@{'/cliente/adicionar-enderecoEntrega/' + ${cliente.id}}"
+        class="btn btn-success ms-3"
+        >Adicionar Endereço</a
+      >
+      <label class="form-label" for="cep">Cep</label>
+      <!-- Verifica se há pelo menos um endereço na lista -->
+      <input
+        style="width: 35%"
+        class="inputs required form-control"
+        type="number"
+        name="cep"
+        id="cep"
+        placeholder="Somente números"
+      />
+      <span class="span-required">o cep não é válido!!!</span>
+
+      <!-- Mova este bloco fora do loop th:each -->
+      <form th:action="@{'/cliente/frete/'+ ${carrinhos[0].id}}" method="POST">
+        <div id="freteContainer" th:if="${frete == null}">
+          <label for="frete">Selecione uma opção de frete:</label>
+          <select
+            class="form-select w-50"
+            name="frete"
+            id="frete"
+            th:object="${carrinho}"
+          >
+            <option th:value="0.00">Selecione o frete</option>
+            <option th:value="5.00">Frete Econômico - R$ 5,00</option>
+            <option th:value="10.00">Frete Padrão - R$ 10,00</option>
+            <option th:value="25.00">Frete Expresso - R$ 25,00</option>
+            <!-- Outras opções de frete com valores correspondentes -->
+          </select>
+          <button type="submit" class="btn btn-success mt-2">
+            Calcular Frete
+          </button>
+        </div>
+      </form>
     </div>
+    <script src="/CheckoutFrete.js"></script>
+
   </body>
 </html>

@@ -18,8 +18,9 @@
         <thead>
           <tr>
             <th scope="col">Nome do Produto</th>
-            <th scope="col">quantidade</th>
             <th scope="col">imagem</th>
+            <th scope="col">quantidade</th>
+            <th scope="col">forma de pagamento</th>
             <th scope="col">Preço</th>
           </tr>
         </thead>
@@ -27,18 +28,20 @@
         <tbody>
           <tr th:each="pedido : ${pedidos}">
             <td th:text="${pedido.nome}"></td>
-            <td th:text="${pedido.quantidade}"></td>
-            
 
             <td>
               <img
-                      th:each="produto : ${produtosComImagem}"
-                      th:if="${produto.nome == pedido.nome}"
-                      th:src="@{/imagem/{id}(id=${produto.id})}"
-                      alt="Imagem do Produto"
-                      style="height: 100px; width: 100px"
+                th:each="produto : ${produtosComImagem}"
+                th:if="${produto.nome == pedido.nome}"
+                th:src="@{/imagem/{id}(id=${produto.id})}"
+                alt="Imagem do Produto"
+                style="height: 100px; width: 100px"
               />
-          </td>
+            </td>
+
+            <td th:text="${pedido.quantidade}"></td>
+
+            <td th:text="${pedido.tipoPagamento}"></td>
             <td th:text="${pedido.preco}"></td>
           </tr>
         </tbody>
@@ -49,8 +52,11 @@
         <span th:text="${valorTotal}"></span>
       </h5>
 
-      <a class="btn btn-success mt-3" th:href="@{/cliente/finalizado/{id}(id=${idCarrinho})}">Concluir compra</a>
-
+      <a
+        class="btn btn-success mt-3"
+        th:href="@{/cliente/finalizado/{id}(id=${idCarrinho})}"
+        >Concluir compra</a
+      >
     </div>
   </body>
 </html>

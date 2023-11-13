@@ -1,53 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <title>Meus Pedidos</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <title>Meus Pedidos</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Meus Pedidos</h2>
+      <br />
 
-<div class="container mt-5">
-  <h2>Meus Pedidos</h2>
-  <h5>codigo do pedido é: 
-    <div th:each="pedido : ${carrinho}">
-      <span th:text="${pedido.codigoPedido}"></span> <br>
-       <span class="text-danger" th:text="${pedido.StatusPagamento}"></span>
+      <span class="h2 mt-2" th:text="${nomeCliente}"></span>
+      <table class="table">
+        <thead>
+          <tr class="text-center">
+            <th>ID do Pedido</th>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Total</th>
+            <th>forma de pagamento</th>
+            <th>Data do Pedido</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr th:each="pedido : ${carrinho}">
+            <td th:text="${pedido.codigoPedido}"></td>
+            <td th:text="${pedido.nome}"></td>
+            <td th:text="${pedido.quantidade}"></td>
+            <td th:text="${pedido.preco}"></td>
+            <td th:text="${pedido.tipoPagamento}"></td>
+            <td
+              th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
+            ></td>
+            <td class="text-info" th:text="${pedido.StatusPagamento}">
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </h5>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>ID do Pedido</th>
-        <th>Imagem</th>
-        <th>Produto</th>
-        <th>Quantidade</th>
-      </tr>
-    </thead>
-    <tbody>
-
-      <tr th:each="pedido : ${carrinho}">
-        <td th:text="${pedido.id}"></td>
-        <td>
-          <img
-                  th:each="produto : ${produtosComImagem}"
-                  th:if="${produto.nome == pedido.nome}"
-                  th:src="@{/imagem/{id}(id=${produto.id})}"
-                  alt="Imagem do Produto"
-                  style="height: 100px; width: 100px"
-          />
-      </td>
-        <td th:text="${pedido.nome}"></td>
-        <td th:text="${pedido.quantidade}"></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-</body>
+  </body>
 </html>

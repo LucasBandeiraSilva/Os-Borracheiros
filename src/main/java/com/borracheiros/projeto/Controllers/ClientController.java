@@ -141,11 +141,21 @@ public class ClientController {
     public ModelAndView updateEndereco(@PathVariable("id") Long id, Model model) {
         return endereçoService.updateEndereco(id, model);
     }
+    @GetMapping("/adicionar-enderecoEntrega/{id}")
+    public ModelAndView addEnderecoEntreg(@PathVariable("id") Long id) {
+        return endereçoService.addEntrega(id);
+    }
+    
 
     @PostMapping("/adicionar-endereco")
     public String addEndereco(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
             @RequestParam("clienteId") Long clienteId) {
         return endereçoService.addEndereco(enderecoDto, clienteId);
+    }
+    @PostMapping("/adicionar-enderecoEntrega")
+    public String salvarEnderecoEntrega(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
+            @RequestParam("clienteId") Long clienteId) {
+        return endereçoService.addEnderecoEntrega(enderecoDto, clienteId);
     }
 
     @GetMapping("/adicionar-carrinho/{id}")
@@ -156,6 +166,10 @@ public class ClientController {
     @GetMapping("/carrinho/{id}")
     public ModelAndView verCarrinho(@PathVariable Long id, HttpSession session){
         return carrinhoService.verCarrinho(id, session);
+    }
+    @GetMapping("/anonimo/carrinho/{id}")
+    public ModelAndView verCarrinhoNaoLogado(@PathVariable Long id, HttpSession session){
+        return carrinhoService.verCarrinhoNaoLogado(id);
     }
 
     @GetMapping("/endereco-padrao/{id}")
@@ -188,8 +202,8 @@ public class ClientController {
         return carrinhoService.associarEnderecoAoCarrinho(enderecoId, carrinhoId, session);
     }
     @PostMapping("/resumo/{id}")
-    public ModelAndView resumoPedido(@PathVariable Long id){
-        return carrinhoService.resumoPedido(id);
+    public ModelAndView resumoPedido(@PathVariable Long id,@RequestParam("tipoPagamento") String tipoPagamento){
+        return carrinhoService.resumoPedido(id,tipoPagamento);
     }
     @GetMapping("/finalizado/{id}")
     public ModelAndView concluirPedido(@PathVariable Long id){

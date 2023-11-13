@@ -104,6 +104,7 @@ public class ClienteService {
         }
         return "Erro";
     }
+    
 
     public String validacaoLogin(@RequestParam("email") String email, @RequestParam("senha") String senha,
             HttpSession session, Model model) {

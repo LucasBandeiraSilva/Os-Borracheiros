@@ -12,22 +12,19 @@
     <link rel="stylesheet" href="/ResumoPedido.css" />
   </head>
   <body>
-    <h1>Detalhes do Cliente</h1>
-    <p>Nome do Cliente: <span th:text="${cliente.nome}"></span></p>
-
     <h2>Itens do Carrinho</h2>
     <table class="table table-bordered text-center">
       <thead>
         <tr>
           <th>Nome do Produto</th>
           <th>Quantidade</th>
-          <th>Acções</th>
+          <th>Ações</th>
           <th>Preço</th>
           <th>Imagem</th>
         </tr>
       </thead>
       <tbody>
-        <tr th:each="item : ${carrinhos}">
+        <tr th:each="item : ${carrinhos.estoque}">
           <td th:text="${item.nome}"></td>
           <td>
             <span class="ms-4" th:text="${item.quantidade}"></span>
@@ -68,21 +65,21 @@
       class="d-flex row justify-content-around align-items-center g-2 border"
     >
       <div class="col">
-        
+        <h3>
+          Frete dos Produtos R$
+          <span class="badge text-bg-primary" th:text="${carrinhos.totalFrete}"></span>
+        </h3>
         <h3 class="ms-3">
           Total de Itens R$
-          <span class="badge text-bg-primary" th:text="${totalItens}"></span>
+          <span class="badge text-bg-primary" th:text="${carrinhos.totalItens}"></span>
         </h3>
       </div>
 
       <div class="col-md-auto me-3">
-        <a
-          class="btn btn-outline-success"
-          id="btn"
-          th:href="@{/cliente/endereco/selecionar/{id}(id=${cliente.id})}"
-          >avancar</a
-        >
+        <a class="btn btn-outline-success" id="btn" th:href="@{/}">avançar</a>
       </div>
     </div>
+
+    <script src="/CheckoutFrete.js"></script>
   </body>
 </html>

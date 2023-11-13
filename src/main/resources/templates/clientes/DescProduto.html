@@ -22,7 +22,12 @@
     <header>
       <!-- place navbar here -->
       <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-        <a class="navbar-brand ms-4" href="#"><img src="/shoes.png" alt="Logo For Shoe Store@clipartmax.com" style="width: 200px; height: 100px;"></a>
+        <a class="navbar-brand ms-4" href="#"
+          ><img
+            src="/shoes.png"
+            alt="Logo For Shoe Store@clipartmax.com"
+            style="width: 200px; height: 100px"
+        /></a>
         <button
           class="navbar-toggler d-lg-none"
           type="button"
@@ -42,15 +47,15 @@
           </ul>
           <form class="d-flex my-2 my-lg-0">
             <a
-              th:href="@{/}"
+              th:href="@{'/cliente/anonimo/carrinho/' + ${produto.id}}"
               target="_blank"
               rel="noopener noreferrer"
-              style="pointer-events: none"
+              class="mt-auto mb-auto me-4"
               ><i
-                class="fa-solid fa-cart-shopping fa-2xl m-auto me-4"
+                class="fa-solid fa-cart-shopping fa-xl"
                 style="color: #f1f2f3"
-              ></i
-            ></a>
+              ></i>
+            </a>
             <span class="me-4 text-light" id="cart-item-count">0</span>
           </form>
         </div>
@@ -80,10 +85,10 @@
               <div class="card-body d-flex flex-column justify-content-center">
                 <h3 class="card-title" th:text="'R$ ' + ${produto.preco}"></h3>
                 <a
-                class="btn btn-success ms-3"
-                th:href="@{'/cliente/adicionar-carrinho/' + ${produto.id}}"
-                >comprar</a
-              >
+                  class="btn btn-success ms-3"
+                  th:href="@{'/cliente/adicionar-carrinho/' + ${produto.id}}"
+                  >comprar</a
+                >
               </div>
             </div>
           </div>
@@ -118,6 +123,5 @@
       src="https://kit.fontawesome.com/de8b5f1e6f.js"
       crossorigin="anonymous"
     ></script>
-
   </body>
 </html>
