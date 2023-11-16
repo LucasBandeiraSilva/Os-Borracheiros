@@ -59,4 +59,9 @@ public class UserController {
     public void status(@RequestParam("id") Long id, @RequestParam("UsuarioStatus") boolean usuarioStatus) {
         usuarioService.status(id, usuarioStatus);
     }
+
+    @GetMapping("/pedidos")
+    public ModelAndView pedido(){
+        return usuarioService.listaPedidos();
+    }
 }

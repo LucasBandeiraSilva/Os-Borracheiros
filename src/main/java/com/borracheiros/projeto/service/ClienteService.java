@@ -104,61 +104,49 @@ public class ClienteService {
         }
         return "Erro";
     }
-    
 
     public String validacaoLogin(@RequestParam("email") String email, @RequestParam("senha") String senha,
-            HttpSession session, Model model) {
+        HttpSession session, Model model) {
 
-        Cliente cliente = clienteRepository.findByEmail(email);
+    Cliente cliente = clienteRepository.findByEmail(email);
 
-        if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
-            Long carrinhoNaoAutenticadoID = (Long) session.getAttribute("carrinhoNaoAutenticadoID");
+    if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
+        Long carrinhoNaoAutenticadoID = (Long) session.getAttribute("carrinhoNaoAutenticadoID");
 
-            if (carrinhoNaoAutenticadoID != null) {
-                System.out.println("vOU SALVAR O CARRINHO!");
-                // Recupere o carrinho não autenticado pelo ID
-                Carrinho carrinhoNaoAutenticado = carrinhoRepository.findById(carrinhoNaoAutenticadoID).orElse(null);
+        if (carrinhoNaoAutenticadoID != null) {
+            Carrinho carrinhoNaoAutenticado = carrinhoRepository.findById(carrinhoNaoAutenticadoID).orElse(null);
 
-                if (carrinhoNaoAutenticado != null) {
-                    // Defina o cliente associado ao carrinho como o cliente logado
-                    carrinhoNaoAutenticado.setCliente(cliente);
-
-                    // Salve o carrinho atualizado no banco de dados
-                    carrinhoRepository.save(carrinhoNaoAutenticado);
-
-                    // Remova o ID do carrinho não autenticado da sessão
-                    session.removeAttribute("carrinhoNaoAutenticadoID");
-                }
+            if (carrinhoNaoAutenticado != null) {
+                carrinhoNaoAutenticado.setCliente(cliente);
+                carrinhoRepository.save(carrinhoNaoAutenticado);
             }
-
-            session.setAttribute("idCliente", cliente.getId());
-            session.setAttribute("cliente", cliente);
-            session.setAttribute("nomeUsuario", cliente.getNome());
-            System.out.println("ID do cliente: " + cliente.getId());
-            System.out.println("Nome do cliente: " + cliente.getNome());
-            return "redirect:/cliente/logado";
-        } else {
-            model.addAttribute("loginMismatch", true);
-            return "clientes/LoginCliente";
         }
+
+        session.setAttribute("cliente", cliente);
+        session.setAttribute("nomeUsuario", cliente.getNome());
+        return "redirect:/cliente/logado";
+    } else {
+        model.addAttribute("loginMismatch", true);
+        return "clientes/LoginCliente";
+    }
+}
+
+
+
+    public ModelAndView selecionarEndereco(@PathVariable Long id) {
+
+        Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
+
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+
+            ModelAndView mv = new ModelAndView("clientes/EnderecoCheckout");
+            mv.addObject("cliente", cliente);
+            mv.addObject("carrinhos", cliente.getCarrinho());
+            return mv;
+        }
+
+        return new ModelAndView("erro");
     }
 
-        public ModelAndView selecionarEndereco(@PathVariable Long id) {
-
-            
-            Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
-
-            if (clienteOptional.isPresent()) {
-                Cliente cliente = clienteOptional.get();
-                
-                ModelAndView mv = new ModelAndView("clientes/EnderecoCheckout");
-                mv.addObject("cliente", cliente);
-                mv.addObject("carrinhos", cliente.getCarrinho());
-                return mv;
-            }
-
-            return new ModelAndView("erro");
-        }
-
-    
 }

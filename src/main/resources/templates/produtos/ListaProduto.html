@@ -64,7 +64,7 @@ thead th:nth-child(3) {
    
   <table>
     <thead>
-      <tr>
+      <tr class="text-center">
         <th scope="col-1">Id</th>
         <th scope="col-1">Nome</th>
         <th scope="col-1">Imagem</th>
@@ -76,7 +76,7 @@ thead th:nth-child(3) {
       </tr>
     </thead>
 
-    <tbody id="iproduto">
+    <tbody id="iproduto" class="text-center">
       <tr th:each="produto : ${produtos}">
         <td class="col-1" th:text="${produto.id}"></td>
         <td class="col-1" th:text="${produto.nome}"></td>

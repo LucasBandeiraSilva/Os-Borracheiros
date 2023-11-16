@@ -9,6 +9,7 @@ import com.borracheiros.projeto.client.endereco.Endereco;
 import com.borracheiros.projeto.estoque.entities.Estoque;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,13 +17,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 
+@Entity
 public class Carrinho {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,17 +33,15 @@ public class Carrinho {
 
     private String nome;
 
-     @ManyToMany
-    @JoinTable(name = "carrinho_estoque",
-        joinColumns = @JoinColumn(name = "carrinho_id"),
-        inverseJoinColumns = @JoinColumn(name = "estoque_id"))
+    @ManyToMany
+    @JoinTable(name = "carrinho_estoque", joinColumns = @JoinColumn(name = "carrinho_id"), inverseJoinColumns = @JoinColumn(name = "estoque_id"))
     private List<Estoque> estoques = new ArrayList<>();
 
     private Integer quantidade;
 
     private BigDecimal preco;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Cliente cliente;
 
     private BigDecimal frete;
@@ -48,7 +49,6 @@ public class Carrinho {
     @ManyToOne
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
-
 
     private Long codigoPedido;
 
@@ -61,5 +61,21 @@ public class Carrinho {
     private BigDecimal valorTotal;
 
     private java.sql.Date dataPedido;
+
+    
+
+    @Override
+public String toString() {
+    return "Carrinho{" +
+            "id=" + id +
+            ", nome='" + nome + '\'' +
+            ", quantidade=" + quantidade +
+            ", preco=" + preco +
+            ", cliente=" + (cliente != null ? cliente.getId() : "null") + // Evita referência cíclica
+            ", frete=" + frete +
+            // Adicione outros campos conforme necessário
+            '}';
+}
+
 
 }

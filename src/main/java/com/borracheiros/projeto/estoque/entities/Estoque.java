@@ -14,13 +14,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@ToString
+
 public class Estoque {
 
     @Id
@@ -50,5 +53,16 @@ public class Estoque {
 
    @ManyToMany(mappedBy = "estoques")
     private List<Carrinho> carrinhos = new ArrayList<>();
+
+    @Override
+public String toString() {
+    return "Estoque{" +
+            "id=" + id +
+            ", nome='" + nome + '\'' +
+            ", preco=" + preco +
+            ", quantidadeEstoque=" + quantidadeEstoque +
+            // Adicione outros campos conforme necessário
+            '}';
+}
 
 }

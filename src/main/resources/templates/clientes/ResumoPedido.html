@@ -55,7 +55,7 @@
             <img
               th:each="produto : ${produtosComImagem}"
               th:if="${produto.nome == item.nome}"
-              th:src="@{/imagem/{id}(id=${produto.id})}"
+              th:src="@{'/imagem/' + ${produto.id}}"
               alt="Imagem do Produto"
               style="height: 100px; width: 100px"
             />
@@ -63,6 +63,10 @@
         </tr>
       </tbody>
     </table>
+
+
+
+
 
     <div
       class="d-flex row justify-content-around align-items-center g-2 border"

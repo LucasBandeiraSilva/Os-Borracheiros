@@ -18,13 +18,13 @@
         <tr>
           <th>Nome do Produto</th>
           <th>Quantidade</th>
-          <th>Ações</th>
+          <th>Acções</th>
           <th>Preço</th>
           <th>Imagem</th>
         </tr>
       </thead>
       <tbody>
-        <tr th:each="item : ${carrinhos.estoque}">
+        <tr th:each="item : ${carrinhos}">
           <td th:text="${item.nome}"></td>
           <td>
             <span class="ms-4" th:text="${item.quantidade}"></span>
@@ -67,16 +67,18 @@
       <div class="col">
         <h3>
           Frete dos Produtos R$
-          <span class="badge text-bg-primary" th:text="${carrinhos.totalFrete}"></span>
+          <span class="badge text-bg-primary" th:text="${totalFrete}"></span>
         </h3>
         <h3 class="ms-3">
           Total de Itens R$
-          <span class="badge text-bg-primary" th:text="${carrinhos.totalItens}"></span>
+          <span class="badge text-bg-primary" th:text="${totalItens}"></span>
         </h3>
       </div>
 
+      
+
       <div class="col-md-auto me-3">
-        <a class="btn btn-outline-success" id="btn" th:href="@{/}">avançar</a>
+        <a class="btn btn-outline-success" id="btn" th:href="@{/}">avancar</a>
       </div>
     </div>
 
