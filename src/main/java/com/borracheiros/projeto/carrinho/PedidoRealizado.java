@@ -1,6 +1,7 @@
 package com.borracheiros.projeto.carrinho;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,6 @@ import com.borracheiros.projeto.client.Cliente;
 import com.borracheiros.projeto.client.endereco.Endereco;
 import com.borracheiros.projeto.estoque.entities.Estoque;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,17 +27,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 
-@Entity
-public class Carrinho {
+@Entity(name = "Pedido_realizado")
+public class PedidoRealizado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
-
-    @ManyToMany
-    @JoinTable(name = "carrinho_estoque", joinColumns = @JoinColumn(name = "carrinho_id"), inverseJoinColumns = @JoinColumn(name = "estoque_id"))
-    private List<Estoque> estoques = new ArrayList<>();
 
     private Integer quantidade;
 
@@ -64,21 +60,11 @@ public class Carrinho {
 
     private java.sql.Date dataPedido;
 
-    @OneToMany(mappedBy = "carrinho")
-    private List<PedidoRealizado> pedidosRealizados;
+    @ManyToOne
+    @JoinColumn(name = "carrinho_id")
+    private Carrinho carrinho;
 
-    @Override
-public String toString() {
-    return "Carrinho{" +
-            "id=" + id +
-            ", nome='" + nome + '\'' +
-            ", quantidade=" + quantidade +
-            ", preco=" + preco +
-            ", cliente=" + (cliente != null ? cliente.getId() : "null") + // Evita referência cíclica
-            ", frete=" + frete +
-            // Adicione outros campos conforme necessário
-            '}';
-}
-
+    @OneToMany(mappedBy = "pedidoRealizado")
+    private List<Endereco> enderecos;
 
 }

@@ -8,5 +8,7 @@ import com.borracheiros.projeto.client.Cliente;
 public interface CarrinhoRepository extends JpaRepository<Carrinho,Long> {
     Carrinho findByNome(String nome);
         List<Carrinho> findByCliente(Cliente cliente);
+        List<Carrinho> findAllByClienteId(Long clienteId);
+
 
 }

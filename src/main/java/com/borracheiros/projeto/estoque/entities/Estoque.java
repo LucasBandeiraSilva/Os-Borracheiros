@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.borracheiros.projeto.carrinho.Carrinho;
+import com.borracheiros.projeto.carrinho.PedidoRealizado;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,18 +52,19 @@ public class Estoque {
     @Column(length = 5242880)
     private byte[] imagem;
 
-   @ManyToMany(mappedBy = "estoques")
+    @ManyToMany(mappedBy = "estoques")
     private List<Carrinho> carrinhos = new ArrayList<>();
 
+
     @Override
-public String toString() {
-    return "Estoque{" +
-            "id=" + id +
-            ", nome='" + nome + '\'' +
-            ", preco=" + preco +
-            ", quantidadeEstoque=" + quantidadeEstoque +
-            // Adicione outros campos conforme necessário
-            '}';
-}
+    public String toString() {
+        return "Estoque{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", preco=" + preco +
+                ", quantidadeEstoque=" + quantidadeEstoque +
+                // Adicione outros campos conforme necessário
+                '}';
+    }
 
 }

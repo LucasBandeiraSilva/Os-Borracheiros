@@ -1,5 +1,6 @@
 package com.borracheiros.projeto.client.endereco;
 
+import com.borracheiros.projeto.carrinho.PedidoRealizado;
 import com.borracheiros.projeto.client.Cliente;
 
 import jakarta.persistence.Entity;
@@ -32,4 +33,8 @@ public class Endereco {
     @ManyToOne()
     @JoinColumn(name = "usuario_id")
     private Cliente cliente;
+    @ManyToOne
+    @JoinColumn(name = "pedidoRealizado_id")
+    private PedidoRealizado pedidoRealizado;
+
 }

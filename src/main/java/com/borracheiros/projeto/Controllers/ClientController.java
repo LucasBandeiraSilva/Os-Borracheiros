@@ -202,8 +202,8 @@ public class ClientController {
         return carrinhoService.associarEnderecoAoCarrinho(enderecoId, carrinhoId, session);
     }
     @PostMapping("/resumo/{id}")
-    public ModelAndView resumoPedido(@PathVariable Long id,@RequestParam("tipoPagamento") String tipoPagamento){
-        return carrinhoService.resumoPedido(id,tipoPagamento);
+    public ModelAndView resumoPedido(@PathVariable Long id,@RequestParam("tipoPagamento") String tipoPagamento,HttpSession session){
+        return carrinhoService.resumoPedido(id,tipoPagamento,session);
     }
     @GetMapping("/finalizado/{id}")
     public ModelAndView concluirPedido(@PathVariable Long id){

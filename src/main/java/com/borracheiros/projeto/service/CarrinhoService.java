@@ -1,6 +1,9 @@
 package com.borracheiros.projeto.service;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.carrinho.Carrinho;
+import com.borracheiros.projeto.carrinho.PedidoRealizado;
 import com.borracheiros.projeto.client.Cliente;
 import com.borracheiros.projeto.client.endereco.Endereco;
 import com.borracheiros.projeto.estoque.entities.Estoque;
@@ -20,7 +24,7 @@ import com.borracheiros.projeto.repositories.CarrinhoRepository;
 import com.borracheiros.projeto.repositories.ClienteRepository;
 import com.borracheiros.projeto.repositories.EnderecoRepository;
 import com.borracheiros.projeto.repositories.EstoqueRepository;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.borracheiros.projeto.repositories.PedidoRealizadoRepository;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -36,6 +40,8 @@ public class CarrinhoService {
     private CarrinhoRepository carrinhoRepository;
     @Autowired
     private EnderecoRepository enderecoRepository;
+    @Autowired
+    private PedidoRealizadoRepository pedidoRealizadoRepository;
 
     public ModelAndView adicionaProdutoCarrinho(Long id, HttpSession session) {
         ModelAndView mv = new ModelAndView();
@@ -348,14 +354,23 @@ public class CarrinhoService {
         return new ModelAndView("erro");
     }
 
-    public ModelAndView resumoPedido(@PathVariable Long id, @RequestParam("tipoPagamento") String tipoPagamento) {
+    public ModelAndView resumoPedido(@PathVariable Long id, @RequestParam("tipoPagamento") String tipoPagamento,
+            HttpSession session) {
 
+        Cliente clienteSession = (Cliente) session.getAttribute("cliente");
         ModelAndView mv = new ModelAndView();
+
+        // Verifica se o cliente está autenticado
+        if (clienteSession != null) {
+            System.out.println("Eu estou no resumo");
+        }
         Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(id);
         if (carrinhoOptional.isPresent()) {
             Carrinho carrinho = carrinhoOptional.get();
             Cliente carrinhoCliente = carrinho.getCliente();
+            Long idCliente = carrinhoCliente.getId();
             // Random random = new Random();
+
             carrinho.setTipoPagamento(tipoPagamento);
             this.carrinhoRepository.save(carrinho);
             List<Carrinho> pedidosCliente = carrinhoCliente.getCarrinho();
@@ -378,7 +393,8 @@ public class CarrinhoService {
 
             System.out.println("forma pagamento " + carrinho.getTipoPagamento());
             System.out.println("valor total: " + carrinho.getValorTotal());
-
+            System.out.println("id cliente: " + idCliente);
+            mv.addObject("idcliente", idCliente);
             mv.addObject("valorTotal", carrinho.getValorTotal());
             mv.addObject("pedidos", pedidosCliente);
             mv.addObject("produtosComImagem", produtosComImagem);
@@ -392,60 +408,99 @@ public class CarrinhoService {
         return null;
     }
 
-    public ModelAndView concluirPedido(@PathVariable Long id) {
+    public ModelAndView concluirPedido(@PathVariable Long clienteId) {
         ModelAndView mv = new ModelAndView();
 
-        Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(id);
-        if (carrinhoOptional.isPresent()) {
-            Carrinho carrinho = carrinhoOptional.get();
-            Cliente cliente = carrinho.getCliente();
-            String getNomeCliente = cliente.getNome();
-            carrinho.setCodigoPedido(Math.abs(new Random().nextLong()));
-            carrinho.setStatusPagamento("Aguardando o pagamento");
-            java.util.Date dataAtual = new java.util.Date();
-            java.sql.Date dataSql = new java.sql.Date(dataAtual.getTime());
-            carrinho.setDataPedido(dataSql);
+        // Variáveis a serem trazidas à tona
+        Cliente cliente = null;
+        String getNomeCliente = null;
 
-          
+        // Recupere todos os carrinhos do cliente
+        List<Carrinho> carrinhos = this.carrinhoRepository.findAllByClienteId(clienteId);
 
-            carrinhoRepository.save(carrinho);
+        for (Carrinho carrinho : carrinhos) {
+            cliente = carrinho.getCliente();
 
-            List<Estoque> produtos = estoqueRepository.findAll();
-            mv.addObject("produtos", produtos);
+            // Iterar sobre cada produto no carrinho
+            for (Estoque produto : carrinho.getEstoques()) {
+                PedidoRealizado pedidoRealizado = new PedidoRealizado();
+                pedidoRealizado.setCodigoPedido(Math.abs(new Random().nextLong()));
+                pedidoRealizado.setStatusPagamento("Aguardando o pagamento");
+                LocalDateTime horaAtualBrasilia = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+                Date sqlDate = Date.valueOf(horaAtualBrasilia.toLocalDate());
+                pedidoRealizado.setDataPedido(sqlDate);
 
-            mv.addObject("cliente", cliente);
-            mv.addObject("nomeUsuario", getNomeCliente);
-            mv.addObject("produtos", produtos);
+                pedidoRealizado.setCliente(cliente);
+                pedidoRealizado.setNome(produto.getNome());
 
-            mv.setViewName("clientes/CatalogoClienteLogado");
-            return mv;
+                pedidoRealizado.setQuantidade(carrinho.getQuantidade());
+                pedidoRealizado.setEndereco(carrinho.getEndereco());
+                pedidoRealizado.setTipoPagamento(carrinho.getTipoPagamento());
+                pedidoRealizado.setFrete(carrinho.getFrete());
 
+                // Salvar o pedido realizado para cada produto no carrinho
+                pedidoRealizadoRepository.save(pedidoRealizado);
+            }
+            //deleta o carrinho
+            carrinhoRepository.delete(carrinho);
         }
-        return new ModelAndView("Erro");
+
+        if (cliente != null) {
+            getNomeCliente = cliente.getNome(); 
+        }
+
+        List<Estoque> produtos = estoqueRepository.findAll();
+        mv.addObject("produtos", produtos);
+        mv.addObject("cliente", cliente);
+        mv.addObject("nomeUsuario", getNomeCliente);
+        mv.setViewName("clientes/CatalogoClienteLogado");
+        return mv;
     }
+
+    // public ModelAndView verPedido(@PathVariable Long id) {
+    // ModelAndView mv = new ModelAndView();
+    // Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+    // if (clienteOptional.isPresent()) {
+    // Cliente cliente = clienteOptional.get();
+    // List<Carrinho> carrinho = cliente.getCarrinho();
+    // List<Estoque> produtosComImagem = new ArrayList<>();
+    // for (Carrinho pedido : carrinho) {
+    // for (Estoque estoque : pedido.getEstoques()) {
+    // Estoque produtoComImagem =
+    // estoqueRepository.findById(estoque.getId()).orElse(null);
+    // if (produtoComImagem != null) {
+    // produtosComImagem.add(produtoComImagem);
+    // }
+    // }
+    // }
+
+    // mv.addObject("produtosComImagem", produtosComImagem);
+    // mv.addObject("nomeCliente", cliente.getNome());
+    // mv.addObject("carrinho", carrinho);
+    // mv.setViewName("clientes/MeusPedidos");
+    // return mv;
+    // }
+    // return null;
+    // }
 
     public ModelAndView verPedido(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView();
+
         Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
-            List<Carrinho> carrinho = cliente.getCarrinho();
-            List<Estoque> produtosComImagem = new ArrayList<>();
-            for (Carrinho pedido : carrinho) {
-                for (Estoque estoque : pedido.getEstoques()) {
-                    Estoque produtoComImagem = estoqueRepository.findById(estoque.getId()).orElse(null);
-                    if (produtoComImagem != null) {
-                        produtosComImagem.add(produtoComImagem);
-                    }
-                }
-            }
 
-            mv.addObject("produtosComImagem", produtosComImagem);
+            // Buscar pedidos realizados pelo cliente
+            List<PedidoRealizado> pedidosRealizados = pedidoRealizadoRepository.findByCliente(cliente);
+
+            mv.addObject("pedidosRealizados", pedidosRealizados);
             mv.addObject("nomeCliente", cliente.getNome());
-            mv.addObject("carrinho", carrinho);
             mv.setViewName("clientes/MeusPedidos");
             return mv;
         }
+
         return null;
     }
+
 }

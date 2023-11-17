@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.carrinho.Carrinho;
+import com.borracheiros.projeto.carrinho.PedidoRealizado;
 import com.borracheiros.projeto.dto.UserDto;
 import com.borracheiros.projeto.repositories.CarrinhoRepository;
+import com.borracheiros.projeto.repositories.PedidoRealizadoRepository;
 import com.borracheiros.projeto.repositories.RoleRepository;
 import com.borracheiros.projeto.repositories.UsuarioRepository;
 import com.borracheiros.projeto.users.entities.Role;
@@ -34,6 +36,9 @@ public class UsuarioService {
 
     @Autowired
     private CarrinhoRepository carrinhoRepository;
+
+    @Autowired
+    private PedidoRealizadoRepository pedidoRealizadoRepository;
 
     public void status(long id, boolean StatusUsuario) {
 
@@ -175,21 +180,13 @@ public class UsuarioService {
     }
     public ModelAndView listaPedidos(){
         ModelAndView mv = new ModelAndView();
-        List<Carrinho> carrinho = this.carrinhoRepository.findAll();
-        // Cálculo do total dos produtos
-            BigDecimal total = BigDecimal.ZERO;
-            for (Carrinho c : carrinho) {
-                total = total.add(c.getPreco());
-                c.setValorTotal(total);
-                System.out.println("valor total: " + c.getValorTotal());
-            }
+        List<PedidoRealizado> pedidoRealizado = this.pedidoRealizadoRepository.findAll();
         
-        if (carrinho.isEmpty()) {
+        if (pedidoRealizado.isEmpty()) {
             return new ModelAndView("Erro");
         }
         mv.setViewName("usuarios/ListaPedido");
-        mv.addObject("totalItens", total);
-        mv.addObject("carrinho", carrinho);
+        mv.addObject("carrinho", pedidoRealizado);
         return mv;
     }
 }

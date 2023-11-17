@@ -1,60 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    />
-    <title>Editar Pedidos</title>
-  </head>
-  <body>
-    <div class="container mt-5">
-      <h2>Editar Pedidos</h2>
-      <br />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <title>Lista de Pedidos</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Lista de Pedidos</h2>
+    <br/>
 
-      <table class="table">
+    <table class="table">
         <thead>
-          <tr class="text-center">
-            <th>ID do Pedido</th>
+        <tr class="text-center">
+            <th>Codigo do Pedido</th>
             <th>Produto</th>
             <th>Total</th>
             <th>Data do Pedido</th>
             <th>Status</th>
             <th>Ações</th>
-          </tr>
+        </tr>
         </thead>
         <tbody class="text-center">
-          <tr th:each="pedido : ${carrinho}">
+        <tr th:each="pedido : ${carrinho}" class="table-row mb-3">
             <td th:text="${pedido.codigoPedido}"></td>
             <td th:text="${pedido.nome}"></td>
-            <td
-              th:text="${pedido.codigoPedido != null ? pedido.preco.subtract(pedido.frete) : pedido.preco}"
-            ></td>
-            <td
-              th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
-            ></td>
-
-            <td class="text-info" th:text="${pedido.StatusPagamento}"></td>
+            <td th:text="${pedido.valorTotal}"></td>
+            <td th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"></td>
+            <td th:text="${pedido.StatusPagamento}"></td>
             <td>
-              <a
-                th:if="${pedido.codigoPedido != null}"
-                class="btn btn-outline-info"
-                th:href="@{/editarStatus/{id}(id=${pedido.id})}"
-                >Editar Pedido</a
-              >
+                <a th:if="${pedido.codigoPedido != null}"
+                   class="btn btn-outline-info"
+                   th:href="@{/editarStatus/{id}(id=${pedido.id})}">
+                    Editar Pedido
+                </a>
             </td>
-          </tr>
+        </tr>
         </tbody>
-      </table>
-      <h3 class="ms-3">
-        Total da compra R$
-        <span class="badge text-bg-primary" th:text="${totalItens}"></span>
-      </h3>
-    </div>
-  </body>
+    </table>
+</div>
+</body>
 </html>
