@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <link rel="stylesheet" href="/edicaoCliente.css" />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
+    />
+    <title>edição</title>
+  </head>
+  <style>
+    @media only screen and (max-width: 770px) {
+      #container {
+        height: 70vh;
+      }
+    }
+
+    @media only screen and (min-width: 1024px) {
+      #container {
+        margin-top: 20%;
+        height: 500px;
+      }
+    }
+  </style>
+  <body>
+    <main>
+      <div
+        class="container d-flex justify-content-center align-items-center"
+        style="height: 100vh"
+      >
+        <div class="row">
+          <div class="col-12">
+            <div
+              class="border container d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
+              id="container"
+            >
+              <form
+                th:object="${status}"
+                th:action="@{'/editar/pedido/' + ${status.id}}"
+                method="post"
+                id="form"
+              >
+                <input type="hidden" th:field="*{id}" />
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label for="StatusPagamento" class="form-label"
+                        >selecione o Status do pagamento</label
+                      >
+                      <select
+                        class="form-select form-select-lg"
+                        name="StatusPagamento"
+                        id=""
+                      >
+                        <option selected>Escolha o status</option>
+                        <option value="aguardando pagamento">
+                          aguardando pagamento
+                        </option>
+                        <option value="pagamento rejeitado">
+                          pagamento rejeitado
+                        </option>
+                        <option value="pagamento com sucesso">
+                          pagamento com sucesso
+                        </option>
+                        <option value="aguardando retirada">
+                          aguardando retirada
+                        </option>
+                        <option value="em transito">em transito</option>
+                        <option value="entregue">entregue</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary mt-3 w-100" type="submit">
+                  Enviar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="/EditarCliente.js"></script>
+  </body>
+</html>

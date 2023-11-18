@@ -133,7 +133,7 @@ public class UsuarioService {
 
                 return "Erro";
             }
-            
+
         }
         return null;
 
@@ -163,6 +163,7 @@ public class UsuarioService {
         }
         return null;
     }
+
     public ModelAndView ListaUsuario(HttpSession session) {
 
         ModelAndView mv = new ModelAndView();
@@ -178,15 +179,40 @@ public class UsuarioService {
         return mv;
 
     }
-    public ModelAndView listaPedidos(){
+
+    public ModelAndView listaPedidos() {
         ModelAndView mv = new ModelAndView();
         List<PedidoRealizado> pedidoRealizado = this.pedidoRealizadoRepository.findAll();
-        
+
         if (pedidoRealizado.isEmpty()) {
             return new ModelAndView("Erro");
         }
         mv.setViewName("usuarios/ListaPedido");
         mv.addObject("carrinho", pedidoRealizado);
         return mv;
+    }
+
+    public ModelAndView editarStatusPedido(@PathVariable Long id) {
+        ModelAndView mv = new ModelAndView();
+        Optional<PedidoRealizado> pedidoRealizadoOptional = this.pedidoRealizadoRepository.findById(id);
+        if (pedidoRealizadoOptional.isPresent()) {
+            mv.addObject("status", pedidoRealizadoOptional.get());
+            mv.setViewName("/usuarios/EditaStatus");
+            return mv;
+        }
+        return null;
+    }
+
+    public ModelAndView editarPedido(@RequestParam("StatusPagamento") String StatusPagamento, @PathVariable Long id) {
+        ModelAndView mv = new ModelAndView();
+        Optional<PedidoRealizado> pedidoRealizadoOptional = this.pedidoRealizadoRepository.findById(id);
+        if (pedidoRealizadoOptional.isPresent()) {
+            PedidoRealizado pedidoRealizado = pedidoRealizadoOptional.get();
+            pedidoRealizado.setStatusPagamento(StatusPagamento);
+            mv.setViewName("redirect:/pedidos");
+            this.pedidoRealizadoRepository.save(pedidoRealizado);
+            return mv;
+        }
+        return null;
     }
 }

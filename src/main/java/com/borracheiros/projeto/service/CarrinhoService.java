@@ -432,7 +432,7 @@ public class CarrinhoService {
 
                 pedidoRealizado.setCliente(cliente);
                 pedidoRealizado.setNome(produto.getNome());
-
+                pedidoRealizado.setPreco(carrinho.getPreco());
                 pedidoRealizado.setQuantidade(carrinho.getQuantidade());
                 pedidoRealizado.setEndereco(carrinho.getEndereco());
                 pedidoRealizado.setTipoPagamento(carrinho.getTipoPagamento());
@@ -457,31 +457,7 @@ public class CarrinhoService {
         return mv;
     }
 
-    // public ModelAndView verPedido(@PathVariable Long id) {
-    // ModelAndView mv = new ModelAndView();
-    // Optional<Cliente> clienteOptional = clienteRepository.findById(id);
-    // if (clienteOptional.isPresent()) {
-    // Cliente cliente = clienteOptional.get();
-    // List<Carrinho> carrinho = cliente.getCarrinho();
-    // List<Estoque> produtosComImagem = new ArrayList<>();
-    // for (Carrinho pedido : carrinho) {
-    // for (Estoque estoque : pedido.getEstoques()) {
-    // Estoque produtoComImagem =
-    // estoqueRepository.findById(estoque.getId()).orElse(null);
-    // if (produtoComImagem != null) {
-    // produtosComImagem.add(produtoComImagem);
-    // }
-    // }
-    // }
-
-    // mv.addObject("produtosComImagem", produtosComImagem);
-    // mv.addObject("nomeCliente", cliente.getNome());
-    // mv.addObject("carrinho", carrinho);
-    // mv.setViewName("clientes/MeusPedidos");
-    // return mv;
-    // }
-    // return null;
-    // }
+    
 
     public ModelAndView verPedido(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView();

@@ -19,14 +19,14 @@
             <th>Total</th>
             <th>Data do Pedido</th>
             <th>Status</th>
-            <th>Ações</th>
+            <th>Ação</th>
         </tr>
         </thead>
         <tbody class="text-center">
         <tr th:each="pedido : ${carrinho}" class="table-row mb-3">
             <td th:text="${pedido.codigoPedido}"></td>
             <td th:text="${pedido.nome}"></td>
-            <td th:text="${pedido.valorTotal}"></td>
+            <td th:text="${pedido.preco}"></td>
             <td th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"></td>
             <td th:text="${pedido.StatusPagamento}"></td>
             <td>

@@ -64,4 +64,14 @@ public class UserController {
     public ModelAndView pedido(){
         return usuarioService.listaPedidos();
     }
+
+    @GetMapping("/editarStatus/{id}")
+    public ModelAndView editarStatus(@PathVariable Long id) {
+        return usuarioService.editarStatusPedido(id);
+    }
+
+    @PostMapping("/editar/pedido/{id}")
+    public ModelAndView updateStatus(@PathVariable Long id, @RequestParam("StatusPagamento") String StatusPagamento){
+    return usuarioService.editarPedido(StatusPagamento, id);
+    }
 }
