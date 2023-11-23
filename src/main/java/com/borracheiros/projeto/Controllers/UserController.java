@@ -61,8 +61,8 @@ public class UserController {
     }
 
     @GetMapping("/pedidos")
-    public ModelAndView pedido(){
-        return usuarioService.listaPedidos();
+    public ModelAndView pedido(HttpSession session){
+        return usuarioService.listaPedidos(session);
     }
 
     @GetMapping("/editarStatus/{id}")

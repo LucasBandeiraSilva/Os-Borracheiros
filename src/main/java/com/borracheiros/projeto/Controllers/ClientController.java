@@ -169,7 +169,7 @@ public class ClientController {
     }
     @GetMapping("/anonimo/carrinho/{id}")
     public ModelAndView verCarrinhoNaoLogado(@PathVariable Long id, HttpSession session){
-        return carrinhoService.verCarrinhoNaoLogado(id);
+        return carrinhoService.verCarrinhoNaoLogado(id,session);
     }
 
     @GetMapping("/endereco-padrao/{id}")

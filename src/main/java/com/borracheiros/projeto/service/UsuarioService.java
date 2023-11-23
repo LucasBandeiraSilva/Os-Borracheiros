@@ -180,12 +180,18 @@ public class UsuarioService {
 
     }
 
-    public ModelAndView listaPedidos() {
+    public ModelAndView listaPedidos(HttpSession session) {
         ModelAndView mv = new ModelAndView();
         List<PedidoRealizado> pedidoRealizado = this.pedidoRealizadoRepository.findAll();
 
+        Long roleId = (Long) session.getAttribute("roleId");
+
+        if (roleId == null || roleId != 2) {
+            return new ModelAndView("aviso");
+        }
+
         if (pedidoRealizado.isEmpty()) {
-            return new ModelAndView("Erro");
+            return new ModelAndView("usuarios/ListaPedidosVazia");
         }
         mv.setViewName("usuarios/ListaPedido");
         mv.addObject("carrinho", pedidoRealizado);

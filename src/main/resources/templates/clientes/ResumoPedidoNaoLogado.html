@@ -17,17 +17,14 @@
       <thead>
         <tr>
           <th>Nome do Produto</th>
-          <th>Quantidade</th>
-          <th>Acções</th>
+          <th>Ações</th>
           <th>Preço</th>
-          <th>Imagem</th>
         </tr>
       </thead>
       <tbody>
         <tr th:each="item : ${carrinhos}">
           <td th:text="${item.nome}"></td>
-          <td>
-            <span class="ms-4" th:text="${item.quantidade}"></span>
+         
           </td>
           <td>
             <a
@@ -48,15 +45,14 @@
           </td>
 
           <td th:text="${item.preco}"></td>
-          <td>
+          <!-- <td>
             <img
               th:each="produto : ${produtosComImagem}"
-              th:if="${produto.nome == item.nome}"
               th:src="@{/imagem/{id}(id=${produto.id})}"
               alt="Imagem do Produto"
               style="height: 100px; width: 100px"
             />
-          </td>
+          </td> -->
         </tr>
       </tbody>
     </table>
@@ -65,10 +61,7 @@
       class="d-flex row justify-content-around align-items-center g-2 border"
     >
       <div class="col">
-        <h3>
-          Frete dos Produtos R$
-          <span class="badge text-bg-primary" th:text="${totalFrete}"></span>
-        </h3>
+       
         <h3 class="ms-3">
           Total de Itens R$
           <span class="badge text-bg-primary" th:text="${totalItens}"></span>
@@ -78,10 +71,10 @@
       
 
       <div class="col-md-auto me-3">
-        <a class="btn btn-outline-success" id="btn" th:href="@{/}">avancar</a>
+        <a class="btn btn-outline-success" id="btn" th:href="@{/cliente/login}">avancar</a>
       </div>
     </div>
 
-    <script src="/CheckoutFrete.js"></script>
+    <!-- <script src="/CheckoutFrete.js"></script> -->
   </body>
 </html>

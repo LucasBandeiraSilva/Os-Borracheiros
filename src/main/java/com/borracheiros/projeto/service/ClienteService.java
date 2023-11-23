@@ -106,12 +106,14 @@ public class ClienteService {
     }
 
     public String validacaoLogin(@RequestParam("email") String email, @RequestParam("senha") String senha,
-        HttpSession session, Model model) {
-
+    HttpSession session, Model model) {
+    
     Cliente cliente = clienteRepository.findByEmail(email);
 
+    Long carrinhoNaoAutenticadoID = (Long) session.getAttribute("carrinhoNaoAutenticadoID");
+    System.out.println("sessão carrinho: " + carrinhoNaoAutenticadoID);
+
     if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
-        Long carrinhoNaoAutenticadoID = (Long) session.getAttribute("carrinhoNaoAutenticadoID");
 
         if (carrinhoNaoAutenticadoID != null) {
             Carrinho carrinhoNaoAutenticado = carrinhoRepository.findById(carrinhoNaoAutenticadoID).orElse(null);
@@ -123,6 +125,7 @@ public class ClienteService {
         }
 
         session.setAttribute("cliente", cliente);
+        session.removeAttribute("carrinhoNaoAutenticadoID"); // Remova o ID do carrinho da sessão
         session.setAttribute("nomeUsuario", cliente.getNome());
         return "redirect:/cliente/logado";
     } else {
@@ -130,6 +133,8 @@ public class ClienteService {
         return "clientes/LoginCliente";
     }
 }
+
+
 
 
 

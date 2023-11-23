@@ -1,44 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
     <title>Lista de Pedidos</title>
-</head>
-<body>
-<div class="container mt-5">
-    <h2>Lista de Pedidos</h2>
-    <br/>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Lista de Pedidos</h2>
+      <br />
 
-    <table class="table">
+      <table class="table">
         <thead>
-        <tr class="text-center">
+          <tr class="text-center">
             <th>Codigo do Pedido</th>
             <th>Produto</th>
             <th>Total</th>
             <th>Data do Pedido</th>
             <th>Status</th>
             <th>Ação</th>
-        </tr>
+          </tr>
         </thead>
         <tbody class="text-center">
-        <tr th:each="pedido : ${carrinho}" class="table-row mb-3">
+          <tr th:each="pedido : ${carrinho}" class="table-row mb-3">
             <td th:text="${pedido.codigoPedido}"></td>
             <td th:text="${pedido.nome}"></td>
             <td th:text="${pedido.preco}"></td>
-            <td th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"></td>
-            <td th:text="${pedido.StatusPagamento}"></td>
-            <td>
-                <a th:if="${pedido.codigoPedido != null}"
-                   class="btn btn-outline-info"
-                   th:href="@{/editarStatus/{id}(id=${pedido.id})}">
-                    Editar Pedido
-                </a>
+            <td
+              th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
+            ></td>
+            <td th:text="${pedido.StatusPagamento}">                
             </td>
-        </tr>
+            
+            
+            <td>
+              <a
+                th:if="${pedido.codigoPedido != null}"
+                class="btn btn-outline-info"
+                th:href="@{/editarStatus/{id}(id=${pedido.id})}"
+              >
+                Editar Pedido
+              </a>
+            </td>
+          </tr>
         </tbody>
-    </table>
-</div>
-</body>
+      </table>
+    </div>
+  </body>
 </html>

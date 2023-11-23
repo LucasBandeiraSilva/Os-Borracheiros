@@ -25,23 +25,35 @@
             <th>Produto</th>
             <th>Quantidade</th>
             <th>Total</th>
-            <th>forma de pagamento</th>
+            <th>Frete</th>
+            <th>Forma de Pagamento</th>
             <th>Data do Pedido</th>
+            <th>Endereço</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody class="text-center">
-          <tr th:each="pedido : ${pedidosRealizados}">
-            <td th:text="${pedido.codigoPedido}"></td>
-            <td th:text="${pedido.nome}"></td>
-            <td th:text="${pedido.quantidade}"></td>
-            <td th:text="${pedido.preco}"></td>
-            <td th:text="${pedido.tipoPagamento != null ? pedido.tipoPagamento : pedido.tipoPagamento}"></td>
+          <tr th:each="pedido, status : ${pedidosRealizados}">
+            <td class="py-2" th:text="${pedido.codigoPedido}"></td>
+            <td class="py-2" th:text="${pedido.nome}"></td>
+            <td class="py-2" th:text="${pedido.quantidade}"></td>
+            <td class="py-2" th:text="${pedido.preco}"></td>
+            <td class="py-2" th:text="${pedido.frete}"></td>
+            <td
+              class="py-2"
+              th:text="${pedido.tipoPagamento != null ? pedido.tipoPagamento : ''}"
+            ></td>
             <td
               th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
             ></td>
-            <td class="text-info" th:text="${pedido.StatusPagamento}">
+            <td>
+              <span
+                th:if="${pedido.endereco != null}"
+                th:text="${pedido.endereco.endereco}"
+              ></span>
+              <span th:unless="${pedido.endereco != null}">&nbsp;</span>
             </td>
+            <td class="text-info" th:text="${pedido.StatusPagamento}"></td>
           </tr>
         </tbody>
       </table>
