@@ -41,7 +41,7 @@
             <td class="py-2" th:text="${pedido.frete}"></td>
             <td
               class="py-2"
-              th:text="${pedido.tipoPagamento != null ? pedido.tipoPagamento : ''}"
+              th:text="${pedido.tipoPagamento != null ? pedido.tipoPagamento : pedido.tipoPagamento}"
             ></td>
             <td
               th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
@@ -51,7 +51,7 @@
                 th:if="${pedido.endereco != null}"
                 th:text="${pedido.endereco.endereco}"
               ></span>
-              <span th:unless="${pedido.endereco != null}">&nbsp;</span>
+              <span th:unless="${pedido.endereco != null}">&sscr;;</span>
             </td>
             <td class="text-info" th:text="${pedido.StatusPagamento}"></td>
           </tr>

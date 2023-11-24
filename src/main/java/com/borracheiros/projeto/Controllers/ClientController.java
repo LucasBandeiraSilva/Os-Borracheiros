@@ -197,9 +197,9 @@ public class ClientController {
     public ModelAndView selecionarEndereco(@PathVariable Long id){
         return clienteService.selecionarEndereco(id);
     }
-    @GetMapping("/endereco/associarCarrinho/{enderecoId}/{carrinhoId}")
-    public ModelAndView associarCarrinhoEndereco(@PathVariable Long enderecoId, @PathVariable Long carrinhoId,HttpSession session){
-        return carrinhoService.associarEnderecoAoCarrinho(enderecoId, carrinhoId, session);
+    @GetMapping("/endereco/associarCarrinho/{enderecoId}")
+    public ModelAndView associarCarrinhoEndereco(@PathVariable Long enderecoId,HttpSession session){
+        return carrinhoService.associarEnderecoAoCarrinho(enderecoId, session);
     }
     @PostMapping("/resumo/{id}")
     public ModelAndView resumoPedido(@PathVariable Long id,@RequestParam("tipoPagamento") String tipoPagamento,HttpSession session){

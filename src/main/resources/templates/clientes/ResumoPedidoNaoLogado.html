@@ -19,6 +19,7 @@
           <th>Nome do Produto</th>
           <th>Ações</th>
           <th>Preço</th>
+          <th>imagem</th>
         </tr>
       </thead>
       <tbody>
@@ -45,14 +46,14 @@
           </td>
 
           <td th:text="${item.preco}"></td>
-          <!-- <td>
+          <td>
             <img
               th:each="produto : ${produtosComImagem}"
               th:src="@{/imagem/{id}(id=${produto.id})}"
               alt="Imagem do Produto"
               style="height: 100px; width: 100px"
             />
-          </td> -->
+          </td>
         </tr>
       </tbody>
     </table>

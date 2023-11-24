@@ -50,7 +50,7 @@ public class Carrinho {
 
     @ManyToOne
     @JoinColumn(name = "endereco_id")
-    private Endereco endereco;
+    private  Endereco endereco;
 
     private Long codigoPedido;
 

@@ -22,6 +22,7 @@
             <th scope="col">quantidade</th>
             <th scope="col">forma de pagamento</th>
             <th scope="col">Preço</th>
+            <th scope="col">frete</th>
           </tr>
         </thead>
 
@@ -43,6 +44,8 @@
 
             <td th:text="${pedido.tipoPagamento}"></td>
             <td th:text="${pedido.preco}"></td>
+            <td th:text="${pedido.frete}"></td>
+            <br />
           </tr>
         </tbody>
       </table>
