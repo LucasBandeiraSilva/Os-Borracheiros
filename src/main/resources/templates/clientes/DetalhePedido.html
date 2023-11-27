@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <title>Meus Pedidos</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Meus Pedidos</h2>
+      <br />
+
+      <table class="table table-info  table-striped">
+        <thead>
+          <tr class="text-center">
+            <th>Produto</th>
+            <th>frete(R$)</th>
+            <th>Valor (R$)</th>
+            <th>Forma de pagamento</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr th:each="pedido : ${lista}">
+            <td th:text="${pedido.nome}"></td>
+            <td>
+              <span
+                th:text="${pedido.frete}"
+              ></span>
+              <span th:unless="${pedido.frete != null}"
+                >0.00</span
+              >
+            </td>
+            <td th:text="${pedido.preco}"></td>
+            
+            <td>
+                <span
+                  th:text="${pedido.tipoPagamento}"
+                ></span>
+                <span th:unless="${pedido.tipoPagamento != null}"
+                  >boleto</span
+                >
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

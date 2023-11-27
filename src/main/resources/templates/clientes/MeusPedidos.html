@@ -22,27 +22,17 @@
         <thead>
           <tr class="text-center">
             <th>ID do Pedido</th>
-            <th>Produto</th>
-            <th>Quantidade</th>
-            <th>Total</th>
-            <th>Frete</th>
-            <th>Forma de Pagamento</th>
-            <th>Data do Pedido</th>
+            <th>data do pedido</th>
             <th>Endereço</th>
+            <th>Valor</th>
             <th>Status</th>
+            <th>ação</th>
           </tr>
         </thead>
         <tbody class="text-center">
           <tr th:each="pedido, status : ${pedidosRealizados}">
-            <td class="py-2" th:text="${pedido.codigoPedido}"></td>
-            <td class="py-2" th:text="${pedido.nome}"></td>
-            <td class="py-2" th:text="${pedido.quantidade}"></td>
-            <td class="py-2" th:text="${pedido.preco}"></td>
-            <td class="py-2" th:text="${pedido.frete}"></td>
-            <td
-              class="py-2"
-              th:text="${pedido.tipoPagamento != null ? pedido.tipoPagamento : pedido.tipoPagamento}"
-            ></td>
+            <td th:text="${pedido.codigoPedido}"></td>
+
             <td
               th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
             ></td>
@@ -51,9 +41,19 @@
                 th:if="${pedido.endereco != null}"
                 th:text="${pedido.endereco.endereco}"
               ></span>
-              <span th:unless="${pedido.endereco != null}">&sscr;;</span>
+              <span class="text-warning h5" th:unless="${pedido.endereco != null}"
+                >Mesmo que o anterior</span
+              >
             </td>
+            <td th:text="${pedido.preco}"></td>
             <td class="text-info" th:text="${pedido.StatusPagamento}"></td>
+            <td>
+              <a
+                th:href="@{/cliente/pedidos/detalhes/{id}(id=${pedido.id})}"
+                class="btn btn-info"
+                >Mais detalhes</a
+              >
+            </td>
           </tr>
         </tbody>
       </table>

@@ -300,7 +300,7 @@ public class CarrinhoService {
             return new ModelAndView("redirect:/clientes/AvisoLogin");
 
         }
-        
+
         Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(carrinhoId);
         if (carrinhoOptional.isPresent()) {
             Carrinho carrinho = carrinhoOptional.get();
@@ -347,39 +347,37 @@ public class CarrinhoService {
         return new ModelAndView("erro");
     }
 
-
     public ModelAndView associarEnderecoAoCarrinho(@PathVariable Long id, HttpSession session) {
         Optional<Endereco> enderecoOptional = enderecoRepository.findById(id);
-    
+
         if (enderecoOptional.isPresent()) {
             Endereco enderecoEscolhido = enderecoOptional.get();
             Cliente cliente = enderecoEscolhido.getCliente();
-    
+
             List<Endereco> enderecos = cliente.getEnderecos();
             List<Carrinho> carrinhos = cliente.getCarrinho();
-    
+
             ModelAndView mv = new ModelAndView("clientes/FormaPagamento");
             mv.addObject("enderecos", enderecos); // Adiciona a lista de endereços ao modelo
             mv.addObject("carrinhos", carrinhos); // Adiciona a lista de carrinhos ao modelo
-    
-            // Pode ser necessário mais lógica para permitir ao cliente escolher qual carrinho associar
-    
-            // Associa o endereço ao carrinho escolhido (aqui, assume que o cliente tem pelo menos um carrinho)
+
+            // Pode ser necessário mais lógica para permitir ao cliente escolher qual
+            // carrinho associar
+
+            // Associa o endereço ao carrinho escolhido (aqui, assume que o cliente tem pelo
+            // menos um carrinho)
             Carrinho carrinhoEscolhido = carrinhos.get(0);
             carrinhoEscolhido.setEndereco(enderecoEscolhido);
             carrinhoRepository.save(carrinhoEscolhido);
-    
+
             mv.addObject("carrinhoPreco", carrinhoEscolhido.getPreco());
             mv.addObject("id", carrinhoEscolhido.getId());
-    
+
             return mv;
         }
-    
+
         return new ModelAndView("erro");
     }
-    
-    
-    
 
     public ModelAndView resumoPedido(@PathVariable Long id, @RequestParam("tipoPagamento") String tipoPagamento,
             HttpSession session) {
@@ -437,54 +435,60 @@ public class CarrinhoService {
 
     public ModelAndView concluirPedido(@PathVariable Long clienteId) {
         ModelAndView mv = new ModelAndView();
-
-        // Variáveis a serem trazidas à tona
+    
         Cliente cliente = null;
         String getNomeCliente = null;
-
-        // Recupere todos os carrinhos do cliente
+        Long idCliente = null;
+        Long idPedido = null;
+    
         List<Carrinho> carrinhos = this.carrinhoRepository.findAllByClienteId(clienteId);
-
+    
         for (Carrinho carrinho : carrinhos) {
             cliente = carrinho.getCliente();
-        
+            idCliente = cliente.getId();
+    
+            // Movendo a criação do PedidoRealizado para fora do loop interno
+            PedidoRealizado pedidoRealizado = new PedidoRealizado();
+            pedidoRealizado.setCodigoPedido(Math.abs(new Random().nextLong()));
+            pedidoRealizado.setStatusPagamento("Aguardando o pagamento");
+            LocalDateTime horaAtualBrasilia = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+            Date sqlDate = Date.valueOf(horaAtualBrasilia.toLocalDate());
+            pedidoRealizado.setDataPedido(sqlDate);
+            pedidoRealizado.setCliente(cliente);
+    
             for (Estoque produto : carrinho.getEstoques()) {
-                PedidoRealizado pedidoRealizado = new PedidoRealizado();
-                pedidoRealizado.setCodigoPedido(Math.abs(new Random().nextLong()));
-                pedidoRealizado.setStatusPagamento("Aguardando o pagamento");
-                LocalDateTime horaAtualBrasilia = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
-                Date sqlDate = Date.valueOf(horaAtualBrasilia.toLocalDate());
-                pedidoRealizado.setDataPedido(sqlDate);
-        
-                pedidoRealizado.setCliente(cliente);
+                // Configurando os detalhes do pedido com base no produto atual
                 pedidoRealizado.setNome(produto.getNome());
-                pedidoRealizado.setPreco(produto.getPreco()); // Definir o preço do produto, não do carrinho
-                pedidoRealizado.setQuantidade(carrinho.getQuantidade()); // Quantidade do produto no carrinho
-                pedidoRealizado.setEndereco(carrinho.getEndereco()); // Verificar se o endereço está associado ao produto correto
-                pedidoRealizado.setTipoPagamento(carrinho.getTipoPagamento()); // Mesma coisa para a forma de pagamento
-                pedidoRealizado.setFrete(carrinho.getFrete()); // E também para o frete
-        
+                pedidoRealizado.setPreco(produto.getPreco());
+                pedidoRealizado.setQuantidade(carrinho.getQuantidade());
+                pedidoRealizado.setEndereco(carrinho.getEndereco());
+                pedidoRealizado.setTipoPagamento(carrinho.getTipoPagamento());
+                pedidoRealizado.setFrete(carrinho.getFrete());
+    
+                // Salvando o pedido para cada produto no carrinho
                 pedidoRealizadoRepository.save(pedidoRealizado);
-
-                if (pedidoRealizado.getEndereco() == null) {
-                    System.out.println("to nullado");
-                }
             }
+    
+            // Restante do código (se houver) para lidar com o carrinho
             carrinhoRepository.delete(carrinho);
         }
-        
-
+    
         if (cliente != null) {
             getNomeCliente = cliente.getNome();
         }
-
-        List<Estoque> produtos = estoqueRepository.findAll();
-        mv.addObject("produtos", produtos);
+    
         mv.addObject("cliente", cliente);
+        mv.addObject("idcliente", idCliente);
         mv.addObject("nomeUsuario", getNomeCliente);
-        mv.setViewName("clientes/CatalogoClienteLogado");
+    
+        // Recuperando o id do último pedido (pode precisar de ajustes dependendo do seu modelo)
+        
+    
+        mv.setViewName("clientes/PedidoConcluido");
+    
         return mv;
     }
+    
 
     public ModelAndView verPedido(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView();
@@ -505,5 +509,16 @@ public class CarrinhoService {
 
         return null;
     }
-
+    public ModelAndView pedidoDetalhe(@PathVariable Long id){
+        ModelAndView mv=new ModelAndView();
+        Optional<PedidoRealizado> pedidoRealizado = pedidoRealizadoRepository.findById(id);
+        if (pedidoRealizado.isPresent()) {
+            mv.setViewName("clientes/DetalhePedido");
+            PedidoRealizado pr = pedidoRealizado.get();
+           
+            mv.addObject("lista",pr);
+            return mv;
+        }
+        return null;
+    }
 }

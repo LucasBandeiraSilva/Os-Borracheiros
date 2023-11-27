@@ -213,4 +213,8 @@ public class ClientController {
     public ModelAndView verPedido(@PathVariable Long id){
         return carrinhoService.verPedido(id);
     }
+    @GetMapping("/pedidos/detalhes/{id}")
+    public ModelAndView pedidoDetalhe(@PathVariable Long id){
+        return carrinhoService.pedidoDetalhe(id);
+    }
 }
