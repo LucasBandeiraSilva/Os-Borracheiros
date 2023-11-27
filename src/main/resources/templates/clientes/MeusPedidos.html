@@ -41,7 +41,9 @@
                 th:if="${pedido.endereco != null}"
                 th:text="${pedido.endereco.endereco}"
               ></span>
-              <span class="text-warning h5" th:unless="${pedido.endereco != null}"
+              <span
+                class="text-warning h5"
+                th:unless="${pedido.endereco != null}"
                 >Mesmo que o anterior</span
               >
             </td>
@@ -57,6 +59,9 @@
           </tr>
         </tbody>
       </table>
+      <a th:href="@{/cliente/logado}" class="btn btn-dark"
+        >Voltar para o Catálogo</a
+      >
     </div>
   </body>
 </html>

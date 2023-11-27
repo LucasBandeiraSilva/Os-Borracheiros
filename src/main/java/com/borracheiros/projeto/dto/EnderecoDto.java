@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EnderecoDto {
-    private Long cep;
+    private String  cep;
     private String logradouro;
     private String complemento;
     private String Bairro;

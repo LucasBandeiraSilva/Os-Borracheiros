@@ -11,8 +11,8 @@
     />
   </head>
   <body>
-    <div class="container mt-5">
-      <h1 class="mb-4">Resumo Final do Pedido</h1>
+    <div class="container">
+      <h1 >Resumo Final do Pedido</h1>
 
       <table class="table text-center">
         <thead>
@@ -20,9 +20,7 @@
             <th scope="col">Nome do Produto</th>
             <th scope="col">imagem</th>
             <th scope="col">quantidade</th>
-            <th scope="col">forma de pagamento</th>
             <th scope="col">Preço</th>
-            <th scope="col">frete</th>
           </tr>
         </thead>
 
@@ -42,18 +40,18 @@
 
             <td th:text="${pedido.quantidade}"></td>
 
-            <td th:text="${pedido.tipoPagamento}"></td>
             <td th:text="${pedido.preco}"></td>
-            <td th:text="${pedido.frete}"></td>
             <br />
           </tr>
         </tbody>
       </table>
 
-      <h5>
+      <h3>Frete R$ <span th:text="${frete}"></span></h3>
+      <h3>
         Total: R$
         <span th:text="${valorTotal}"></span>
-      </h5>
+      </h3>
+      <h3>Forma de pagamento: <span th:text="${formaPagamento}"></span></h3>
 
       <a
         class="btn btn-success mt-3"

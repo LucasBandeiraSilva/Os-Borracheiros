@@ -1,97 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>Lista de Endereços</title>
     <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-            crossorigin="anonymous"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
     />
     <link rel="stylesheet" href="/endereco.css" />
-</head>
-<body>
-<div class="container">
-    <h1>Selecione seu endereço</h1>
-    <table class="table table-bordered">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Selecione seu endereço</h1>
+      <table class="table table-bordered">
         <thead>
-        <tr>
+          <tr>
             <th>Logradouro</th>
             <th>Cidade</th>
             <th>Complemento</th>
             <th>Ação</th>
-        </tr>
+          </tr>
         </thead>
         <tbody>
-        <tr th:each="endereco : ${cliente.enderecos}">
+          <tr th:each="endereco : ${cliente.enderecos}">
             <td th:text="${endereco.logradouro}"></td>
             <td th:text="${endereco.cidade}"></td>
             <td th:text="${endereco.complemento}"></td>
             <td>
-                <a
-                        th:href="@{'/cliente/endereco/associarCarrinho/' + ${endereco.id}}"
-                        class="btn btn-outline-success"
-                        id="btn"
-                >
-                    Escolher este
-                </a>
+              <a
+                th:href="@{'/cliente/endereco/associarCarrinho/' + ${endereco.id}}"
+                class="btn btn-outline-success"
+                id="btn"
+              >
+                Escolher este
+              </a>
             </td>
-        </tr>
+          </tr>
         </tbody>
-    </table>
-
-    <a
-            th:href="@{'/cliente/carrinho/selecionar'}"
-            class="btn btn-outline-warning"
-    >Voltar para o Carrinho</a>
-    <a
-            th:href="@{'/cliente/adicionar-enderecoEntrega/' + ${cliente.id}}"
-            class="btn btn-success ms-3"
-    >Adicionar Endereço</a>
-    <label class="form-label" for="cep">Cep</label>
-    <!-- Verifica se há pelo menos um endereço na lista -->
-    <input
-            style="width: 35%"
-            class="inputs required form-control"
-            type="number"
-            name="cep"
-            id="cep"
-            placeholder="Somente números"
-    />
-    <span class="span-required">o cep não é válido!!!</span>
-
-    <!-- Mova este bloco fora do loop th:each -->
-    <form th:action="@{'/cliente/frete/'+ ${carrinhos[0].id}}" method="POST">
-        <div id="freteContainer" th:if="${frete == null}">
-            <label for="frete">Selecione uma opção de frete:</label>
-            <select
-                    class="form-select w-50"
-                    name="frete"
-                    id="frete"
-                    th:object="${carrinho}"
-            >
-                <option th:value="0.00">Selecione o valor do frete</option>
-                <option th:value="5.00">Frete Econômico - R$ 5,00</option>
-                <option th:value="10.00">Frete Padrão - R$ 10,00</option>
-                <option th:value="25.00">Frete Expresso - R$ 25,00</option>
-                <!-- Outras opções de frete com valores correspondentes -->
-            </select>
-            <button type="submit" class="btn btn-success mt-2">
-                selecionar Frete
-            </button>
-        </div>
-    </form>
-
-    <!-- Adicione a lista de endereços ao modelo -->
-    <div th:object="${cliente}" th:remove="tag">
-        <div th:each="endereco : ${enderecos}" th:remove="tag">
-            <span th:text="${endereco.logradouro}"></span>
-            <span th:text="${endereco.cidade}"></span>
-            <span th:text="${endereco.complemento}"></span>
-        </div>
+      </table>
     </div>
-</div>
-<script src="/CheckoutFrete.js"></script>
-</body>
+  </body>
 </html>
