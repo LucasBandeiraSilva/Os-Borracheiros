@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -377,7 +378,6 @@ public class CarrinhoService {
         Cliente clienteSession = (Cliente) session.getAttribute("cliente");
         ModelAndView mv = new ModelAndView();
 
-
         // Verifica se o cliente está autenticado
         if (clienteSession != null) {
             System.out.println("Eu estou no resumo");
@@ -410,6 +410,9 @@ public class CarrinhoService {
                 System.out.println("valor total: " + carrinho.getValorTotal());
             }
 
+            session.setAttribute("valorTotalPedido", carrinho.getValorTotal());
+
+
             System.out.println("forma pagamento " + carrinho.getTipoPagamento());
             System.out.println("valor total: " + carrinho.getValorTotal());
             System.out.println("id cliente: " + idCliente);
@@ -429,14 +432,21 @@ public class CarrinhoService {
         return null;
     }
 
-    public ModelAndView concluirPedido(@PathVariable Long clienteId) {
+    public ModelAndView concluirPedido(@PathVariable Long clienteId, HttpSession session) {
         ModelAndView mv = new ModelAndView();
 
         Cliente cliente = null;
         String getNomeCliente = null;
         Long idCliente = null;
+        BigDecimal valorTotalSessao = (BigDecimal) session.getAttribute("valorTotalPedido");
+
+    // Se o valor total não estiver presente na sessão, você pode lidar com isso de maneira apropriada, dependendo dos requisitos
+    if (valorTotalSessao == null) {
+        System.out.println("carrinho nulll");
+    }
 
         List<Carrinho> carrinhos = this.carrinhoRepository.findAllByClienteId(clienteId);
+        Long uniqueOrderCode = Math.abs(new Random().nextLong());
 
         for (Carrinho carrinho : carrinhos) {
             cliente = carrinho.getCliente();
@@ -444,12 +454,13 @@ public class CarrinhoService {
 
             // Movendo a criação do PedidoRealizado para fora do loop interno
             PedidoRealizado pedidoRealizado = new PedidoRealizado();
-            pedidoRealizado.setCodigoPedido(Math.abs(new Random().nextLong()));
+            pedidoRealizado.setCodigoPedido(uniqueOrderCode);
             pedidoRealizado.setStatusPagamento("Aguardando o pagamento");
             LocalDateTime horaAtualBrasilia = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
             Date sqlDate = Date.valueOf(horaAtualBrasilia.toLocalDate());
             pedidoRealizado.setDataPedido(sqlDate);
             pedidoRealizado.setCliente(cliente);
+
 
             for (Estoque produto : carrinho.getEstoques()) {
                 // Configurando os detalhes do pedido com base no produto atual
@@ -459,8 +470,10 @@ public class CarrinhoService {
                 pedidoRealizado.setEndereco(carrinho.getEndereco());
                 pedidoRealizado.setTipoPagamento(carrinho.getTipoPagamento());
                 pedidoRealizado.setFrete(carrinho.getFrete());
+                pedidoRealizado.setValorTotal(valorTotalSessao);
 
-                // Salvando o pedido para cada produto no carrinho
+               
+                System.out.println("preço finalllll!!!!!!!!  " + pedidoRealizado.getValorTotal());
                 pedidoRealizadoRepository.save(pedidoRealizado);
             }
 
@@ -475,42 +488,52 @@ public class CarrinhoService {
         mv.addObject("cliente", cliente);
         mv.addObject("idcliente", idCliente);
         mv.addObject("nomeUsuario", getNomeCliente);
+        session.removeAttribute("valorTotalPedido");
 
         mv.setViewName("clientes/PedidoConcluido");
 
         return mv;
     }
 
-    public ModelAndView verPedido(@PathVariable Long id) {
+    public ModelAndView verPedido(@PathVariable Long clienteId, @PathVariable Long codigoPedido) {
         ModelAndView mv = new ModelAndView();
 
-        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+        // Buscar pedidos realizados pelo cliente com base no código de pedido
+        // selecionado
+        List<PedidoRealizado> pedidosRealizados = pedidoRealizadoRepository.findByClienteIdAndCodigoPedido(clienteId,
+                codigoPedido);
 
-        if (clienteOptional.isPresent()) {
-            Cliente cliente = clienteOptional.get();
-
-            // Buscar pedidos realizados pelo cliente
-            List<PedidoRealizado> pedidosRealizados = pedidoRealizadoRepository.findByCliente(cliente);
-
-            mv.addObject("pedidosRealizados", pedidosRealizados);
-            mv.addObject("nomeCliente", cliente.getNome());
-            mv.setViewName("clientes/MeusPedidos");
-            return mv;
-        }
-
-        return null;
+        mv.addObject("pedidosRealizados", pedidosRealizados);
+        mv.setViewName("clientes/DetalhePedido");
+        return mv;
     }
 
-    public ModelAndView pedidoDetalhe(@PathVariable Long id) {
+    public ModelAndView meusPedidos(@PathVariable Long clienteId) {
         ModelAndView mv = new ModelAndView();
-        Optional<PedidoRealizado> pedidoRealizado = pedidoRealizadoRepository.findById(id);
-        if (pedidoRealizado.isPresent()) {
-            mv.setViewName("clientes/DetalhePedido");
-            PedidoRealizado pr = pedidoRealizado.get();
 
-            mv.addObject("lista", pr);
-            return mv;
+        // Encontrar todos os códigos de pedido distintos associados ao cliente
+        List<PedidoRealizado> pedidosRealizados = pedidoRealizadoRepository
+                .findDistinctByClienteIdAndCodigoPedidoIsNotNull(clienteId);
+
+        // Criar uma lista de códigos de pedidos únicos
+        List<Long> codigosPedidosUnicos = pedidosRealizados.stream()
+                .map(PedidoRealizado::getCodigoPedido)
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<PedidoRealizado> todosOsPedidos = pedidoRealizadoRepository.findByClienteIdAndCodigoPedidoIn(clienteId,
+                codigosPedidosUnicos);
+
+        // Associar a lista de códigos de pedidos às informações dos pedidos realizados
+        mv.setViewName("clientes/MeusPedidos");
+        mv.addObject("pedidos", todosOsPedidos);
+
+        for (PedidoRealizado pedidoRealizado : todosOsPedidos) {
+            System.out.println(pedidoRealizado.getNome());
+            System.out.println(pedidoRealizado.getId());
         }
-        return null;
+        mv.addObject("codigosPedidos", codigosPedidosUnicos);
+        return mv;
     }
+
 }

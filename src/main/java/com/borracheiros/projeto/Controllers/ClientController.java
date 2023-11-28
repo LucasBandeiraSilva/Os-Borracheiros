@@ -206,15 +206,15 @@ public class ClientController {
         return carrinhoService.resumoPedido(id,tipoPagamento,session);
     }
     @GetMapping("/finalizado/{id}")
-    public ModelAndView concluirPedido(@PathVariable Long id){
-        return carrinhoService.concluirPedido(id);
+    public ModelAndView concluirPedido(@PathVariable Long id,HttpSession session){
+        return carrinhoService.concluirPedido(id,session);
     }
-    @GetMapping("/compras/{id}")
-    public ModelAndView verPedido(@PathVariable Long id){
-        return carrinhoService.verPedido(id);
-    }
-    @GetMapping("/pedidos/detalhes/{id}")
+    // @GetMapping("/compras/{id}")
+    // public ModelAndView verPedido(@PathVariable Long id){
+    //     return carrinhoService.verPedido(id);
+    // }
+    @GetMapping("/meusPedidos/{id}")
     public ModelAndView pedidoDetalhe(@PathVariable Long id){
-        return carrinhoService.pedidoDetalhe(id);
+        return carrinhoService.meusPedidos(id);
     }
 }

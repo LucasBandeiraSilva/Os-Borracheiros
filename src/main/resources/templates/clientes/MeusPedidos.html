@@ -1,67 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
     <title>Meus Pedidos</title>
-  </head>
-  <body>
-    <div class="container mt-5">
-      <h2>Meus Pedidos</h2>
-      <br />
-
-      <span class="h2 mt-2" th:text="${nomeCliente}"></span>
-      <table class="table">
+</head>
+<body>
+    <table class="table">
         <thead>
-          <tr class="text-center">
-            <th>ID do Pedido</th>
-            <th>data do pedido</th>
-            <th>Endereço</th>
-            <th>Valor</th>
-            <th>Status</th>
-            <th>ação</th>
-          </tr>
+            <tr>
+                <th>Código do Pedido</th>
+                <th>Data do Pedido</th>
+                <th>Status do Pedido</th>
+                <th>Valor Total</th>
+                <th>Ação</th>
+                <!-- Adicione mais colunas conforme necessário -->
+            </tr>
         </thead>
-        <tbody class="text-center">
-          <tr th:each="pedido, status : ${pedidosRealizados}">
-            <td th:text="${pedido.codigoPedido}"></td>
-
-            <td
-              th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
-            ></td>
-            <td>
-              <span
-                th:if="${pedido.endereco != null}"
-                th:text="${pedido.endereco.endereco}"
-              ></span>
-              <span
-                class="text-warning h5"
-                th:unless="${pedido.endereco != null}"
-                >Mesmo que o anterior</span
-              >
-            </td>
-            <td th:text="${pedido.preco}"></td>
-            <td class="text-info" th:text="${pedido.StatusPagamento}"></td>
-            <td>
-              <a
-                th:href="@{/cliente/pedidos/detalhes/{id}(id=${pedido.id})}"
-                class="btn btn-info"
-                >Mais detalhes</a
-              >
-            </td>
-          </tr>
+        <tbody>
+            <tr th:each="pedido, iterStat : ${pedidos}">
+                <!-- Verifica se o código do pedido já foi exibido -->
+                <th:block th:if="${iterStat.index == 0 or pedido.codigoPedido != pedidos[iterStat.index - 1].codigoPedido}">
+                    <td th:text="${pedido.codigoPedido}"></td>
+                    <td th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${pedido.statusPagamento}"></td>
+                    <td th:text="${pedido.valorTotal}"></td>
+                    <td> <a class="btn btn-outline-primary" th:href="@{/cliente/detalhes/pedido/{id}(id=${pedido.codigoPedi})}">Mais detalhes</a></td>
+                </th:block>
+                <!-- Adicione mais colunas conforme necessário -->
+            </tr>
         </tbody>
-      </table>
-      <a th:href="@{/cliente/logado}" class="btn btn-dark"
-        >Voltar para o Catálogo</a
-      >
-    </div>
-  </body>
+    </table>
+</body>
 </html>
