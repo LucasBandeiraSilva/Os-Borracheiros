@@ -412,7 +412,6 @@ public class CarrinhoService {
 
             session.setAttribute("valorTotalPedido", carrinho.getValorTotal());
 
-
             System.out.println("forma pagamento " + carrinho.getTipoPagamento());
             System.out.println("valor total: " + carrinho.getValorTotal());
             System.out.println("id cliente: " + idCliente);
@@ -440,10 +439,11 @@ public class CarrinhoService {
         Long idCliente = null;
         BigDecimal valorTotalSessao = (BigDecimal) session.getAttribute("valorTotalPedido");
 
-    // Se o valor total não estiver presente na sessão, você pode lidar com isso de maneira apropriada, dependendo dos requisitos
-    if (valorTotalSessao == null) {
-        System.out.println("carrinho nulll");
-    }
+        // Se o valor total não estiver presente na sessão, você pode lidar com isso de
+        // maneira apropriada, dependendo dos requisitos
+        if (valorTotalSessao == null) {
+            System.out.println("carrinho nulll");
+        }
 
         List<Carrinho> carrinhos = this.carrinhoRepository.findAllByClienteId(clienteId);
         Long uniqueOrderCode = Math.abs(new Random().nextLong());
@@ -461,7 +461,6 @@ public class CarrinhoService {
             pedidoRealizado.setDataPedido(sqlDate);
             pedidoRealizado.setCliente(cliente);
 
-
             for (Estoque produto : carrinho.getEstoques()) {
                 // Configurando os detalhes do pedido com base no produto atual
                 pedidoRealizado.setNome(produto.getNome());
@@ -472,7 +471,6 @@ public class CarrinhoService {
                 pedidoRealizado.setFrete(carrinho.getFrete());
                 pedidoRealizado.setValorTotal(valorTotalSessao);
 
-               
                 System.out.println("preço finalllll!!!!!!!!  " + pedidoRealizado.getValorTotal());
                 pedidoRealizadoRepository.save(pedidoRealizado);
             }
@@ -534,6 +532,21 @@ public class CarrinhoService {
         }
         mv.addObject("codigosPedidos", codigosPedidosUnicos);
         return mv;
+    }
+
+    public ModelAndView pedidoDetalhe(Long codigoProduto, HttpSession session) {
+        ModelAndView mv = new ModelAndView();
+        List<PedidoRealizado> pedido = pedidoRealizadoRepository.findByCodigoPedido(codigoProduto);
+
+        Cliente clienteSession = (Cliente) session.getAttribute("cliente");
+        Long idCliente = clienteSession.getId();        
+        if (pedido.size() > 0) {
+            mv.setViewName("clientes/PedidoDetalhe");
+            mv.addObject("pedido", pedido);
+            mv.addObject("idCliente", idCliente);
+            return mv;
+        }
+        return null;
     }
 
 }

@@ -1,36 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <title>Meus Pedidos</title>
+    <style>
+        body {
+            font-size: 16px;
+        }
+
+        @media (max-width: 576px) {
+            body {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Código do Pedido</th>
-                <th>Data do Pedido</th>
-                <th>Status do Pedido</th>
-                <th>Valor Total</th>
-                <th>Ação</th>
-                <!-- Adicione mais colunas conforme necessário -->
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="pedido, iterStat : ${pedidos}">
-                <!-- Verifica se o código do pedido já foi exibido -->
-                <th:block th:if="${iterStat.index == 0 or pedido.codigoPedido != pedidos[iterStat.index - 1].codigoPedido}">
-                    <td th:text="${pedido.codigoPedido}"></td>
-                    <td th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${pedido.statusPagamento}"></td>
-                    <td th:text="${pedido.valorTotal}"></td>
-                    <td> <a class="btn btn-outline-primary" th:href="@{/cliente/detalhes/pedido/{id}(id=${pedido.codigoPedi})}">Mais detalhes</a></td>
-                </th:block>
-                <!-- Adicione mais colunas conforme necessário -->
-            </tr>
-        </tbody>
-    </table>
+    <div class="container ">
+        <h1 class="text-center mt-5">Meus Pedidos</h1>
+        <table class="table table-responsive text-center">
+            <!-- Adicionado "table-responsive" para melhorar a visualização em telas pequenas -->
+            <thead>
+                <tr>
+                    <th>Código do Pedido</th>
+                    <th>Data do Pedido</th>
+                    <th>Status do Pedido</th>
+                    <th>Valor Total</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pedido, iterStat : ${pedidos}">
+                    <th:block
+                        th:if="${iterStat.index == 0 or pedido.codigoPedido != pedidos[iterStat.index - 1].codigoPedido}">
+                        <td th:text="${pedido.codigoPedido}"></td>
+                        <td th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${pedido.statusPagamento}"></td>
+                        <td th:text="${pedido.valorTotal}"></td>
+                        <td>
+                            <a class="btn btn-outline-primary"
+                                th:href="@{/cliente/detalhes/pedido/{id}(id=${pedido.codigoPedido})}">Mais detalhes</a>
+                        </td>
+                    </th:block>
+                </tr>
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-outline-success border-4" th:href="@{/cliente/logado}">voltar ao catálogo</a>
+        </div>
+    </div>
 </body>
+
 </html>

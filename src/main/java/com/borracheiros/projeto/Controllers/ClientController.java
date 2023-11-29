@@ -209,12 +209,14 @@ public class ClientController {
     public ModelAndView concluirPedido(@PathVariable Long id,HttpSession session){
         return carrinhoService.concluirPedido(id,session);
     }
-    // @GetMapping("/compras/{id}")
-    // public ModelAndView verPedido(@PathVariable Long id){
-    //     return carrinhoService.verPedido(id);
-    // }
+   
     @GetMapping("/meusPedidos/{id}")
-    public ModelAndView pedidoDetalhe(@PathVariable Long id){
+    public ModelAndView meusPedidos(@PathVariable Long id){
         return carrinhoService.meusPedidos(id);
+    }
+
+    @GetMapping("/detalhes/pedido/{codigoProduto}")
+    public ModelAndView pedidoDetalhe(@PathVariable Long codigoProduto,HttpSession session){
+        return carrinhoService.pedidoDetalhe(codigoProduto,session);
     }
 }
