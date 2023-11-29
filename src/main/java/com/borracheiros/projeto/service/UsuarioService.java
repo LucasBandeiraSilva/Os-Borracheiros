@@ -34,8 +34,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private CarrinhoRepository carrinhoRepository;
+    
 
     @Autowired
     private PedidoRealizadoRepository pedidoRealizadoRepository;
@@ -182,7 +181,7 @@ public class UsuarioService {
 
     public ModelAndView listaPedidos(HttpSession session) {
         ModelAndView mv = new ModelAndView();
-        List<PedidoRealizado> pedidoRealizado = this.pedidoRealizadoRepository.findAll();
+        List<PedidoRealizado> pedidoRealizado = this.pedidoRealizadoRepository.findAllByOrderByDataPedidoDesc();
 
         Long roleId = (Long) session.getAttribute("roleId");
 

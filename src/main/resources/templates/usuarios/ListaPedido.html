@@ -20,26 +20,23 @@
       <table class="table">
         <thead>
           <tr class="text-center">
-            <th>Codigo do Pedido</th>
-            <th>Produto</th>
-            <th>Total</th>
             <th>Data do Pedido</th>
+            <th>Codigo do Pedido</th>
+            <th>Total</th>
             <th>Status</th>
             <th>Ação</th>
           </tr>
         </thead>
         <tbody class="text-center">
           <tr th:each="pedido : ${carrinho}" class="table-row mb-3">
-            <td th:text="${pedido.codigoPedido}"></td>
-            <td th:text="${pedido.nome}"></td>
-            <td th:text="${pedido.preco}"></td>
             <td
               th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
             ></td>
-            <td th:text="${pedido.StatusPagamento}">                
-            </td>
-            
-            
+            <td th:text="${pedido.codigoPedido}"></td>
+            <td th:text="${pedido.valorTotal }"></td>
+
+            <td th:text="${pedido.StatusPagamento}"></td>
+
             <td>
               <a
                 th:if="${pedido.codigoPedido != null}"

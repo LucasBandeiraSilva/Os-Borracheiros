@@ -33,7 +33,6 @@
                   Resumo do pedido
                 </p>
 
-                <span th:text="${idCliente}"></span>
                 <div class="row">
                   <div class="col mb-3">
                     <p class="small text-muted mb-1">Data</p>
@@ -80,7 +79,7 @@
                       <div class="col-md-2 col-lg-3">
                         <p>
                           Preço:
-                          <span th:text="'R$ ' + ${produto.preco}"></span>
+                          <span th:text="'R$'+ ${produto.preco}"></span>
                         </p>
                       </div>
                     </div>
@@ -103,7 +102,7 @@
                     <p
                       class="lead fw-bold mb-0"
                       style="color: #f37a27"
-                      th:text=" 'total do pedido: ' + ${pedido[0].valorTotal}"
+                      th:text="'Total do pedido: ' + 'R$' +${pedido[0].valorTotal}"
                     ></p>
                   </div>
                 </div>
@@ -114,7 +113,7 @@
       </div>
     </section>
     <div class="d-flex justify-content-center">
-        <a class="btn btn-outline-warning fs-4" th:href="@{/cliente/meusPedidos/{id}(id=${idCliente})}">voltar</a>
+        <a class="btn btn-success fs-4 text-white" th:href="@{/cliente/meusPedidos/{id}(id=${idCliente})}">Voltar</a>
     </div>
     
   </body>

@@ -335,7 +335,7 @@ public class CarrinhoService {
             }
 
             // Redireciona para a página do carrinho do cliente
-            return new ModelAndView("redirect:/cliente/carrinho/" + carrinho.getCliente().getId());
+            return new ModelAndView("redirect:/cliente/endereco/selecionar/" + carrinho.getCliente().getId());
         }
         return new ModelAndView("erro");
     }
@@ -446,7 +446,7 @@ public class CarrinhoService {
         }
 
         List<Carrinho> carrinhos = this.carrinhoRepository.findAllByClienteId(clienteId);
-        Long uniqueOrderCode = Math.abs(new Random().nextLong());
+        Long codigoPedidoUnico = Math.abs(new Random().nextLong());
 
         for (Carrinho carrinho : carrinhos) {
             cliente = carrinho.getCliente();
@@ -454,7 +454,7 @@ public class CarrinhoService {
 
             // Movendo a criação do PedidoRealizado para fora do loop interno
             PedidoRealizado pedidoRealizado = new PedidoRealizado();
-            pedidoRealizado.setCodigoPedido(uniqueOrderCode);
+            pedidoRealizado.setCodigoPedido(codigoPedidoUnico);
             pedidoRealizado.setStatusPagamento("Aguardando o pagamento");
             LocalDateTime horaAtualBrasilia = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
             Date sqlDate = Date.valueOf(horaAtualBrasilia.toLocalDate());
@@ -486,6 +486,7 @@ public class CarrinhoService {
         mv.addObject("cliente", cliente);
         mv.addObject("idcliente", idCliente);
         mv.addObject("nomeUsuario", getNomeCliente);
+        mv.addObject("codigoPedido", codigoPedidoUnico);
         session.removeAttribute("valorTotalPedido");
 
         mv.setViewName("clientes/PedidoConcluido");
@@ -511,7 +512,7 @@ public class CarrinhoService {
 
         // Encontrar todos os códigos de pedido distintos associados ao cliente
         List<PedidoRealizado> pedidosRealizados = pedidoRealizadoRepository
-                .findDistinctByClienteIdAndCodigoPedidoIsNotNull(clienteId);
+                .findDistinctByClienteIdAndCodigoPedidoIsNotNullOrderByCodigoPedidoDesc(clienteId);
 
         // Criar uma lista de códigos de pedidos únicos
         List<Long> codigosPedidosUnicos = pedidosRealizados.stream()
@@ -519,7 +520,7 @@ public class CarrinhoService {
                 .distinct()
                 .collect(Collectors.toList());
 
-        List<PedidoRealizado> todosOsPedidos = pedidoRealizadoRepository.findByClienteIdAndCodigoPedidoIn(clienteId,
+        List<PedidoRealizado> todosOsPedidos = pedidoRealizadoRepository.findByClienteIdAndCodigoPedidoInOrderByDataPedidoDesc(clienteId,
                 codigosPedidosUnicos);
 
         // Associar a lista de códigos de pedidos às informações dos pedidos realizados
@@ -541,7 +542,7 @@ public class CarrinhoService {
         Cliente clienteSession = (Cliente) session.getAttribute("cliente");
         Long idCliente = clienteSession.getId();        
         if (pedido.size() > 0) {
-            mv.setViewName("clientes/PedidoDetalhe");
+            mv.setViewName("clientes/PedidoInfo");
             mv.addObject("pedido", pedido);
             mv.addObject("idCliente", idCliente);
             return mv;
