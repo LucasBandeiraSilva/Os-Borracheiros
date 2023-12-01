@@ -1,6 +1,7 @@
 package com.borracheiros.projeto.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.dto.UserDto;
@@ -16,6 +18,7 @@ import com.borracheiros.projeto.service.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+
 @Controller
 public class UserController {
 
@@ -43,6 +46,8 @@ public class UserController {
     }
 
     @PostMapping("/ListaUsuario")
+    @ResponseStatus(HttpStatus.FOUND) // Código 302 para indicar redirecionamento
+
     public String createUser(@Valid UserDto usuarioDto, BindingResult bindingResult, Model model) {
 
         return usuarioService.createUser(usuarioDto, bindingResult, model);
@@ -61,7 +66,7 @@ public class UserController {
     }
 
     @GetMapping("/pedidos")
-    public ModelAndView pedido(HttpSession session){
+    public ModelAndView pedido(HttpSession session) {
         return usuarioService.listaPedidos(session);
     }
 
@@ -71,7 +76,7 @@ public class UserController {
     }
 
     @PostMapping("/editar/pedido/{id}")
-    public ModelAndView updateStatus(@PathVariable Long id, @RequestParam("StatusPagamento") String StatusPagamento){
-    return usuarioService.editarPedido(StatusPagamento, id);
+    public ModelAndView updateStatus(@PathVariable Long id, @RequestParam("StatusPagamento") String StatusPagamento) {
+        return usuarioService.editarPedido(StatusPagamento, id);
     }
 }

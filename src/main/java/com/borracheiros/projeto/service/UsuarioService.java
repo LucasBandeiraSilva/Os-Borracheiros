@@ -62,81 +62,95 @@ public class UsuarioService {
     }
 
     public String createUser(@Valid UserDto usuarioDto, BindingResult bindingResult, Model model) {
-
         Usuario usuario = usuarioDto.toUsuario();
         Long roleId = usuarioDto.getRole();
         Role role = roleRepository.findById(roleId).orElse(null);
-
+    
         if (usuarioDto.getId() != null) {
-            Optional<Usuario> optionalUsuario = usuarioRepository.findById(usuarioDto.getId());
+            return updateUser(usuarioDto, bindingResult, usuario, role,model);
+        } else {
+            return createUser(usuarioDto, bindingResult, usuario, role);
+        }
+    }
+    
+    private String updateUser(UserDto usuarioDto, BindingResult bindingResult, Usuario usuario, Role role,Model model) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findById(usuarioDto.getId());
+    
+        if (optionalUsuario.isPresent()) {
+            Usuario usuarioExistente = optionalUsuario.get();
+    
+            usuarioExistente.setRole(role);
+            usuarioExistente.setNome(usuarioDto.getNome());
+            usuarioExistente.setSenha(usuarioDto.getSenha());
+            usuarioExistente.setCpf(usuarioDto.getCpf());
 
-            // Se o usuário existir, atualize os campos com os valores do formulário
-            if (optionalUsuario.isPresent()) {
-                Usuario usuarioExistente = optionalUsuario.get();
-
-                usuarioExistente.setRole(role);
-
-                if (usuario.getEmail() != null && !usuario.getEmail().isEmpty()) {
-                    usuarioExistente.setEmail(usuario.getEmail());
-                }
-                if (usuario.getNome() != null && !usuario.getNome().isEmpty()) {
-                    usuarioExistente.setNome(usuario.getNome());
-                }
-                if (usuario.getCpf() != null && !usuario.getCpf().isEmpty()) {
-                    usuarioExistente.setCpf(usuario.getCpf());
-
-                }
-                if (usuario.getSenha() != usuarioDto.getConfirmPassword()) {
-                    return "Erro";
-                }
-
-                if (usuario.getStatusUsuario() != null) {
-                    usuarioExistente.setStatusUsuario(usuario.getStatusUsuario());
-                }
-                if (!usuarioExistente.getCpf().equals(usuario.getCpf())) {
-                    if (usuarioRepository.existsByCpf(usuario.getCpf())) {
-                        return "usuarios/ErroCPF";
-                    }
-                }
-                usuarioRepository.save(usuarioExistente);
-                return "redirect:/";
-            }
-            if (usuarioRepository.existsByCpf(usuario.getCpf())) {
-                bindingResult.rejectValue("cpf", "error.userDto", "CPF já cadastrado");
-
-            }
-
-            if (usuario.getCpf() == null || usuario.getCpf().isEmpty()) {
-                bindingResult.rejectValue("cpf", "error.userDto", "Campo CPF é obrigatório");
-
-            }
-
-            if (bindingResult.hasErrors()) {
-                System.out.println("Formulário com erros");
-                System.out.println(bindingResult.getAllErrors());
-                if (usuario.getNome() == null) {
-                    bindingResult.rejectValue("nome", "error.nome", "");
-                }
-                if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
-                    bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
-                }
-
+            if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
+                model.addAttribute("passwordMismatch", true);
+                bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
                 return "usuarios/cadastro"; // Retorna a página de cadastro com os erros
             }
-
-            if (role != null) {
-                usuario.setRole(role);
-                usuarioRepository.save(usuario);
-                return "redirect:/"; // Redireciona para a página inicial
-            } else {
-
-                return "Erro";
+            
+            
+            if (!usuarioExistente.getCpf().equals(usuario.getCpf())) {
+                if (usuarioRepository.existsByCpf(usuario.getCpf())) {
+                    return "usuarios/ErroCPF";
+                }
             }
-
+    
+            usuarioRepository.save(usuarioExistente);
+            return "redirect:/";
+        }
+    
+        return handleUserErrors(usuario, bindingResult);
+    }
+    
+    private String createUser(UserDto usuarioDto, BindingResult bindingResult, Usuario usuario, Role role) {
+        if (usuarioRepository.existsByCpf(usuario.getCpf())) {
+            bindingResult.rejectValue("cpf", "error.userDto", "CPF já cadastrado");
+        }
+    
+        if (usuario.getCpf() == null || usuario.getCpf().isEmpty()) {
+            bindingResult.rejectValue("cpf", "error.userDto", "Campo CPF é obrigatório");
+        }
+    
+        if (bindingResult.hasErrors()) {
+            System.out.println("Formulário com erros");
+            System.out.println(bindingResult.getAllErrors());
+            if (usuario.getNome() == null) {
+                bindingResult.rejectValue("nome", "error.nome", "");
+            }
+            if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
+                bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
+            }
+    
+            return "usuarios/cadastro"; // Retorna a página de cadastro com os erros
+        }
+    
+        if (role != null) {
+            usuario.setRole(role);
+            usuarioRepository.save(usuario);
+            System.out.println("Usuário criado com sucesso");
+            return "redirect:/"; // Redireciona para a página inicial
+        } else {
+            return "Erro";
+        }
+    }
+    
+    private String handleUserErrors(Usuario usuario, BindingResult bindingResult) {
+        // Lógica comum para tratamento de erros do usuário
+        if (bindingResult.hasErrors()) {
+            System.out.println("Formulário com erros");
+            System.out.println(bindingResult.getAllErrors());
+            if (usuario.getNome() == null) {
+                bindingResult.rejectValue("nome", "error.nome", "");
+            }
+            // Adicione outras validações conforme necessário
+            return "usuarios/cadastro"; // Retorna a página de cadastro com os erros
         }
         return null;
-
     }
+    
+    
 
     public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha,
             UserDto usuarioDto, HttpSession session, Model model) {

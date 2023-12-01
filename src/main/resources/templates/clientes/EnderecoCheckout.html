@@ -20,6 +20,7 @@
             <th>Logradouro</th>
             <th>Cidade</th>
             <th>Complemento</th>
+            <td>Endereço principal</td>
             <th>Ação</th>
           </tr>
         </thead>
@@ -28,6 +29,10 @@
             <td th:text="${endereco.logradouro}"></td>
             <td th:text="${endereco.cidade}"></td>
             <td th:text="${endereco.complemento}"></td>
+            <td>
+              <span th:if="${endereco.enderecoPadrao}">este é o principal</span>
+              <span th:unless="${endereco.enderecoPadrao}"><!-- deixar em branco --></span>
+            </td>
             <td>
               <a
                 th:href="@{'/cliente/endereco/associarCarrinho/' + ${endereco.id}}"
@@ -40,6 +45,7 @@
           </tr>
         </tbody>
       </table>
+      <a class="btn btn-primary" th:href="@{/cliente/adicionar-endereco-cehckout/{id}(id=${cliente.id})}">adicionar mais um endereço</a>
     </div>
   </body>
 </html>

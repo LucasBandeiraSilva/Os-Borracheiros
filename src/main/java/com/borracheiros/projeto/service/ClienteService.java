@@ -106,8 +106,8 @@ public class ClienteService {
     }
 
     public String validacaoLogin(@RequestParam("email") String email, @RequestParam("senha") String senha,
-    HttpSession session, Model model) {
-    
+        HttpSession session, Model model) {
+
     Cliente cliente = clienteRepository.findByEmail(email);
 
     Long carrinhoNaoAutenticadoID = (Long) session.getAttribute("carrinhoNaoAutenticadoID");
@@ -133,6 +133,7 @@ public class ClienteService {
         return "clientes/LoginCliente";
     }
 }
+
 
 
 

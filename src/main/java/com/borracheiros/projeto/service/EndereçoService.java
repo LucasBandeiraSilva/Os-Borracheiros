@@ -57,6 +57,24 @@ public class EndereçoService {
         return null;
     }
 
+    // caso o cliente clicque para adicionar mais um endereço no checkou esse metodo é acionado
+    public String addEnderecoEntregaCheckout(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
+            @RequestParam("clienteId") Long clienteId) {
+        Optional<Cliente> clienteOptional = clienteRepository.findById(clienteId);
+
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+
+            Endereco endereco = enderecoDto.toEndereco();
+
+            endereco.setCliente(cliente);
+
+            enderecoRepository.save(endereco);
+            return "redirect:/cliente/endereco/selecionar/" + cliente.getId();
+        }
+        return null;
+    }
+
     public ModelAndView addEntrega(@PathVariable("id") Long id) {
         ModelAndView mv = new ModelAndView();
         Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
@@ -85,6 +103,21 @@ public class EndereçoService {
             mv.addObject("endereco", endereco);
             mv.addObject("clienteId", cliente.getId()); // Adicione o clienteId ao modelo
             mv.setViewName("clientes/adicionarEndereco");
+            return mv;
+        }
+
+        return mv;
+    }
+    public ModelAndView updateEnderecoCheckout(@PathVariable("id") Long id) {
+        ModelAndView mv = new ModelAndView();
+        Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+            Endereco endereco = new Endereco();
+            endereco.setCliente(cliente);
+            mv.addObject("endereco", endereco);
+            mv.addObject("clienteId", cliente.getId()); // Adicione o clienteId ao modelo
+            mv.setViewName("clientes/addEnderecoCheckout");
             return mv;
         }
 

@@ -12,70 +12,113 @@
     <link rel="stylesheet" href="/ResumoPedido.css" />
   </head>
   <body>
-    <h2>Itens do Carrinho</h2>
-    <table class="table table-bordered text-center">
-      <thead>
-        <tr>
-          <th>Nome do Produto</th>
-          <th>Ações</th>
-          <th>Preço</th>
-          <th>imagem</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="item : ${carrinhos}">
-          <td th:text="${item.nome}"></td>
-         
-          </td>
-          <td>
-            <a
-              class="btn btn-success"
-              th:href="@{'/cliente/adicionarUm/'+ ${item.id}}"
-              >+1</a
+    <div class="card">
+      <div class="row">
+        <div class="col-md-8 cart">
+          <h2 class="text-center">Itens do seu Carrinho</h2>
+          <!-- Loop para os itens do carrinho -->
+          <div th:each="item : ${carrinhos}">
+            <div class="row border-top border-bottom">
+              <div class="row main align-items-center">
+                <div class="col-2">
+                  <!-- Imagem do produto -->
+                  <img
+                    th:each="produto : ${produtosComImagem}"
+                    th:if="${produto.nome == item.nome}"
+                    th:src="@{'/imagem/' + ${produto.id}}"
+                    alt="Imagem do Produto"
+                    style="height: 100px; width: 100px"
+                  />
+                </div>
+                <div class="col">
+                  <div class="row text-muted ms-5" th:text="${item.nome}"></div>
+                  <br />
+                  <div
+                    class="row text-muted ms-5"
+                    th:text=" 'quantidade: ' +${item.quantidade}"
+                  ></div>
+                </div>
+                <div class="col">
+                  <!-- Botões + e - -->
+                  <a
+                    class="btn btn-success"
+                    th:href="@{'/cliente/adicionarUm/' + ${item.id}}"
+                    >+1</a
+                  >
+                  <a
+                    class="btn btn-warning"
+                    th:href="@{'/cliente/removeUm/' + ${item.id}}"
+                    >-1</a
+                  >
+                </div>
+                <div class="col" th:text="'R$ ' + ${item.preco}">
+                  <!-- Preço -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Fim do loop -->
+          <div class="back-to-shop">
+            <a style="font-size: 24px" th:href="@{/cliente/catalogo}"
+              >&leftarrow;</a
+            ><span class="text-muted">Comprar mais</span>
+          </div>
+        </div>
+        <div class="col-md-4 summary">
+          <div>
+            <h5><b>Resumo</b></h5>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col" style="padding-left: 0">
+              total de produtos no carrinho:
+              <span th:text="${carrinhos.size()}"></span>
+            </div>
+          </div>
+          <form
+            method="post"
+            th:action="@{'/cliente/frete/' + ${carrinhos[0].id}}"
+          >
+            <p>Frete</p>
+            <!-- Verifica se há um endereço padrão de entrega -->
+            <div th:if="${cepCliente != null}">
+              <p>
+                O CEP do seu endereço padrão de entrega é
+                <span th:text="${cepCliente}"></span>
+              </p>
+            </div>
+            <!-- Seleção de frete -->
+            <span class="span-required">o cep não é válido!!!</span>
+            <select class="form-select" name="frete" style="width: 9vw">
+              <option class="text-muted" value="0.00">
+                Escolha o valor do frete
+              </option>
+              <option class="text-muted" value="5.00">
+                Frete Econômico - R$ 5,00
+              </option>
+              <option class="text-muted" value="10.00">
+                Frete Padrão - R$; 10,00
+              </option>
+              <option class="text-muted" value="25.00">
+                Frete Expresso - R$ 25,00
+              </option>
+              <!-- Outras opções de frete com valores correspondentes -->
+            </select>
+            <div
+              class="row"
+              style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding: 2vh 0"
             >
-            <a
-              class="btn btn-warning"
-              th:href="@{'/cliente/removeUm/'+ ${item.id}}"
-              >-1</a
-            >
-            <a
-              class="btn btn-danger"
-              th:href="@{'/cliente/deletar/'+ ${item.id}}"
-              >remover do carrinho</a
-            >
-          </td>
-
-          <td th:text="${item.preco}"></td>
-          <td>
-            <img
-              th:each="produto : ${produtosComImagem}"
-              th:src="@{/imagem/{id}(id=${produto.id})}"
-              alt="Imagem do Produto"
-              style="height: 100px; width: 100px"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div
-      class="d-flex row justify-content-around align-items-center g-2 border"
-    >
-      <div class="col">
-       
-        <h3 class="ms-3">
-          Total de Itens R$
-          <span class="badge text-bg-primary" th:text="${totalItens}"></span>
-        </h3>
-      </div>
-
-      
-
-      <div class="col-md-auto me-3">
-        <a class="btn btn-outline-success" id="btn" th:href="@{/cliente/login}">avancar</a>
+              <div class="col">Preço total</div>
+              <div class="col text-right">
+                R$: <span th:text="${totalItens}"></span>
+              </div>
+            </div>
+            <button class="btn" type="submit">Avançar para o checkout</button>
+          </form>
+        </div>
       </div>
     </div>
 
-    <!-- <script src="/CheckoutFrete.js"></script> -->
+    <script src="/CheckoutFrete.js"></script>
   </body>
 </html>

@@ -124,40 +124,45 @@ public class CarrinhoService {
         return mv;
     }
 
-    public ModelAndView verCarrinhoNaoLogado(@PathVariable Long id, HttpSession session) {
+    public ModelAndView verCarrinhoNaoLogado(HttpSession session) {
         ModelAndView mv = new ModelAndView();
-        Optional<Estoque> estoqueOptional = this.estoqueRepository.findById(id);
-
-        if (estoqueOptional.isPresent()) {
-            System.out.println("Eu não estou logado...");
-            Estoque estoque = estoqueOptional.get();
-            mv.addObject("carrinhos", estoque.getCarrinhos());
+    
+       
+    
+        // Recupera todos os carrinhos
+        List<Carrinho> carrinhos = carrinhoRepository.findAll();
+    
+        if (!carrinhos.isEmpty()) {
             List<Estoque> produtosComImagem = new ArrayList<>(); // Lista para armazenar produtos com imagem
             BigDecimal totalItens = BigDecimal.ZERO;
-
-            for (Carrinho carrinho : estoque.getCarrinhos()) {
-                for (Estoque produto : carrinho.getEstoques()) {
-                    Estoque produtoComImagem = estoqueRepository.findById(produto.getId()).orElse(null);
+    
+            for (Carrinho carrinho : carrinhos) {
+                for (Estoque estoque : carrinho.getEstoques()) {
+                    Estoque produtoComImagem = estoqueRepository.findById(estoque.getId()).orElse(null);
                     if (produtoComImagem != null) {
                         produtosComImagem.add(produtoComImagem);
                     }
-                    totalItens = totalItens.add(carrinho.getPreco()); // Adiciona o preço do produto ao total
+    
+                    if (carrinho.getPreco() != null) {
+                        totalItens = totalItens.add(carrinho.getPreco());
+                    }
                 }
             }
-            Long carrinhoNaoAutenticadoID = (Long) session.getAttribute("carrinhoNaoAutenticadoID");
-            if (carrinhoNaoAutenticadoID != null) {
-                System.out.println("to no carrinho não autenticado!!!" + carrinhoNaoAutenticadoID);
-            }
-
-            mv.addObject("produtosComImagem", produtosComImagem);
-            mv.addObject("totalItens", totalItens);
+    
+            // Cálculo do total dos produtos
+            mv.addObject("totalItens", totalItens); // Adiciona o total dos produtos ao modelo
+            mv.addObject("produtosComImagem", produtosComImagem); // Adiciona os produtos com imagem ao modelo
+            mv.addObject("carrinhos", carrinhos); // Adiciona os carrinhos ao modelo
             mv.setViewName("clientes/ResumoPedidoNaoLogado");
-            return mv;
+        } else {
+            // Se a lista de carrinhos estiver vazia, redirecione para a página de carrinho vazio
+            return new ModelAndView("clientes/CarrinhoVazio");
         }
-
-        System.out.println("Estou retornando null");
-        return null;
+    
+        return mv;
     }
+    
+    
 
     public ModelAndView verCarrinho(Long id, HttpSession session) {
         Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
@@ -173,6 +178,16 @@ public class CarrinhoService {
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
             List<Carrinho> carrinhos = carrinhoRepository.findByCliente(cliente);
+            Optional<Endereco> enderecoPadraoOptional = enderecoRepository
+                    .findByClienteIdAndEnderecoPadraoTrue(cliente.getId());
+
+            if (enderecoPadraoOptional.isPresent()) {
+                Endereco enderecoPadrao = enderecoPadraoOptional.get();
+                String cepCliente = enderecoPadrao.getCep();
+                mv.addObject("cepCliente", cepCliente); // Adiciona o CEP ao modelo
+            }else{
+                System.out.println("o cliente não possui um endereço padrão de entrega");
+            }
 
             mv.addObject("cliente", cliente);
             mv.addObject("carrinhos", carrinhos);
@@ -310,6 +325,10 @@ public class CarrinhoService {
         Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(id);
         if (carrinhoOptional.isPresent()) {
             Carrinho carrinho = carrinhoOptional.get();
+
+            if (carrinho.getCliente() == null) {
+                return new ModelAndView("clientes/LoginCliente");
+            }
 
             BigDecimal valorTotal = carrinho.getPreco();
 
@@ -520,8 +539,9 @@ public class CarrinhoService {
                 .distinct()
                 .collect(Collectors.toList());
 
-        List<PedidoRealizado> todosOsPedidos = pedidoRealizadoRepository.findByClienteIdAndCodigoPedidoInOrderByDataPedidoDesc(clienteId,
-                codigosPedidosUnicos);
+        List<PedidoRealizado> todosOsPedidos = pedidoRealizadoRepository
+                .findByClienteIdAndCodigoPedidoInOrderByDataPedidoDesc(clienteId,
+                        codigosPedidosUnicos);
 
         // Associar a lista de códigos de pedidos às informações dos pedidos realizados
         mv.setViewName("clientes/MeusPedidos");
@@ -540,7 +560,7 @@ public class CarrinhoService {
         List<PedidoRealizado> pedido = pedidoRealizadoRepository.findByCodigoPedido(codigoProduto);
 
         Cliente clienteSession = (Cliente) session.getAttribute("cliente");
-        Long idCliente = clienteSession.getId();        
+        Long idCliente = clienteSession.getId();
         if (pedido.size() > 0) {
             mv.setViewName("clientes/PedidoInfo");
             mv.addObject("pedido", pedido);

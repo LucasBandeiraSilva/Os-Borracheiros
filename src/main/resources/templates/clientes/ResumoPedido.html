@@ -33,8 +33,12 @@
                   />
                 </div>
                 <div class="col">
-                  <div class="row text-muted ms-5" th:text="${item.nome}"></div> <br>
-                  <div class="row text-muted ms-5" th:text=" 'quantidade: ' +${item.quantidade}"></div>
+                  <div class="row text-muted ms-5" th:text="${item.nome}"></div>
+                  <br />
+                  <div
+                    class="row text-muted ms-5"
+                    th:text=" 'quantidade: ' +${item.quantidade}"
+                  ></div>
                 </div>
                 <div class="col">
                   <!-- Botões + e - -->
@@ -57,7 +61,8 @@
           </div>
           <!-- Fim do loop -->
           <div class="back-to-shop">
-            <a style="font-size: 24px;" th:href="@{/cliente/logado}">&leftarrow;</a
+            <a style="font-size: 24px" th:href="@{/cliente/logado}"
+              >&leftarrow;</a
             ><span class="text-muted">Comprar mais</span>
           </div>
         </div>
@@ -77,8 +82,16 @@
             th:action="@{'/cliente/frete/' + ${carrinhos[0].id}}"
           >
             <p>Frete</p>
+            <!-- Verifica se há um endereço padrão de entrega -->
+            <div th:if="${cepCliente != null}">
+              <p>
+                O CEP do seu endereço padrão de entrega é
+                <span th:text="${cepCliente}"></span>
+              </p>
+            </div>
             <!-- Seleção de frete -->
-            <select class="form-select" name="frete" style="width: 9vw;">
+            <span class="span-required">o cep não é válido!!!</span>
+            <select class="form-select" name="frete" style="width: 9vw">
               <option class="text-muted" value="0.00">
                 Escolha o valor do frete
               </option>
@@ -107,43 +120,7 @@
         </div>
       </div>
     </div>
-    <!-- <form
-      class="mt-5"
-      th:action="@{'/cliente/frete/' + ${carrinhos[0].id}}"
-      method="POST"
-    >
-      <label class="form-label" for="cep">CEP</label>
-      <input
-        style="width: 35%"
-        class="inputs required form-control"
-        type="number"
-        name="cep"
-        id="cep"
-        placeholder="Somente números"
-      />
-      <span class="span-required">o cep não é válido!!!</span>
-      <div id="freteContainer" th:if="${frete == null}">
-        <label for="frete">Selecione uma opção de frete:</label>
-        <select class="form-select w-50" name="frete" id="frete">
-          <option th:value="0.00">Selecione o valor do frete</option>
-          <option th:value="5.00">Frete Econômico - R$ 5,00</option>
-          <option th:value="10.00">Frete Padrão - R$ 10,00</option>
-          <option th:value="25.00">Frete Expresso - R$ 25,00</option>
-        </select>
-        <button type="submit" class="btn btn-success mt-2">
-          Selecionar Frete
-        </button>
-      </div>
-    </form>
-    <div class="d-flex justify-content-end me-2">
-      <a
-        class="btn btn-primary"
-        id="btn"
-        th:href="@{/cliente/endereco/selecionar/{id}(id=${cliente.id})}"
-      >
-        Avançar <i class="bi bi-arrow-right"></i>
-      </a>
-    </div> -->
+    
     <script src="/CheckoutFrete.js"></script>
   </body>
 </html>

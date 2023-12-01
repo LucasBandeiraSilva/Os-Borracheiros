@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/cadastro.css" />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
+    />
+    <title>adicionar endereço</title>
+  </head>
+  <style>
+    @media only screen and (max-width: 770px) {
+      #container {
+        height: 70vh;
+      }
+    }
+    @media only screen and (min-width: 1024px) {
+      #container {
+        height: 700px;
+      }
+    }
+  </style>
+  <body>
+    <main>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 offset-md-3 text-center mb-2"></div>
+
+          <div class="col-md-6 offset-md-3">
+            <div
+              class="border container d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
+              id="container"
+            >
+              <h2 class="text-bg-primary">adicione outro endereço!</h2>
+              <form
+                th:object="${endereco}"
+                action="/cliente/adicionar-enderecoEntrega/checkout"
+                method="post"
+                id="form"
+              >
+                <input type="hidden" name="clienteId" th:value="${clienteId}" />
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="form-label" for="cep">Cep</label>
+                    <input
+                      class="inputs required form-control"
+                      type="number"
+                      name="cep"
+                      id="cep"
+                      placeholder="Somente numeros"
+                    />
+                    <span class="span-required">o cep não é valido!!!</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="Loradouro">Logradouro</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="logradouro"
+                      id="logradouro"
+                      placeholder="logradouro"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="form-label" for="bairro">bairro</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="bairro"
+                      id="bairro"
+                      placeholder="bairro"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="cidade">cidade</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="cidade"
+                      id="cidade"
+                      placeholder="cidade"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="form-label" for="estado">estado</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="estado"
+                      id="estado"
+                      placeholder="estado"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="numero">numero</label>
+                    <input
+                      class="inputs required form-control"
+                      type="number"
+                      name="numero"
+                      id="numero"
+                      placeholder="numero"
+                      oninput="houseNumberValidation()"
+                    />
+                    <span class="span-required"
+                      >você precisa digitar um numero valido</span
+                    >
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="complemento"
+                      >Complemento</label
+                    >
+                    <input
+                      class="inputs required form-control"
+                      type="text"
+                      name="complemento"
+                      id="complemento"
+                      placeholder="EX: casa"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="endereco">endereço</label>
+                    <input
+                      class="inputs required form-control"
+                      type="text"
+                      name="endereco"
+                      id="endereco"
+                      placeholder="endereço"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="Tipo endereço"
+                      >Tipo endereço</label
+                    >
+                    <select
+                      class="form-select"
+                      name="tipoEndereco"
+                      id="tipoEndereco"
+                      required
+                    >
+                      <option value="entrega">Entrega</option>
+                      <option value="Faturamento">Faturamento</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 d-none">
+                    <label class="form-label" for="">Status</label>
+                    <select
+                      class="form-select"
+                      name="statusEndereco"
+                      id="statusEndereco"
+                    >
+                      <option value="true" selected>ATIVO</option>
+                      <option value="false">INATIVO</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button class="btn btn-success mt-3 w-100" type="submit">
+                  Enviar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="/Endereco.js"></script>
+  </body>
+</html>

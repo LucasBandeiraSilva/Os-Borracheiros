@@ -141,6 +141,10 @@ public class ClientController {
     public ModelAndView updateEndereco(@PathVariable("id") Long id, Model model) {
         return endereçoService.updateEndereco(id, model);
     }
+    @GetMapping("adicionar-endereco-cehckout/{id}")
+    public ModelAndView updateEnderecoCheckout(@PathVariable("id") Long id) {
+        return endereçoService.updateEnderecoCheckout(id);
+    }
     @GetMapping("/adicionar-enderecoEntrega/{id}")
     public ModelAndView addEnderecoEntreg(@PathVariable("id") Long id) {
         return endereçoService.addEntrega(id);
@@ -157,6 +161,11 @@ public class ClientController {
             @RequestParam("clienteId") Long clienteId) {
         return endereçoService.addEnderecoEntrega(enderecoDto, clienteId);
     }
+    @PostMapping("/adicionar-enderecoEntrega/checkout")
+    public String salvarEnderecoEntregaCheckout(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
+            @RequestParam("clienteId") Long clienteId) {
+        return endereçoService.addEnderecoEntregaCheckout(enderecoDto, clienteId);
+    }
 
     @GetMapping("/adicionar-carrinho/{id}")
     public ModelAndView adicionaCarrinho(@PathVariable("id") Long id, HttpSession session) {
@@ -167,9 +176,9 @@ public class ClientController {
     public ModelAndView verCarrinho(@PathVariable Long id, HttpSession session){
         return carrinhoService.verCarrinho(id, session);
     }
-    @GetMapping("/anonimo/carrinho/{id}")
-    public ModelAndView verCarrinhoNaoLogado(@PathVariable Long id, HttpSession session){
-        return carrinhoService.verCarrinhoNaoLogado(id,session);
+    @GetMapping("/anonimo/carrinho/")
+    public ModelAndView verCarrinhoNaoLogado( HttpSession session){
+        return carrinhoService.verCarrinhoNaoLogado(session);
     }
 
     @GetMapping("/endereco-padrao/{id}")
