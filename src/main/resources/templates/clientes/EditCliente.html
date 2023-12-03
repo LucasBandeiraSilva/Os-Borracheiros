@@ -55,7 +55,9 @@
                     <span class="span-required">nome invalido</span>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <label class="form-label" for="dataAniversario">data de nascimento</label>
+                    <label class="form-label" for="dataAniversario"
+                      >data de nascimento</label
+                    >
                     <input
                       class="form-control inputs required"
                       type="date"
@@ -64,7 +66,7 @@
                       th:field="*{dataAniversario}"
                       oninput="dateValidation()"
                     />
-                    <span  th:errors="*{dataAniversario}"></span>
+                    <span th:errors="*{dataAniversario}"></span>
                     <span class="span-required">data não deve ser vazia</span>
                   </div>
                 </div>
@@ -174,11 +176,6 @@
                   <tr th:each="endereco : ${cliente.enderecos}">
                     <td th:text="${endereco.logradouro}"></td>
                     <td>
-                      <!-- <a
-                        th:href="@{'/cliente/adicionar-endereco/' + ${endereco.id}}"
-                        class="btn btn-success ms-3"
-                        >adicionar</a
-                      > -->
                       <a
                         th:href="@{'/cliente/excluir-endereco/' + ${endereco.id}}"
                         class="btn btn-danger ms-3"
@@ -186,7 +183,8 @@
                       >
                       <a
                         th:href="@{'/cliente/endereco-padrao/' + ${endereco.id}}"
-                        class="btn btn-primary ms-3"
+                        class="btn btn-primary ms-3 padrao"
+                        id="padrao"
                         >Definir Padrão</a
                       >
                     </td>
@@ -204,5 +202,6 @@
       </div>
     </main>
     <script src="/EditarCliente.js"></script>
+    <script src="/enderecoPadrao.js"></script>
   </body>
 </html>

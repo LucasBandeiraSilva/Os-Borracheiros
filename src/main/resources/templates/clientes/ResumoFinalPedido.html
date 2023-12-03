@@ -12,7 +12,7 @@
   </head>
   <body>
     <div class="container">
-      <h1 >Resumo Final do Pedido</h1>
+      <h1>Resumo Final do Pedido</h1>
 
       <table class="table text-center">
         <thead>
@@ -54,10 +54,12 @@
       <h3>Forma de pagamento: <span th:text="${formaPagamento}"></span></h3>
 
       <a
-        class="btn btn-success mt-3"
+        class="btn btn-info mt-3"
+        id="finaliza-pedido"
         th:href="@{/cliente/finalizado/{idcliente}(idcliente=${idcliente})}"
         >Concluir compra</a
       >
     </div>
+    <script src="/Carrinho.js"></script>
   </body>
 </html>

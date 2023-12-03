@@ -1,5 +1,7 @@
 package com.borracheiros.projeto.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +15,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.carrinho.Carrinho;
+import com.borracheiros.projeto.carrinho.CarrinhoNaoAutenticado;
 import com.borracheiros.projeto.client.Cliente;
 import com.borracheiros.projeto.client.endereco.Endereco;
 import com.borracheiros.projeto.dto.ClientDto;
 import com.borracheiros.projeto.dto.EnderecoDto;
+import com.borracheiros.projeto.repositories.CarrinhoNaoAutenticadoRepository;
 import com.borracheiros.projeto.repositories.CarrinhoRepository;
 import com.borracheiros.projeto.repositories.ClienteRepository;
 import com.borracheiros.projeto.repositories.EnderecoRepository;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 
 @Service
@@ -34,6 +39,9 @@ public class ClienteService {
 
     @Autowired
     private CarrinhoRepository carrinhoRepository;
+
+    @Autowired
+    private CarrinhoNaoAutenticadoRepository carrinhoNaoAutenticadoRepository;
 
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -105,39 +113,44 @@ public class ClienteService {
         return "Erro";
     }
 
+    @Transactional
     public String validacaoLogin(@RequestParam("email") String email, @RequestParam("senha") String senha,
-        HttpSession session, Model model) {
+            HttpSession session, Model model) {
 
-    Cliente cliente = clienteRepository.findByEmail(email);
+        Cliente cliente = clienteRepository.findByEmail(email);
 
-    Long carrinhoNaoAutenticadoID = (Long) session.getAttribute("carrinhoNaoAutenticadoID");
-    System.out.println("sessão carrinho: " + carrinhoNaoAutenticadoID);
+        if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
 
-    if (cliente != null && encoder.matches(senha, cliente.getSenha())) {
+            // Recupere todos os carrinhos não autenticados
+            List<CarrinhoNaoAutenticado> carrinhosNaoAutenticados = carrinhoNaoAutenticadoRepository.findAll();
 
-        if (carrinhoNaoAutenticadoID != null) {
-            Carrinho carrinhoNaoAutenticado = carrinhoRepository.findById(carrinhoNaoAutenticadoID).orElse(null);
+            for (CarrinhoNaoAutenticado carrinhoNaoAutenticado : carrinhosNaoAutenticados) {
+                // Para cada carrinho não autenticado, crie um novo Carrinho e transfira as
+                // informações
+                Carrinho carrinho = new Carrinho();
+                carrinho.setCliente(cliente);
+                carrinho.setEstoques(new ArrayList<>(carrinhoNaoAutenticado.getEstoques()));
+                carrinho.setQuantidade(carrinhoNaoAutenticado.getQuantidade());
+                carrinho.setPreco(carrinhoNaoAutenticado.getPreco());
+                carrinho.setNome(carrinhoNaoAutenticado.getNome());
 
-            if (carrinhoNaoAutenticado != null) {
-                carrinhoNaoAutenticado.setCliente(cliente);
-                carrinhoRepository.save(carrinhoNaoAutenticado);
+                // Salve o carrinho no banco de dados
+                carrinhoRepository.save(carrinho);
+
+                // Remova o carrinho não autenticado do banco de dados
+                carrinhoNaoAutenticadoRepository.deleteAll();
             }
+
+            // Restante do código para cliente autenticado
+            session.setAttribute("cliente", cliente);
+            session.removeAttribute("carrinhoNaoAutenticadoID"); // Remova o ID do carrinho da sessão
+            session.setAttribute("nomeUsuario", cliente.getNome());
+            return "redirect:/cliente/logado";
+        } else {
+            model.addAttribute("loginMismatch", true);
+            return "clientes/LoginCliente";
         }
-
-        session.setAttribute("cliente", cliente);
-        session.removeAttribute("carrinhoNaoAutenticadoID"); // Remova o ID do carrinho da sessão
-        session.setAttribute("nomeUsuario", cliente.getNome());
-        return "redirect:/cliente/logado";
-    } else {
-        model.addAttribute("loginMismatch", true);
-        return "clientes/LoginCliente";
     }
-}
-
-
-
-
-
 
     public ModelAndView selecionarEndereco(@PathVariable Long id) {
 

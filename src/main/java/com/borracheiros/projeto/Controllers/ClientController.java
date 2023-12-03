@@ -199,8 +199,8 @@ public class ClientController {
         return carrinhoService.removeCarrinho(id, session);
     }
     @PostMapping("/frete/{id}")
-    public ModelAndView calcularFrete(@PathVariable Long id,@RequestParam("frete") String freteSelecionado){
-        return carrinhoService.calcularFrete(id,freteSelecionado);
+    public ModelAndView calcularFrete(@PathVariable Long id,@RequestParam("frete") String freteSelecionado,HttpSession session){
+        return carrinhoService.calcularFrete(id,freteSelecionado, session);
     }
     @GetMapping("/endereco/selecionar/{id}")
     public ModelAndView selecionarEndereco(@PathVariable Long id){

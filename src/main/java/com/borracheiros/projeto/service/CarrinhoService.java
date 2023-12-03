@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.borracheiros.projeto.carrinho.Carrinho;
+import com.borracheiros.projeto.carrinho.CarrinhoNaoAutenticado;
 import com.borracheiros.projeto.carrinho.PedidoRealizado;
 import com.borracheiros.projeto.client.Cliente;
 import com.borracheiros.projeto.client.endereco.Endereco;
 import com.borracheiros.projeto.estoque.entities.Estoque;
+import com.borracheiros.projeto.repositories.CarrinhoNaoAutenticadoRepository;
 import com.borracheiros.projeto.repositories.CarrinhoRepository;
 import com.borracheiros.projeto.repositories.ClienteRepository;
 import com.borracheiros.projeto.repositories.EnderecoRepository;
@@ -34,6 +36,8 @@ public class CarrinhoService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    @Autowired
+    private CarrinhoNaoAutenticadoRepository carrinhoNaoAutenticadoRepository;
 
     @Autowired
     private EstoqueRepository estoqueRepository;
@@ -56,6 +60,7 @@ public class CarrinhoService {
             Cliente cliente = (Cliente) session.getAttribute("cliente");
 
             if (cliente != null) {
+                // Cliente autenticado
                 Carrinho carrinho = null;
 
                 // Verifique se o cliente já tem um carrinho
@@ -89,26 +94,27 @@ public class CarrinhoService {
                 mv.setViewName("clientes/CatalogoClienteLogado");
             } else {
                 // Cliente não autenticado
-                Carrinho carrinhoNaoAutenticado = (Carrinho) session.getAttribute("carrinhoNaoAutenticado");
+                CarrinhoNaoAutenticado carrinhoNaoAutenticado = (CarrinhoNaoAutenticado) session
+                        .getAttribute("carrinhoNaoAutenticado");
 
                 if (carrinhoNaoAutenticado == null) {
-                    carrinhoNaoAutenticado = new Carrinho();
-                    carrinhoNaoAutenticado.getEstoques().add(estoque);
-                    carrinhoNaoAutenticado.setNome(nomeProduto);
-                    carrinhoNaoAutenticado.setQuantidade(1);
-                    carrinhoNaoAutenticado.setPreco(BigDecimal.ZERO); // Inicialize o preço como zero
-                } else {
-                    int novaQuantidade = carrinhoNaoAutenticado.getQuantidade() + 1;
-                    carrinhoNaoAutenticado.setQuantidade(novaQuantidade);
+                    carrinhoNaoAutenticado = new CarrinhoNaoAutenticado();
                 }
 
-                carrinhoNaoAutenticado.setPreco(carrinhoNaoAutenticado.getPreco().add(estoque.getPreco()));
-                carrinhoRepository.save(carrinhoNaoAutenticado); // Atualize o carrinho no banco de dados
+                // Adicione o estoque ao carrinho não autenticado
+                carrinhoNaoAutenticado.getEstoques().add(estoque);
 
-                session.setAttribute("carrinhoNaoAutenticadoID", carrinhoNaoAutenticado.getId());
+                carrinhoNaoAutenticado.setQuantidade(1);
+                carrinhoNaoAutenticado.setPreco(BigDecimal.ZERO); // Inicialize o preço como zero
+
+                carrinhoNaoAutenticado.setNome(nomeProduto);
+                carrinhoNaoAutenticado.setPreco(carrinhoNaoAutenticado.getPreco().add(estoque.getPreco()));
+
+                // Salve o carrinho não autenticado no banco de dados
+                carrinhoNaoAutenticadoRepository.save(carrinhoNaoAutenticado);
 
                 if (carrinhoNaoAutenticado != null) {
-                    System.out.println("carrinho passando......");
+                    System.out.println("Carrinho não autenticado salvo no banco.");
                     System.out.println(carrinhoNaoAutenticado.getId());
                 }
 
@@ -116,8 +122,6 @@ public class CarrinhoService {
                 mv.setViewName("clientes/catalogo");
             }
         } else {
-            // Lógica para lidar com o caso em que o estoque não foi encontrado
-            // Pode ser uma boa ideia redirecionar o usuário para uma página de erro.
             mv.setViewName("erro");
         }
 
@@ -126,43 +130,40 @@ public class CarrinhoService {
 
     public ModelAndView verCarrinhoNaoLogado(HttpSession session) {
         ModelAndView mv = new ModelAndView();
-    
-       
-    
-        // Recupera todos os carrinhos
-        List<Carrinho> carrinhos = carrinhoRepository.findAll();
-    
-        if (!carrinhos.isEmpty()) {
+
+        // Recupera todos os carrinhos não autenticados
+        List<CarrinhoNaoAutenticado> carrinhosNaoAutenticados = carrinhoNaoAutenticadoRepository.findAll();
+
+        if (!carrinhosNaoAutenticados.isEmpty()) {
             List<Estoque> produtosComImagem = new ArrayList<>(); // Lista para armazenar produtos com imagem
             BigDecimal totalItens = BigDecimal.ZERO;
-    
-            for (Carrinho carrinho : carrinhos) {
-                for (Estoque estoque : carrinho.getEstoques()) {
+
+            for (CarrinhoNaoAutenticado carrinhoNaoAutenticado : carrinhosNaoAutenticados) {
+                for (Estoque estoque : carrinhoNaoAutenticado.getEstoques()) {
                     Estoque produtoComImagem = estoqueRepository.findById(estoque.getId()).orElse(null);
                     if (produtoComImagem != null) {
                         produtosComImagem.add(produtoComImagem);
                     }
-    
-                    if (carrinho.getPreco() != null) {
-                        totalItens = totalItens.add(carrinho.getPreco());
+
+                    if (carrinhoNaoAutenticado.getPreco() != null) {
+                        totalItens = totalItens.add(carrinhoNaoAutenticado.getPreco());
                     }
                 }
             }
-    
-            // Cálculo do total dos produtos
-            mv.addObject("totalItens", totalItens); // Adiciona o total dos produtos ao modelo
-            mv.addObject("produtosComImagem", produtosComImagem); // Adiciona os produtos com imagem ao modelo
-            mv.addObject("carrinhos", carrinhos); // Adiciona os carrinhos ao modelo
+
+            // adicionando models
+            mv.addObject("totalItens", totalItens); 
+            mv.addObject("produtosComImagem", produtosComImagem); 
+            mv.addObject("carrinhosNaoAutenticados", carrinhosNaoAutenticados); 
             mv.setViewName("clientes/ResumoPedidoNaoLogado");
         } else {
-            // Se a lista de carrinhos estiver vazia, redirecione para a página de carrinho vazio
-            return new ModelAndView("clientes/CarrinhoVazio");
+            // Se a lista de carrinhos não autenticados estiver vazia, redirecione para a
+            // página de carrinho vazio
+            return new ModelAndView("clientes/CarrinhoVazioNaoLogado");
         }
-    
+
         return mv;
     }
-    
-    
 
     public ModelAndView verCarrinho(Long id, HttpSession session) {
         Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
@@ -185,7 +186,7 @@ public class CarrinhoService {
                 Endereco enderecoPadrao = enderecoPadraoOptional.get();
                 String cepCliente = enderecoPadrao.getCep();
                 mv.addObject("cepCliente", cepCliente); // Adiciona o CEP ao modelo
-            }else{
+            } else {
                 System.out.println("o cliente não possui um endereço padrão de entrega");
             }
 
@@ -319,42 +320,43 @@ public class CarrinhoService {
         }
     }
 
-    public ModelAndView calcularFrete(@PathVariable Long id, @RequestParam("frete") String freteSelecionado) {
+    public ModelAndView calcularFrete(@PathVariable Long id, @RequestParam("frete") String freteSelecionado,
+            HttpSession session) {
         BigDecimal frete = new BigDecimal(freteSelecionado);
 
-        Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(id);
-        if (carrinhoOptional.isPresent()) {
-            Carrinho carrinho = carrinhoOptional.get();
+        Cliente clienteSession = (Cliente) session.getAttribute("cliente");
+        if (clienteSession == null) {
+            return new ModelAndView("clientes/LoginCliente");
 
-            if (carrinho.getCliente() == null) {
-                return new ModelAndView("clientes/LoginCliente");
-            }
+        } else {
+            Optional<Carrinho> carrinhoOptional = this.carrinhoRepository.findById(id);
+            if (carrinhoOptional.isPresent()) {
+                Carrinho carrinho = carrinhoOptional.get();
 
-            BigDecimal valorTotal = carrinho.getPreco();
+                BigDecimal valorTotal = carrinho.getPreco();
 
-            if (carrinho.getFrete() == null || !carrinho.getFrete().equals(frete)) {
-                BigDecimal freteAntigo = carrinho.getFrete();
+                if (carrinho.getFrete() == null || !carrinho.getFrete().equals(frete)) {
+                    BigDecimal freteAntigo = carrinho.getFrete();
 
-                if (freteAntigo != null) {
-                    // Subtrai o frete antigo do valor total
-                    valorTotal = valorTotal.subtract(freteAntigo);
+                    if (freteAntigo != null) {
+                        // Subtrai o frete antigo do valor total
+                        valorTotal = valorTotal.subtract(freteAntigo);
+                    }
+
+                    // Adiciona o novo frete ao valor total
+                    valorTotal = valorTotal.add(frete);
+
+                    // Atualiza o frete no carrinho
+                    carrinho.setFrete(frete);
+
+                    // Atualiza o valor total no carrinho
+                    carrinho.setPreco(valorTotal);
+
+                    this.carrinhoRepository.saveAndFlush(carrinho);
                 }
 
-                // Adiciona o novo frete ao valor total
-                valorTotal = valorTotal.add(frete);
-
-                // Atualiza o frete no carrinho
-                carrinho.setFrete(frete);
-
-                // Atualiza o valor total no carrinho
-                carrinho.setPreco(valorTotal);
-
-                // Salva as alterações no carrinho
-                this.carrinhoRepository.saveAndFlush(carrinho);
+                return new ModelAndView("redirect:/cliente/endereco/selecionar/" + carrinho.getCliente().getId());
             }
-
-            // Redireciona para a página do carrinho do cliente
-            return new ModelAndView("redirect:/cliente/endereco/selecionar/" + carrinho.getCliente().getId());
         }
         return new ModelAndView("erro");
     }
@@ -370,14 +372,8 @@ public class CarrinhoService {
             List<Carrinho> carrinhos = cliente.getCarrinho();
 
             ModelAndView mv = new ModelAndView("clientes/FormaPagamento");
-            mv.addObject("enderecos", enderecos); // Adiciona a lista de endereços ao modelo
-            mv.addObject("carrinhos", carrinhos); // Adiciona a lista de carrinhos ao modelo
-
-            // Pode ser necessário mais lógica para permitir ao cliente escolher qual
-            // carrinho associar
-
-            // Associa o endereço ao carrinho escolhido (aqui, assume que o cliente tem pelo
-            // menos um carrinho)
+            mv.addObject("enderecos", enderecos);
+            mv.addObject("carrinhos", carrinhos);
             Carrinho carrinhoEscolhido = carrinhos.get(0);
             carrinhoEscolhido.setEndereco(enderecoEscolhido);
             carrinhoRepository.save(carrinhoEscolhido);
@@ -458,8 +454,6 @@ public class CarrinhoService {
         Long idCliente = null;
         BigDecimal valorTotalSessao = (BigDecimal) session.getAttribute("valorTotalPedido");
 
-        // Se o valor total não estiver presente na sessão, você pode lidar com isso de
-        // maneira apropriada, dependendo dos requisitos
         if (valorTotalSessao == null) {
             System.out.println("carrinho nulll");
         }
@@ -490,7 +484,7 @@ public class CarrinhoService {
                 pedidoRealizado.setFrete(carrinho.getFrete());
                 pedidoRealizado.setValorTotal(valorTotalSessao);
 
-                System.out.println("preço finalllll!!!!!!!!  " + pedidoRealizado.getValorTotal());
+                System.out.println("preço final " + pedidoRealizado.getValorTotal());
                 pedidoRealizadoRepository.save(pedidoRealizado);
             }
 

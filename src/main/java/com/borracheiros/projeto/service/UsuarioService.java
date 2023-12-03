@@ -118,7 +118,7 @@ public class UsuarioService {
             System.out.println(bindingResult.getAllErrors());
             if (usuario.getNome() == null) {
                 bindingResult.rejectValue("nome", "error.nome", "");
-            }
+            }   
             if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
                 bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
             }

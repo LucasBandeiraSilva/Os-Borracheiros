@@ -56,6 +56,14 @@
                 <div class="col" th:text="'R$ ' + ${item.preco}">
                   <!-- Preço -->
                 </div>
+                <div class="col">
+                  <a th:href="@{'/cliente/deletar/' + ${item.id}}" id="deletar">
+                    <i
+                      class="fa-solid fa-trash-can fa-lg"
+                      style="color: #cb0606"
+                    ></i
+                  ></a>
+                </div>
               </div>
             </div>
           </div>
@@ -104,7 +112,6 @@
               <option class="text-muted" value="25.00">
                 Frete Expresso - R$ 25,00
               </option>
-              <!-- Outras opções de frete com valores correspondentes -->
             </select>
             <div
               class="row"
@@ -120,7 +127,12 @@
         </div>
       </div>
     </div>
-    
+
     <script src="/CheckoutFrete.js"></script>
+    <script src="/Carrinho.js"></script>
+    <script
+      src="https://kit.fontawesome.com/de8b5f1e6f.js"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

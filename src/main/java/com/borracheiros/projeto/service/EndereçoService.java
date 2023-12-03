@@ -40,6 +40,7 @@ public class EndereçoService {
 
         return "redirect:/cliente/editar/" + clienteId;
     }
+
     public String addEnderecoEntrega(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
             @RequestParam("clienteId") Long clienteId) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(clienteId);
@@ -57,7 +58,8 @@ public class EndereçoService {
         return null;
     }
 
-    // caso o cliente clicque para adicionar mais um endereço no checkou esse metodo é acionado
+    // caso o cliente clicque para adicionar mais um endereço no checkou esse metodo
+    // é acionado
     public String addEnderecoEntregaCheckout(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
             @RequestParam("clienteId") Long clienteId) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(clienteId);
@@ -91,8 +93,6 @@ public class EndereçoService {
         return mv;
     }
 
-   
-
     public ModelAndView updateEndereco(@PathVariable("id") Long id, Model model) {
         ModelAndView mv = new ModelAndView();
         Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
@@ -108,6 +108,7 @@ public class EndereçoService {
 
         return mv;
     }
+
     public ModelAndView updateEnderecoCheckout(@PathVariable("id") Long id) {
         ModelAndView mv = new ModelAndView();
         Optional<Cliente> clienteOptional = this.clienteRepository.findById(id);
@@ -134,7 +135,7 @@ public class EndereçoService {
                 return "clientes/AvisoEndereco";
             }
             enderecoRepository.deleteById(id);
-            return "clientes/EnderecoExcluido";
+            return "redirect:/cliente/editar/" + cliente.getId();
         }
         return null;
     }
@@ -149,16 +150,19 @@ public class EndereçoService {
                 throw new IllegalArgumentException("O endereço não pertence ao usuário.");
             } else {
 
-                for (Endereco e : cliente.getEnderecos()) { // verifica se o cliente ja possui um endereço como padrão,
-                                                            // se sim o desativa para a definição de outro como padrão
+                for (Endereco e : cliente.getEnderecos()) {
                     if (e.isEnderecoPadrao()) {
                         e.setEnderecoPadrao(false);
                     }
+                    /*
+                     * verifica se o cliente ja possui um endereço como padrão,
+                     * se sim o desativa para a definição de outro como padrão
+                     */
                 }
 
                 endereco.setEnderecoPadrao(true);
                 enderecoRepository.save(endereco);
-                mv.setViewName("clientes/EnderecoPadrao");
+                mv.setViewName("redirect:/cliente/editar/" + cliente.getId());
                 return mv;
             }
         }

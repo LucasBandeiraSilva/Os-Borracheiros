@@ -3,6 +3,7 @@ package com.borracheiros.projeto.client;
 import java.util.List;
 
 import com.borracheiros.projeto.carrinho.Carrinho;
+import com.borracheiros.projeto.carrinho.CarrinhoNaoAutenticado;
 import com.borracheiros.projeto.client.endereco.Endereco;
 
 import jakarta.persistence.Column;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -34,5 +36,7 @@ public class Cliente {
     private List<Endereco> enderecos;
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<Carrinho> carrinho;
-    
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+    private List<CarrinhoNaoAutenticado> carrinhosNaoAutenticados;
+
 }
