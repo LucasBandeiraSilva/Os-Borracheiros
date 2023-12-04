@@ -25,6 +25,10 @@ public interface PedidoRealizadoRepository extends JpaRepository<PedidoRealizado
 
     List<PedidoRealizado> findAllByOrderByDataPedidoDesc();
 
+    List<PedidoRealizado> findDistinctByCodigoPedidoIsNotNullOrderByCodigoPedidoDesc();
+
+    List<PedidoRealizado>findByCodigoPedidoInOrderByDataPedidoDesc(List<Long> codigosPedido);
+
 
 
 

@@ -3,6 +3,7 @@ package com.borracheiros.projeto.service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -193,23 +194,36 @@ public class UsuarioService {
 
     }
 
-    public ModelAndView listaPedidos(HttpSession session) {
-        ModelAndView mv = new ModelAndView();
-        List<PedidoRealizado> pedidoRealizado = this.pedidoRealizadoRepository.findAllByOrderByDataPedidoDesc();
+    public ModelAndView listarTodosPedidos(HttpSession session) {
+    ModelAndView mv = new ModelAndView();
 
-        Long roleId = (Long) session.getAttribute("roleId");
+    Long roleId = (Long) session.getAttribute("roleId");
 
-        if (roleId == null || roleId != 2) {
-            return new ModelAndView("aviso");
-        }
-
-        if (pedidoRealizado.isEmpty()) {
-            return new ModelAndView("usuarios/ListaPedidosVazia");
-        }
-        mv.setViewName("usuarios/ListaPedido");
-        mv.addObject("carrinho", pedidoRealizado);
-        return mv;
+    if (roleId == null || roleId != 2) {
+        return new ModelAndView("aviso");
     }
+
+    // Encontrar todos os códigos de pedido distintos
+    List<Long> codigosPedidosUnicos = pedidoRealizadoRepository
+            .findDistinctByCodigoPedidoIsNotNullOrderByCodigoPedidoDesc()
+            .stream()
+            .map(PedidoRealizado::getCodigoPedido)
+            .distinct()
+            .collect(Collectors.toList());
+
+    // Buscar os pedidos associados a esses códigos
+    List<PedidoRealizado> todosOsPedidos = pedidoRealizadoRepository
+            .findByCodigoPedidoInOrderByDataPedidoDesc(codigosPedidosUnicos);
+
+    if (todosOsPedidos.isEmpty()) {
+        return new ModelAndView("usuarios/ListaPedidosVazia");
+    }
+
+    mv.setViewName("usuarios/ListaPedido");
+    mv.addObject("pedidos", todosOsPedidos);
+    return mv;
+}
+
 
     public ModelAndView editarStatusPedido(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView();

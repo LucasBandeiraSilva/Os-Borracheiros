@@ -168,7 +168,7 @@ public class CarrinhoService {
 
             mv.addObject("produtosComImagem", produtosComImagem);
             mv.addObject("carrinhosNaoAutenticados", carrinhosNaoAutenticados);
-            mv.setViewName("clientes/ResumoPedidoNaoLogado");
+            mv.setViewName("clientes/CarrinhoNaoLogado");
         } else {
             // Se a lista de carrinhos não autenticados estiver vazia, redirecione para a
             // página de carrinho vazio
@@ -241,7 +241,7 @@ public class CarrinhoService {
                 mv.addObject("produtosComImagem", produtosComImagem);
                 mv.addObject("carrinho", carrinhos); 
                 mv.addObject("totalFrete",totalFrete);
-                mv.setViewName("clientes/ResumoPedido");
+                mv.setViewName("clientes/Carrinho");
             } else {
                 // A lista carrinhos está vazia, redirecione para a página de carrinho vazio
                 return new ModelAndView("clientes/CarrinhoVazio");
