@@ -42,17 +42,28 @@
                   <!-- Botões + e - -->
                   <a
                     class="btn btn-success"
-                    th:href="@{'/cliente/adicionarUm/' + ${item.id}}"
+                    th:href="@{'/cliente/add/' + ${item.id}}"
                     >+1</a
                   >
                   <a
                     class="btn btn-warning"
-                    th:href="@{'/cliente/removeUm/' + ${item.id}}"
+                    th:href="@{'/cliente/menosUmProduto/' + ${item.id} + '/delete'}"
                     >-1</a
                   >
                 </div>
                 <div class="col" th:text="'R$ ' + ${item.preco}">
                   <!-- Preço -->
+                </div>
+                <div class="col">
+                  <a
+                    th:href="@{'/cliente/carrinho/' + ${item.id} + '/remove'}"
+                    id="deletar"
+                  >
+                    <i
+                      class="fa-solid fa-trash-can fa-lg"
+                      style="color: #cb0606"
+                    ></i
+                  ></a>
                 </div>
               </div>
             </div>
@@ -77,7 +88,7 @@
           </div>
           <form
             method="post"
-            th:action="@{'/cliente/frete/' + ${carrinhosNaoAutenticados[0].id}}"
+            th:action="@{'/cliente/frete/carrinhoNaoAutenticado/' + ${carrinhosNaoAutenticados[0].id}}"
           >
             <p>Frete</p>
             <!-- Verifica se há um endereço padrão de entrega -->
@@ -87,9 +98,11 @@
                 <span th:text="${cepCliente}"></span>
               </p>
             </div>
+            <label class="form-label" for="frete">Informe o frete abaixo</label>
+            <input class="form-control w-50" type="number" name="" id="" placeholder="informe o cep:">
             <!-- Seleção de frete -->
             <span class="span-required">o cep não é válido!!!</span>
-            <select class="form-select" name="frete" style="width: 9vw">
+            <select class="form-select w-50" name="frete" >
               <option class="text-muted" value="0.00">
                 Escolha o valor do frete
               </option>
@@ -102,8 +115,9 @@
               <option class="text-muted" value="25.00">
                 Frete Expresso - R$ 25,00
               </option>
-              <!-- Outras opções de frete com valores correspondentes -->
             </select>
+            <span th:if="${totalFrete != null and totalFrete>0}" th:text="'valor do frete R$: '+ ${totalFrete}"></span>
+            <button class="btn" type="submit">Calcular frete</button>
             <div
               class="row"
               style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding: 2vh 0"
@@ -113,12 +127,18 @@
                 R$: <span th:text="${totalItens}"></span>
               </div>
             </div>
-            <button class="btn" type="submit">Avançar para o checkout</button>
+           
           </form>
+          <a th:href="@{/cliente/login}" class="btn btn-success">Avançar</a>
         </div>
+
       </div>
     </div>
 
     <script src="/CheckoutFrete.js"></script>
+    <script
+      src="https://kit.fontawesome.com/de8b5f1e6f.js"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

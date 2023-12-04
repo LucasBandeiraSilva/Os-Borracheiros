@@ -26,7 +26,7 @@ public class Endereco {
     private int numero;
     private String cidade;
     private String endereco;
-    private String tipoEndereco;
+    private String enderecoFaturamento;
     private boolean statusEndereco;
     private boolean enderecoPadrao;
 

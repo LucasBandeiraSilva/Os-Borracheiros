@@ -29,6 +29,7 @@ import com.borracheiros.projeto.repositories.EnderecoRepository;
 import com.borracheiros.projeto.repositories.EstoqueRepository;
 import com.borracheiros.projeto.repositories.PedidoRealizadoRepository;
 
+import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpSession;
 
 @Service
@@ -51,6 +52,8 @@ public class CarrinhoService {
     public ModelAndView adicionaProdutoCarrinho(Long id, HttpSession session) {
         ModelAndView mv = new ModelAndView();
         Optional<Estoque> estoqueOptional = this.estoqueRepository.findById(id);
+
+        
 
         if (estoqueOptional.isPresent()) {
             Estoque estoque = estoqueOptional.get();
@@ -137,6 +140,7 @@ public class CarrinhoService {
         if (!carrinhosNaoAutenticados.isEmpty()) {
             List<Estoque> produtosComImagem = new ArrayList<>(); // Lista para armazenar produtos com imagem
             BigDecimal totalItens = BigDecimal.ZERO;
+            BigDecimal totalFrete = BigDecimal.ZERO; // Inicializa o total do frete
 
             for (CarrinhoNaoAutenticado carrinhoNaoAutenticado : carrinhosNaoAutenticados) {
                 for (Estoque estoque : carrinhoNaoAutenticado.getEstoques()) {
@@ -149,12 +153,21 @@ public class CarrinhoService {
                         totalItens = totalItens.add(carrinhoNaoAutenticado.getPreco());
                     }
                 }
+
+                // Adiciona o frete ao totalFrete
+                if (carrinhoNaoAutenticado.getFrete() != null) {
+                    totalFrete = (carrinhoNaoAutenticado.getFrete());
+                }
             }
 
+            System.out.println("total do frete no carrinho nao logado: " + totalFrete);
+
             // adicionando models
-            mv.addObject("totalItens", totalItens); 
-            mv.addObject("produtosComImagem", produtosComImagem); 
-            mv.addObject("carrinhosNaoAutenticados", carrinhosNaoAutenticados); 
+            mv.addObject("totalItens", totalItens);
+            mv.addObject("totalFrete", totalFrete); // Adiciona o total do frete ao modelo
+
+            mv.addObject("produtosComImagem", produtosComImagem);
+            mv.addObject("carrinhosNaoAutenticados", carrinhosNaoAutenticados);
             mv.setViewName("clientes/ResumoPedidoNaoLogado");
         } else {
             // Se a lista de carrinhos não autenticados estiver vazia, redirecione para a
@@ -177,6 +190,8 @@ public class CarrinhoService {
         }
 
         if (clienteOptional.isPresent()) {
+            BigDecimal totalFrete = BigDecimal.ZERO;
+
             Cliente cliente = clienteOptional.get();
             List<Carrinho> carrinhos = carrinhoRepository.findByCliente(cliente);
             Optional<Endereco> enderecoPadraoOptional = enderecoRepository
@@ -207,6 +222,10 @@ public class CarrinhoService {
                         if (carrinho.getPreco() != null) {
                             mv.addObject("totalItens", carrinho.getPreco());
                         }
+                        if(carrinho.getFrete() != null){
+                            totalFrete = carrinho.getFrete();
+                            System.out.println("logado frete: " + totalFrete);
+                        }
                     }
                 }
 
@@ -218,9 +237,10 @@ public class CarrinhoService {
                 }
 
                 // Adiciona o valor do frete ao totalFrete
-                mv.addObject("totalItens", total); // Adiciona o total dos produtos para exibição na página
-                mv.addObject("produtosComImagem", produtosComImagem); // Adiciona os produtos com imagem para exibição
-                mv.addObject("carrinho", carrinhos); // Adiciona os carrinhos ao modelo
+                mv.addObject("totalItens", total);
+                mv.addObject("produtosComImagem", produtosComImagem);
+                mv.addObject("carrinho", carrinhos); 
+                mv.addObject("totalFrete",totalFrete);
                 mv.setViewName("clientes/ResumoPedido");
             } else {
                 // A lista carrinhos está vazia, redirecione para a página de carrinho vazio
@@ -230,6 +250,59 @@ public class CarrinhoService {
 
         // Se clienteOptional estiver vazio, retorna uma ModelAndView vazia
         return mv;
+    }
+
+    // adição de mais 1 produto no carrinho de cliente não logado
+    public ModelAndView maisUmProduto(@PathVariable Long carrinhoId) {
+        Optional<CarrinhoNaoAutenticado> carrinhoNaoAutenticadoOptional = this.carrinhoNaoAutenticadoRepository
+                .findById(carrinhoId);
+        if (carrinhoNaoAutenticadoOptional.isPresent()) {
+            CarrinhoNaoAutenticado carrinhoNaoAutenticado = carrinhoNaoAutenticadoOptional.get();
+            int novaQuantidade = carrinhoNaoAutenticado.getQuantidade() + 1;
+            carrinhoNaoAutenticado.setQuantidade(novaQuantidade);
+            BigDecimal preco = carrinhoNaoAutenticado.getEstoques().get(0).getPreco();
+            BigDecimal novoPreco = preco.multiply(BigDecimal.valueOf(carrinhoNaoAutenticado.getQuantidade()));
+            carrinhoNaoAutenticado.setPreco(novoPreco);
+            carrinhoNaoAutenticadoRepository.save(carrinhoNaoAutenticado);
+            ModelAndView mv = new ModelAndView("redirect:/cliente/anonimo/carrinho/");
+            return mv;
+        }
+        return null;
+    }
+
+    // remoção de um produto do cliente não logado
+    public ModelAndView menosUmProduto(@PathVariable Long carrinhoId) {
+        Optional<CarrinhoNaoAutenticado> carrinhoNaoAutenticadoOptional = this.carrinhoNaoAutenticadoRepository
+                .findById(carrinhoId);
+        if (carrinhoNaoAutenticadoOptional.isPresent()) {
+            CarrinhoNaoAutenticado carrinhoNaoAutenticado = carrinhoNaoAutenticadoOptional.get();
+            int novaQuantidade = carrinhoNaoAutenticado.getQuantidade() - 1;
+            carrinhoNaoAutenticado.setQuantidade(novaQuantidade);
+            BigDecimal preco = carrinhoNaoAutenticado.getEstoques().get(0).getPreco();
+            BigDecimal novoPreco = preco.multiply(BigDecimal.valueOf(carrinhoNaoAutenticado.getQuantidade()));
+            carrinhoNaoAutenticado.setPreco(novoPreco);
+            carrinhoNaoAutenticadoRepository.save(carrinhoNaoAutenticado);
+            ModelAndView mv = new ModelAndView("redirect:/cliente/anonimo/carrinho/");
+            return mv;
+        } else {
+            return new ModelAndView("erro");
+        }
+    }
+
+    // remover produto do carrinho do cliente não logado
+    public ModelAndView removerProduto(@PathVariable Long carrinhoId) {
+        Optional<CarrinhoNaoAutenticado> carrinhoNaoAutenticadoOptional = this.carrinhoNaoAutenticadoRepository
+                .findById(carrinhoId);
+
+        if (carrinhoNaoAutenticadoOptional.isPresent()) {
+            carrinhoNaoAutenticadoRepository.deleteById(carrinhoId);
+            ModelAndView mv = new ModelAndView("redirect:/cliente/anonimo/carrinho/");
+            return mv;
+        } else {
+            return new ModelAndView("erro");
+
+        }
+
     }
 
     public ModelAndView adcionaUm(@PathVariable Long carrinhoId, HttpSession session) {
@@ -355,9 +428,49 @@ public class CarrinhoService {
                     this.carrinhoRepository.saveAndFlush(carrinho);
                 }
 
-                return new ModelAndView("redirect:/cliente/endereco/selecionar/" + carrinho.getCliente().getId());
+                return new ModelAndView("redirect:/cliente/carrinho/" + carrinho.getCliente().getId());
             }
         }
+        return new ModelAndView("erro");
+    }
+
+    public ModelAndView calcularFretecarrinhoNaoAutenticado(@PathVariable Long id,
+            @RequestParam("frete") String freteSelecionado,
+            HttpSession session) {
+        freteSelecionado = freteSelecionado.replace(",", ".");
+
+        BigDecimal frete = new BigDecimal(freteSelecionado);
+
+        Optional<CarrinhoNaoAutenticado> carrinhoNaoAutenticadoOptional = this.carrinhoNaoAutenticadoRepository
+                .findById(id);
+        if (carrinhoNaoAutenticadoOptional.isPresent()) {
+            CarrinhoNaoAutenticado carrinhoNaoAutenticado = carrinhoNaoAutenticadoOptional.get();
+
+            BigDecimal valorTotal = carrinhoNaoAutenticado.getPreco();
+
+            if (carrinhoNaoAutenticado.getFrete() == null || !carrinhoNaoAutenticado.getFrete().equals(frete)) {
+                BigDecimal freteAntigo = carrinhoNaoAutenticado.getFrete();
+
+                if (freteAntigo != null) {
+                    // Subtrai o frete antigo do valor total
+                    valorTotal = valorTotal.subtract(freteAntigo);
+                }
+
+                // Adiciona o novo frete ao valor total
+                valorTotal = valorTotal.add(frete);
+
+                // Atualiza o frete no carrinho
+                carrinhoNaoAutenticado.setFrete(frete);
+
+                // Atualiza o valor total no carrinho
+                carrinhoNaoAutenticado.setPreco(valorTotal);
+
+                this.carrinhoNaoAutenticadoRepository.saveAndFlush(carrinhoNaoAutenticado);
+                return new ModelAndView("redirect:/cliente/anonimo/carrinho/");
+            }
+
+        }
+
         return new ModelAndView("erro");
     }
 

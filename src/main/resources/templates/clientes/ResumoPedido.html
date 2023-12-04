@@ -113,6 +113,8 @@
                 Frete Expresso - R$ 25,00
               </option>
             </select>
+            <span th:if="${totalFrete != null and totalFrete>0}" th:text="'valor do frete R$: '+ ${totalFrete}"></span>
+            <button class="btn" type="submit">Calcular frete</button>
             <div
               class="row"
               style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding: 2vh 0"
@@ -122,8 +124,8 @@
                 R$: <span th:text="${totalItens}"></span>
               </div>
             </div>
-            <button class="btn" type="submit">Avançar para o checkout</button>
           </form>
+          <a th:href="@{'/cliente/endereco/selecionar/' + ${cliente.id}}" class="btn">aaaaa</a>
         </div>
       </div>
     </div>

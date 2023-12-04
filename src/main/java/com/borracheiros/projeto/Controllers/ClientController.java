@@ -96,8 +96,6 @@ public class ClientController {
 
             mv.setViewName("clientes/DescProduto");
             mv.addObject("produto", produto);
-            // mv.addObject("cliente", cliente); // Certifique-se de que 'cliente' não seja
-            // nulo
 
             return mv;
         }
@@ -124,11 +122,16 @@ public class ClientController {
         return clienteService.alterar(id, model);
     }
 
+    @PostMapping("/validar-edicao/{id}")
+    public ModelAndView validarEdicao(@PathVariable Long id,@ModelAttribute("clientDto") ClientDto clientDto){
+        return clienteService.edicaoCliente(id, clientDto);
+    }
+
     @PostMapping("/catalogo")
     public String createUser(ClientDto clientDto, EnderecoDto enderecoDto, BindingResult bindingResult,
-            Model model) {
+            Model model, @RequestParam("enderecoFaturamento") boolean enderecoFaturamento) {
 
-        return clienteService.createUser(clientDto, enderecoDto, bindingResult, model);
+        return clienteService.createUser(clientDto, enderecoDto, bindingResult, model,enderecoFaturamento);
     }
 
     @GetMapping("/excluir-endereco/{id}")
@@ -141,26 +144,29 @@ public class ClientController {
     public ModelAndView updateEndereco(@PathVariable("id") Long id, Model model) {
         return endereçoService.updateEndereco(id, model);
     }
+
     @GetMapping("adicionar-endereco-cehckout/{id}")
     public ModelAndView updateEnderecoCheckout(@PathVariable("id") Long id) {
         return endereçoService.updateEnderecoCheckout(id);
     }
+
     @GetMapping("/adicionar-enderecoEntrega/{id}")
     public ModelAndView addEnderecoEntreg(@PathVariable("id") Long id) {
         return endereçoService.addEntrega(id);
     }
-    
 
     @PostMapping("/adicionar-endereco")
     public String addEndereco(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
             @RequestParam("clienteId") Long clienteId) {
         return endereçoService.addEndereco(enderecoDto, clienteId);
     }
+
     @PostMapping("/adicionar-enderecoEntrega")
     public String salvarEnderecoEntrega(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
             @RequestParam("clienteId") Long clienteId) {
         return endereçoService.addEnderecoEntrega(enderecoDto, clienteId);
     }
+
     @PostMapping("/adicionar-enderecoEntrega/checkout")
     public String salvarEnderecoEntregaCheckout(@ModelAttribute("enderecoDto") EnderecoDto enderecoDto,
             @RequestParam("clienteId") Long clienteId) {
@@ -172,60 +178,93 @@ public class ClientController {
         session.setAttribute("lastClickedButtonIndex", session.getAttribute("lastClickedButton"));
         return carrinhoService.adicionaProdutoCarrinho(id, session);
     }
+
     @GetMapping("/carrinho/{id}")
-    public ModelAndView verCarrinho(@PathVariable Long id, HttpSession session){
+    public ModelAndView verCarrinho(@PathVariable Long id, HttpSession session) {
         return carrinhoService.verCarrinho(id, session);
     }
+
     @GetMapping("/anonimo/carrinho/")
-    public ModelAndView verCarrinhoNaoLogado( HttpSession session){
+    public ModelAndView verCarrinhoNaoLogado(HttpSession session) {
         return carrinhoService.verCarrinhoNaoLogado(session);
     }
 
     @GetMapping("/endereco-padrao/{id}")
-    public ModelAndView definirEnderecoPadrao(@PathVariable Long id){
+    public ModelAndView definirEnderecoPadrao(@PathVariable Long id) {
         return endereçoService.definirEnderecoPadrao(id);
     }
 
     @GetMapping("/adicionarUm/{id}")
-    public ModelAndView adicionarUm(@PathVariable Long id, HttpSession session){
+    public ModelAndView adicionarUm(@PathVariable Long id, HttpSession session) {
         return carrinhoService.adcionaUm(id, session);
     }
+
     @GetMapping("/removeUm/{id}")
-    public ModelAndView removeUm(@PathVariable Long id, HttpSession session){
+    public ModelAndView removeUm(@PathVariable Long id, HttpSession session) {
         return carrinhoService.removeUM(id, session);
     }
+
     @GetMapping("/deletar/{id}")
-    public ModelAndView deletar(@PathVariable Long id, HttpSession session){
+    public ModelAndView deletar(@PathVariable Long id, HttpSession session) {
         return carrinhoService.removeCarrinho(id, session);
     }
+
     @PostMapping("/frete/{id}")
-    public ModelAndView calcularFrete(@PathVariable Long id,@RequestParam("frete") String freteSelecionado,HttpSession session){
-        return carrinhoService.calcularFrete(id,freteSelecionado, session);
+    public ModelAndView calcularFrete(@PathVariable Long id, @RequestParam("frete") String freteSelecionado,
+            HttpSession session) {
+        return carrinhoService.calcularFrete(id, freteSelecionado, session);
     }
+    @PostMapping("/frete/carrinhoNaoAutenticado/{id}")
+    public ModelAndView calcularFretecarrinhoNaoAutenticado(@PathVariable Long id, @RequestParam("frete") String freteSelecionado,
+            HttpSession session) {
+        return carrinhoService.calcularFretecarrinhoNaoAutenticado(id, freteSelecionado, session);
+    }
+
     @GetMapping("/endereco/selecionar/{id}")
-    public ModelAndView selecionarEndereco(@PathVariable Long id){
+    public ModelAndView selecionarEndereco(@PathVariable Long id) {
         return clienteService.selecionarEndereco(id);
     }
+
     @GetMapping("/endereco/associarCarrinho/{enderecoId}")
-    public ModelAndView associarCarrinhoEndereco(@PathVariable Long enderecoId,HttpSession session){
+    public ModelAndView associarCarrinhoEndereco(@PathVariable Long enderecoId, HttpSession session) {
         return carrinhoService.associarEnderecoAoCarrinho(enderecoId, session);
     }
+
     @PostMapping("/resumo/{id}")
-    public ModelAndView resumoPedido(@PathVariable Long id,@RequestParam("tipoPagamento") String tipoPagamento,HttpSession session){
-        return carrinhoService.resumoPedido(id,tipoPagamento,session);
+    public ModelAndView resumoPedido(@PathVariable Long id, @RequestParam("tipoPagamento") String tipoPagamento,
+            HttpSession session) {
+        return carrinhoService.resumoPedido(id, tipoPagamento, session);
     }
+
     @GetMapping("/finalizado/{id}")
-    public ModelAndView concluirPedido(@PathVariable Long id,HttpSession session){
-        return carrinhoService.concluirPedido(id,session);
+    public ModelAndView concluirPedido(@PathVariable Long id, HttpSession session) {
+        return carrinhoService.concluirPedido(id, session);
     }
-   
+
     @GetMapping("/meusPedidos/{id}")
-    public ModelAndView meusPedidos(@PathVariable Long id){
+    public ModelAndView meusPedidos(@PathVariable Long id) {
         return carrinhoService.meusPedidos(id);
     }
 
     @GetMapping("/detalhes/pedido/{codigoProduto}")
-    public ModelAndView pedidoDetalhe(@PathVariable Long codigoProduto,HttpSession session){
-        return carrinhoService.pedidoDetalhe(codigoProduto,session);
+    public ModelAndView pedidoDetalhe(@PathVariable Long codigoProduto, HttpSession session) {
+        return carrinhoService.pedidoDetalhe(codigoProduto, session);
     }
+
+    // Abaixo os metodos adiciona e remove +1, remove o produto do carrinho do cliente não logado
+    @GetMapping("/add/{id}")
+    public ModelAndView addItem(@PathVariable Long id) {
+        return carrinhoService.maisUmProduto(id);
+    }
+
+
+    @GetMapping("/menosUmProduto/{id}/delete")
+    public ModelAndView removeItem(@PathVariable Long id) {
+        return carrinhoService.menosUmProduto(id);
+    }
+    @GetMapping("/carrinho/{id}/remove")
+    public ModelAndView removerProduto(@PathVariable Long id) {
+        return carrinhoService.removerProduto(id);
+    }
+
 }

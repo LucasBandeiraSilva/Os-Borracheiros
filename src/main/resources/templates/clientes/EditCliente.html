@@ -35,7 +35,7 @@
             >
               <form
                 th:object="${cliente}"
-                action="/cliente/catalogo"
+                th:action="@{'/cliente/validar-edicao/' + ${cliente.id}}" 
                 method="post"
                 id="form"
               >

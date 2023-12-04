@@ -45,44 +45,46 @@ public class ClienteService {
 
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    public ModelAndView edicaoCliente(@PathVariable Long ClienteId, @ModelAttribute("clientDto") ClientDto clientDto) {
+        Optional<Cliente> optionalCliente = this.clienteRepository.findById(ClienteId);
+        if (optionalCliente.isPresent()) {
+            Cliente cliente = clientDto.toCliente();
+
+            Cliente clienteExistente = optionalCliente.get();
+            if (cliente.getCpf() != null && !cliente.getCpf().isEmpty()) {
+                clienteExistente.setCpf(cliente.getCpf());
+            }
+            if (cliente.getEmail() != null && !cliente.getEmail().isEmpty()) {
+                clienteExistente.setEmail(cliente.getEmail());
+            }
+            if (cliente.getNome() != null && !cliente.getNome().isEmpty()) {
+                clienteExistente.setNome(cliente.getNome());
+            }
+            if (cliente.getSenha() != null && !cliente.getSenha().isEmpty()) {
+                String senhaAtualizada = encoder.encode(cliente.getSenha());
+                clienteExistente.setSenha(senhaAtualizada);
+
+            }
+
+            clienteExistente.setDataAniversario(cliente.getDataAniversario());
+
+            System.out.println(cliente.getDataAniversario());
+
+            clienteRepository.save(clienteExistente);
+
+            return new ModelAndView("redirect:/cliente/login");
+
+        }
+        return null;
+
+    }
+
     public String createUser(@Valid @ModelAttribute("clientDto") ClientDto clientDto, EnderecoDto enderecoDto,
             BindingResult bindingResult,
-            Model model) {
+            Model model, @RequestParam("enderecoFaturamento") boolean enderecoFaturamento) {
 
         Cliente cliente = clientDto.toCliente();
         Endereco endereco = enderecoDto.toEndereco();
-
-        if (clientDto.getId() != null) {
-            System.out.println("editando.....");
-            Optional<Cliente> optionalCliente = clienteRepository.findById(clientDto.getId());
-
-            if (optionalCliente.isPresent()) {
-                Cliente clienteExistente = optionalCliente.get();
-                if (cliente.getCpf() != null && !cliente.getCpf().isEmpty()) {
-                    clienteExistente.setCpf(cliente.getCpf());
-                }
-                if (cliente.getEmail() != null && !cliente.getEmail().isEmpty()) {
-                    clienteExistente.setEmail(cliente.getEmail());
-                }
-                if (cliente.getNome() != null && !cliente.getNome().isEmpty()) {
-                    clienteExistente.setNome(cliente.getNome());
-                }
-                if (cliente.getSenha() != null && !cliente.getSenha().isEmpty()) {
-                    String senhaAtualizada = encoder.encode(cliente.getSenha());
-                    clienteExistente.setSenha(senhaAtualizada);
-
-                }
-
-                clienteExistente.setDataAniversario(cliente.getDataAniversario());
-
-                System.out.println(cliente.getDataAniversario());
-
-                clienteRepository.save(clienteExistente);
-
-                return "redirect:/cliente/login";
-
-            }
-        }
 
         if (clienteRepository.existsByCpf(cliente.getCpf()) || clienteRepository.existsByEmail(cliente.getEmail())) {
             if (clienteRepository.existsByCpf(cliente.getCpf())) {
@@ -99,6 +101,9 @@ public class ClienteService {
 
         clienteRepository.save(cliente);
         endereco.setCliente(cliente);
+        if (enderecoFaturamento) {
+            endereco.setEnderecoFaturamento(endereco.getLogradouro());
+        }
         enderecoRepository.save(endereco);
         System.out.println(cliente.getDataAniversario());
         return "redirect:/cliente/login";
@@ -124,28 +129,38 @@ public class ClienteService {
             // Recupere todos os carrinhos não autenticados
             List<CarrinhoNaoAutenticado> carrinhosNaoAutenticados = carrinhoNaoAutenticadoRepository.findAll();
 
-            for (CarrinhoNaoAutenticado carrinhoNaoAutenticado : carrinhosNaoAutenticados) {
-                // Para cada carrinho não autenticado, crie um novo Carrinho e transfira as
-                // informações
-                Carrinho carrinho = new Carrinho();
-                carrinho.setCliente(cliente);
-                carrinho.setEstoques(new ArrayList<>(carrinhoNaoAutenticado.getEstoques()));
-                carrinho.setQuantidade(carrinhoNaoAutenticado.getQuantidade());
-                carrinho.setPreco(carrinhoNaoAutenticado.getPreco());
-                carrinho.setNome(carrinhoNaoAutenticado.getNome());
+            if (!carrinhosNaoAutenticados.isEmpty()) {
+                CarrinhoNaoAutenticado primeiroCarrinho = carrinhosNaoAutenticados.get(0);
 
-                // Salve o carrinho no banco de dados
-                carrinhoRepository.save(carrinho);
+                for (CarrinhoNaoAutenticado carrinhoNaoAutenticado : carrinhosNaoAutenticados) {
+                    // Para cada carrinho não autenticado, crie um novo Carrinho e transfira as
+                    // informações
+                    Carrinho carrinho = new Carrinho();
+                    carrinho.setCliente(cliente);
+                    carrinho.setEstoques(new ArrayList<>(carrinhoNaoAutenticado.getEstoques()));
+                    carrinho.setQuantidade(carrinhoNaoAutenticado.getQuantidade());
+                    carrinho.setPreco(carrinhoNaoAutenticado.getPreco());
+                    carrinho.setFrete(primeiroCarrinho.getFrete());
+                    carrinho.setNome(carrinhoNaoAutenticado.getNome());
 
-                // Remova o carrinho não autenticado do banco de dados
+                    // Salve o carrinho no banco de dados
+                    carrinhoRepository.save(carrinho);
+                }
+
+                // Remova todos os carrinhos não autenticados do banco de dados
                 carrinhoNaoAutenticadoRepository.deleteAll();
-            }
 
-            // Restante do código para cliente autenticado
-            session.setAttribute("cliente", cliente);
-            session.removeAttribute("carrinhoNaoAutenticadoID"); // Remova o ID do carrinho da sessão
-            session.setAttribute("nomeUsuario", cliente.getNome());
-            return "redirect:/cliente/logado";
+                session.setAttribute("cliente", cliente);
+                session.removeAttribute("carrinhoNaoAutenticadoID"); // Remova o ID do carrinho da sessão
+                session.setAttribute("nomeUsuario", cliente.getNome());
+                return "redirect:/cliente/logado";
+            } else {
+                // Lista de carrinhos vazia
+                session.setAttribute("cliente", cliente);
+                session.setAttribute("nomeUsuario", cliente.getNome());
+                return "redirect:/cliente/logado";
+            }
+            // senha e/ou email incorretos
         } else {
             model.addAttribute("loginMismatch", true);
             return "clientes/LoginCliente";

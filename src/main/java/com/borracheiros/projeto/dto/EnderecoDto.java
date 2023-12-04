@@ -20,6 +20,7 @@ public class EnderecoDto {
     private boolean statusEndereco;
     private boolean enderecoPadrao;
     private String tipoEndereco;
+    private String enderecoFaturamento;
 
 
     public Endereco toEndereco(){
@@ -33,7 +34,7 @@ public class EnderecoDto {
         endereco.setEndereco(this.endereco);
         endereco.setStatusEndereco(this.statusEndereco);
         endereco.setEnderecoPadrao(this.enderecoPadrao);
-        endereco.setTipoEndereco(this.tipoEndereco);
+        endereco.setEnderecoFaturamento(this.enderecoFaturamento);
         return endereco;
     }
     
