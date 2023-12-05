@@ -9,7 +9,7 @@
       rel="stylesheet"
       th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
     />
-    <title>edição</title>
+    <title>Edição</title>
   </head>
   <style>
     @media only screen and (max-width: 770px) {
@@ -52,11 +52,11 @@
                       th:field="*{nome}"
                       oninput="nameValidate()"
                     />
-                    <span class="span-required">nome invalido</span>
+                    <span class="span-required">Nome invalido</span>
                   </div>
                   <div class="col-md-6 mt-2">
                     <label class="form-label" for="dataAniversario"
-                      >data de nascimento</label
+                      >Data de nascimento</label
                     >
                     <input
                       class="form-control inputs required"
@@ -67,7 +67,7 @@
                       oninput="dateValidation()"
                     />
                     <span th:errors="*{dataAniversario}"></span>
-                    <span class="span-required">data não deve ser vazia</span>
+                    <span class="span-required">Data não deve ser vazia</span>
                   </div>
                 </div>
                 <div class="row">
@@ -84,9 +84,9 @@
                       oninput="emailRegexValidation()"
                       disabled
                     />
-                    <span class="span-required">email invalido</span>
+                    <span class="span-required">Email invalido</span>
                     <span class="text-danger" th:if="${emailMismatch}"
-                      >ja existe um cadastro com este e-mail!</span
+                      >Ja existe um cadastro com este e-mail!</span
                     >
                   </div>
                   <div class="col-md-6">
@@ -102,9 +102,9 @@
                       th:field="*{cpf}"
                       disabled
                     />
-                    <span class="span-required">cpf invalido</span>
+                    <span class="span-required">CPF invalido</span>
                     <span class="text-danger" th:if="${cpfMismatch}"
-                      >ja existe um cadastro com este e-mail!</span
+                      >Ja existe um cadastro com este e-mail!</span
                     >
                   </div>
                 </div>
@@ -121,7 +121,7 @@
                       oninput="validateMainPassword()"
                     />
                     <span class="span-required"
-                      >Senha deve ter no mínimo 6 caracteres</span
+                      >Senha deve ter no mínimo seis(6) caracteres</span
                     >
                   </div>
                   <div class="col-md-6">
@@ -137,12 +137,12 @@
                       placeholder="Nova Senha"
                       oninput="comparePassword()"
                     />
-                    <span class="span-required">As senhas não conferem</span>
+                    <span class="span-required">As senhas não conferem.</span>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <label class="form-label" for="genero">genero</label>
+                    <label class="form-label" for="genero">Genero</label>
                     <select
                       class="form-select"
                       name="genero"
@@ -150,8 +150,8 @@
                       required
                     >
                       <option selected disabled>Selecione seu genero</option>
-                      <option value="masculino">masculino</option>
-                      <option value="feminino">feminino</option>
+                      <option value="masculino">Masculino</option>
+                      <option value="feminino">Feminino</option>
                     </select>
                   </div>
                 </div>

@@ -40,7 +40,7 @@
                 <h3>Cadastre-se em nossa loja</h3>
                 <div class="row">
                   <div class="col-md-6">
-                    <label for="nome" class="form-label">nome</label>
+                    <label for="nome" class="form-label">Nome</label>
                     <input
                       type="text"
                       class="form-control inputs required"
@@ -49,13 +49,13 @@
                       placeholder="nome de usuario"
                       oninput="nameValidate()"
                     />
-                    <span class="span-required">nome invalido</span>
+                    <span class="span-required">Nome invalido</span>
                     <span class="text-danger" th:if="${nameMismatch}"
-                      >ja existe um cadastro com este e-mail!</span
+                      >Ja existe um cadastro com este e-mail!</span
                     >
                   </div>
                   <div class="col-md-6 mt-2">
-                    <label for="dataAniversario">data de nascimento</label>
+                    <label for="dataAniversario">Data de nascimento</label>
                     <input
                       class="form-control inputs required"
                       type="date"
@@ -70,10 +70,10 @@
                       th:errors="*{dataAniversario}"
                     ></span>
                     <span class="is-invalid" th:if="${dateInFuture}"
-                      >você infelizmente não pode nascer no futuro</span
+                      >Você infelizmente não pode nascer no futuro!!!</span
                     >
 
-                    <span class="span-required">data não deve ser vazia</span>
+                    <span class="span-required">Data não deve ser vazia.</span>
                   </div>
                 </div>
 
@@ -91,11 +91,11 @@
                       th:field="*{email}"
                       th:errorclass="is-invalid"
                     />
-                    <span class="span-required">email invalido</span>
+                    <span class="span-required">Email invalido</span>
                     <span class="invalid-feedback" th:errors="*{email}"></span>
 
                     <span class="text-danger" th:if="${emailMismatch}"
-                      >ja existe um cadastro com este e-mail!</span
+                      >Ja existe um cadastro com este e-mail!</span
                     >
                   </div>
                   <div class="col-md-6">
@@ -111,11 +111,11 @@
                       th:field="*{cpf}"
                       th:errorclass="is-invalid"
                     />
-                    <span class="span-required">cpf invalido</span>
+                    <span class="span-required">CPF invalido</span>
                     <span class="invalid-feedback" th:errors="*{cpf}"></span>
 
                     <span class="text-danger" th:if="${cpfMismatch}"
-                      >ja existe um cadastro com este
+                      >Ja existe um cadastro com este
                       <h1>CPF!</h1></span
                     >
                   </div>
@@ -134,7 +134,7 @@
                       oninput="validateMainPassword()"
                     />
                     <span class="span-required"
-                      >Senha deve ter no mínimo 6 caracteres</span
+                      >Senha deve ter no mínimo seis(6) caracteres</span
                     >
                   </div>
                   <div class="col-md-6">
@@ -156,7 +156,7 @@
 
                 <div class="row">
                   <div class="col-md-6">
-                    <label class="form-label" for="genero">genero</label>
+                    <label class="form-label" for="genero">Genero</label>
                     <select
                       class="form-select"
                       name="genero"
@@ -164,8 +164,8 @@
                       required
                     >
                       <option selected disabled>Selecione seu genero</option>
-                      <option value="masculino">masculino</option>
-                      <option value="feminino">feminino</option>
+                      <option value="masculino">Masculino</option>
+                      <option value="feminino">Feminino</option>
                     </select>
                   </div>
 
@@ -178,7 +178,7 @@
                       id="cep"
                       placeholder="Somente numeros"
                     />
-                    <span class="span-required">o cep não é valido!!!</span>
+                    <span class="span-required">Cep não é valido!!!</span>
                   </div>
                 </div>
 
@@ -194,7 +194,7 @@
                     />
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" for="bairro">bairro</label>
+                    <label class="form-label" for="bairro">Bairro</label>
                     <input
                       class="form-control"
                       type="text"
@@ -207,7 +207,7 @@
 
                 <div class="row">
                   <div class="col-md-6">
-                    <label class="form-label" for="cidade">cidade</label>
+                    <label class="form-label" for="cidade">Cidade</label>
                     <input
                       class="form-control"
                       type="text"
@@ -217,7 +217,7 @@
                     />
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" for="estado">estado</label>
+                    <label class="form-label" for="estado">Estado</label>
                     <input
                       class="form-control"
                       type="text"
@@ -227,7 +227,7 @@
                     />
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" for="numero">numero</label>
+                    <label class="form-label" for="numero">Numero</label>
                     <input
                       class="inputs required form-control"
                       type="number"
@@ -237,11 +237,11 @@
                       oninput="houseNumberValidation()"
                     />
                     <span class="span-required"
-                      >você precisa digitar um numero valido</span
+                      >Você precisa digitar um numero valido</span
                     >
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" for="endereco">endereço</label>
+                    <label class="form-label" for="endereco">Endereço</label>
                     <input
                       class="inputs required form-control"
                       type="text"
@@ -284,7 +284,7 @@
                         id="flexCheckDefault"
                       />
                       <label class="form-check-label" for="flexCheckDefault">
-                        considerar o mesmo endereço para o faturamento?
+                        Considerar o mesmo endereço para o faturamento?
                       </label>
                     </div>
                   </div>

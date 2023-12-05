@@ -8,7 +8,7 @@
       rel="stylesheet"
       th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
     />
-    <title>adicionar endereço</title>
+    <title>Adicionar endereço</title>
   </head>
   <style>
     @media only screen and (max-width: 770px) {
@@ -34,7 +34,7 @@
             class="border container d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
             id="container"
             >
-            <h2 class="text-bg-primary">adicione outro endereço!</h2>
+            <h2 class="text-bg-primary">Adicione outro endereço!</h2>
               <form
                 th:object="${endereco}"
                 action="/cliente/adicionar-enderecoEntrega"
@@ -53,7 +53,7 @@
                       id="cep"
                       placeholder="Somente numeros"
                     />
-                    <span class="span-required">o cep não é valido!!!</span>
+                    <span class="span-required">Cep não é valido!!!</span>
                   </div>
                   <div class="col-md-6">
                     <label class="form-label" for="Loradouro">Logradouro</label>
@@ -69,7 +69,7 @@
 
                 <div class="row">
                   <div class="col-md-6">
-                    <label class="form-label" for="bairro">bairro</label>
+                    <label class="form-label" for="bairro">Bairro</label>
                     <input
                       class="form-control"
                       type="text"
@@ -79,7 +79,7 @@
                     />
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" for="cidade">cidade</label>
+                    <label class="form-label" for="cidade">Cidade</label>
                     <input
                       class="form-control"
                       type="text"
@@ -92,7 +92,7 @@
 
                 <div class="row">
                   <div class="col-md-6">
-                    <label class="form-label" for="estado">estado</label>
+                    <label class="form-label" for="estado">Estado</label>
                     <input
                       class="form-control"
                       type="text"
@@ -102,7 +102,7 @@
                     />
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" for="numero">numero</label>
+                    <label class="form-label" for="numero">Numero</label>
                     <input
                       class="inputs required form-control"
                       type="number"
@@ -112,11 +112,11 @@
                       oninput="houseNumberValidation()"
                     />
                     <span class="span-required"
-                      >você precisa digitar um numero valido</span
+                      >Você precisa digitar um numero valido</span
                     >
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" for="endereco">endereço</label>
+                    <label class="form-label" for="endereco">Endereço</label>
                     <input
                       class="inputs required form-control"
                       type="text"
