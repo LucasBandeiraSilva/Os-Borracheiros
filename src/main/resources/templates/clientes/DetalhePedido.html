@@ -21,7 +21,7 @@
         <thead>
           <tr class="text-center">
             <th>Produto</th>
-            <th>frete(R$)</th>
+            <th>Frete(R$)</th>
             <th>Valor (R$)</th>
             <th>Forma de pagamento</th>
           </tr>
@@ -44,7 +44,7 @@
                   th:text="${pedido.tipoPagamento}"
                 ></span>
                 <span th:unless="${pedido.tipoPagamento != null}"
-                  >boleto</span
+                  >Boleto</span
                 >
               </td>
           </tr>

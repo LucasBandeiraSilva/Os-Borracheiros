@@ -53,6 +53,7 @@
                     aria-describedby="helpId"
                     placeholder="digite seu email"
                   />
+<<<<<<< HEAD
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">cpf</label>
@@ -61,6 +62,18 @@
                     >cpf invalido</span
                   >
                   <span th:if="${cpfMismatch}" class="text-danger">cpf ja existente!!!</span>
+=======
+                  <span class="span-required"
+                    >Email invalido</span
+                  >
+                  <span th:if="${emailNull}" class="text-danger">Email vazio</span>
+                  <span th:if="${EmailMismatch}" class="text-danger">Email ja existente!!!</span>
+                </div>
+                <div class="mb-2">
+                  <label for="cpf" class="form-label">CPF</label>
+                  <input type="text" class="form-control inputs required" th:field="*{cpf}" id="cpf" aria-describedby="cpf" placeholder="cpf" >
+                  <span th:if="${cpf}" class="text-danger">CPF ja existente!!!</span>
+>>>>>>> 41125b17134269dd2493d47672fe4bc621198607
 
                 </div>
 
@@ -79,14 +92,18 @@
                     
                   />
                   <span class="span-required"
-                    >Senha deve ter no mínimo 6 caracteres</span
+                    >Senha deve ter no mínimo 6 caracteres.</span
                   >
+<<<<<<< HEAD
+=======
+                  <span th:if="${senhaNull}" class="text-danger">As senhas não coincidem.</span>
+>>>>>>> 41125b17134269dd2493d47672fe4bc621198607
 
                 </div>
 
                 <div class="mb-2">
                   <label for="confirmPassword" class="form-label"
-                    >Digite Novamente a senha</label
+                    >Digite Novamente a senha.</label
                   >
                   <input
                     type="password"
@@ -97,8 +114,8 @@
                     placeholder="Nova Senha"
                     oninput="comparePassword()"
                   />
-                  <span class="span-required">As senhas não conferem</span>
-                  <span th:if="${passwordMismatch}" class="text-danger">As senhas não coincidem</span>
+                  <span class="span-required">As senhas não conferem.</span>
+                  <span th:if="${passwordMismatch}" class="text-danger">As senhas não coincidem.</span>
                   
                   <div class="mb-2">
 
@@ -116,7 +133,7 @@
                   </select>
                   
                 </div>
-                <button class="btn btn-primary mt-2 w-100"type="submit">enviar</button>
+                <button class="btn btn-primary mt-2 w-100"type="submit">Enviar</button>
                 <p></p>
               </div>
             </form>

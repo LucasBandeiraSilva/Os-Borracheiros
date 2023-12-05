@@ -30,7 +30,7 @@
             <td th:text="${endereco.cidade}"></td>
             <td th:text="${endereco.complemento}"></td>
             <td>
-              <span th:if="${endereco.enderecoPadrao}">este é o principal</span>
+              <span th:if="${endereco.enderecoPadrao}">Este é o principal!</span>
               <span th:unless="${endereco.enderecoPadrao}"><!-- deixar em branco --></span>
             </td>
             <td>
@@ -39,13 +39,13 @@
                 class="btn btn-outline-success"
                 id="btn"
               >
-                Escolher este
+                Escolher este.
               </a>
             </td>
           </tr>
         </tbody>
       </table>
-      <a class="btn btn-primary" th:href="@{/cliente/adicionar-endereco-cehckout/{id}(id=${cliente.id})}">adicionar mais um endereço</a>
+      <a class="btn btn-primary" th:href="@{/cliente/adicionar-endereco-cehckout/{id}(id=${cliente.id})}">Adicionar mais um endereço.</a>
     </div>
   </body>
 </html>

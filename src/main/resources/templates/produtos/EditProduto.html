@@ -43,7 +43,7 @@
       <div
         class="container d-flex justify-content-center align-items-center mb-5"
       >
-        <h1>editar Produtos</h1>
+        <h1>Editar Produtos</h1>
       </div>
     </header>
     <main>
@@ -58,7 +58,7 @@
           enctype="multipart/form-data"
         >
           <input type="hidden" th:field="*{id}" />
-          <label for="nome">Nome do produto</label>
+          <label for="nome">Nome do produto:</label>
 
           <div class="mb-3">
             <input
@@ -72,7 +72,7 @@
             />
           </div>
 
-          <label for="aaa">Breve descrição</label>
+          <label for="aaa">Breve descrição:</label>
           <div class="mb-3">
             <input
               type="text"
@@ -84,7 +84,7 @@
               th:field="*{descricao}"
             />
           </div>
-          <label for="descrição longa">Descrição longa</label>
+          <label for="descrição longa">Descrição longa:</label>
 
           <div class="mb-3">
             <label for="" class="form-label"></label>
@@ -97,7 +97,7 @@
             ></textarea>
           </div>
           <div class="mb-3">
-            <label for="" class="form-label">Imagem Atual</label>
+            <label for="" class="form-label">Imagem Atual:</label>
             <img
               th:src="@{/imagem/{id}(id=${estoque.id})}"
               alt="Imagem atual do produto"
@@ -107,7 +107,7 @@
             />
           </div>
           <div class="mb-3">
-            <label for="" class="form-label">Imagem</label>
+            <label for="" class="form-label">Imagem:</label>
             <input
               th:src="@{/imagem/{id}(id=${estoque.id})}"
               type="file"
@@ -118,14 +118,14 @@
               aria-describedby="fileHelpId"
             />
             <div id="fileHelpId" class="form-text text-white">
-              Informe a imagem do produto
+              Informe a imagem do produto.
             </div>
             <span th:if="${imgError}" class="text-danger"
-              >voce deve escolher uma imagem!!!</span
+              >Você deve escolher uma imagem!!!</span
             >
           </div>
 
-          <label for="preco">Preço do produto</label>
+          <label for="preco">Preço do produto:</label>
           <div class="mb-3">
             <input
               type="number"
@@ -140,7 +140,7 @@
               >Preço invalido!!!</span
             >
           </div>
-          <label for="quantidadeEstoque">Quantidade do produto</label>
+          <label for="quantidadeEstoque">Quantidade do produto:</label>
           <div class="mb-3">
             <input
               type="number"
@@ -152,7 +152,7 @@
               th:field="*{quantidadeEstoque}"
             />
             <span th:if="${estoqueError}" class="text-danger"
-              >Esotoque deve ser maior ou igual a 1!!!</span
+              >Estoque deve ser maior ou igual a um(1)!!!</span
             >
           </div>
           <div class="mb-3">
