@@ -8,9 +8,6 @@
     <title>Editar Dados</title>
   </head>
   <body>
-    <header>
-      <!-- place navbar here -->
-    </header>
     <main>
       <div class="container">
         <div class="row">
@@ -20,17 +17,13 @@
             <p>Edite seus dados!</p>
           </div>
           
-          <div
-            class="col h2 text-white d-flex align-items-center justify-content-center"
-          >
-            
-          </div>
+         
           <div class="col">
             <div
               class="border conatiner d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
               style="height: 760px; width: 600px"
             >
-            <form th:action="@{/ListaUsuario}" th:object="${usuario}" method="post" id="form" class="p-5">
+            <form th:action="@{/usuario/{id}(id=${usuario.id})}" th:object="${usuario}" method="post" id="form" class="p-5">
               <input type="hidden" th:field="*{id}" />
 
                 <div class="row">
@@ -43,38 +36,31 @@
                       id="nome"
                       name="nome"
                       placeholder="nome de usuario"
-                      onchange="verificaNome()"
+                      oninput="nameValidate()"
                     />
+                    <span class="span-required"
+                    >você precisa digitar um nome maior</span
+                  >
                 </div>
-               
-                  
-
-                <div class="mb-2">
+                <div class="mb-2 d-none">
                   <label for="email" class="form-label">email</label>
                   <input
                     type="email"
-                    class="form-control inputs required"
+                    class="form-control inputs"
                     th:field="*{email}"
                     id="email"
                     name="email"
                     aria-describedby="helpId"
                     placeholder="digite seu email"
-                    oninput="nameValidate()"
-                    disabled
-                    
-
-
                   />
-                  <span class="span-required"
-                    >email invalido</span
-                  >
-                  <span th:if="${emailNull}" class="text-danger">email vazio</span>
-                  <span th:if="${EmailMismatch}" class="text-danger">email ja existente!!!</span>
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">cpf</label>
-                  <input type="text" class="form-control inputs required" th:field="*{cpf}" id="cpf" aria-describedby="cpf" placeholder="cpf" >
-                  <span th:if="${cpf}" class="text-danger">cpf ja existente!!!</span>
+                  <input type="text" class="form-control inputs required" th:field="*{cpf}" id="cpf" aria-describedby="cpf" placeholder="cpf" oninput="cpfValidator()" >
+                  <span class="span-required"
+                    >cpf invalido</span
+                  >
+                  <span th:if="${cpfMismatch}" class="text-danger">cpf ja existente!!!</span>
 
                 </div>
 
@@ -95,7 +81,6 @@
                   <span class="span-required"
                     >Senha deve ter no mínimo 6 caracteres</span
                   >
-                  <span th:if="${senhaNull}" class="text-danger">As senhas não coincidem</span>
 
                 </div>
 
@@ -139,6 +124,6 @@
         </div>
       </div>
     </main>
-    <script th:src="@{/Cadastro.js}"></script>
+    <script src="/CadastroUsuario.js"></script>
   </body>
 </html>

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,8 +35,6 @@ public class UsuarioService {
     private RoleRepository roleRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
-
-    
 
     @Autowired
     private PedidoRealizadoRepository pedidoRealizadoRepository;
@@ -66,92 +65,70 @@ public class UsuarioService {
         Usuario usuario = usuarioDto.toUsuario();
         Long roleId = usuarioDto.getRole();
         Role role = roleRepository.findById(roleId).orElse(null);
-    
-        if (usuarioDto.getId() != null) {
-            return updateUser(usuarioDto, bindingResult, usuario, role,model);
-        } else {
-            return createUser(usuarioDto, bindingResult, usuario, role);
-        }
-    }
-    
-    private String updateUser(UserDto usuarioDto, BindingResult bindingResult, Usuario usuario, Role role,Model model) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findById(usuarioDto.getId());
-    
-        if (optionalUsuario.isPresent()) {
-            Usuario usuarioExistente = optionalUsuario.get();
-    
-            usuarioExistente.setRole(role);
-            usuarioExistente.setNome(usuarioDto.getNome());
-            usuarioExistente.setSenha(usuarioDto.getSenha());
-            usuarioExistente.setCpf(usuarioDto.getCpf());
 
-            if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
-                model.addAttribute("passwordMismatch", true);
-                bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
-                return "usuarios/cadastro"; // Retorna a página de cadastro com os erros
-            }
-            
-            
-            if (!usuarioExistente.getCpf().equals(usuario.getCpf())) {
-                if (usuarioRepository.existsByCpf(usuario.getCpf())) {
-                    return "usuarios/ErroCPF";
-                }
-            }
-    
-            usuarioRepository.save(usuarioExistente);
-            return "redirect:/";
-        }
-    
-        return handleUserErrors(usuario, bindingResult);
-    }
-    
-    private String createUser(UserDto usuarioDto, BindingResult bindingResult, Usuario usuario, Role role) {
         if (usuarioRepository.existsByCpf(usuario.getCpf())) {
             bindingResult.rejectValue("cpf", "error.userDto", "CPF já cadastrado");
         }
-    
+
         if (usuario.getCpf() == null || usuario.getCpf().isEmpty()) {
             bindingResult.rejectValue("cpf", "error.userDto", "Campo CPF é obrigatório");
         }
-    
+
         if (bindingResult.hasErrors()) {
             System.out.println("Formulário com erros");
             System.out.println(bindingResult.getAllErrors());
             if (usuario.getNome() == null) {
                 bindingResult.rejectValue("nome", "error.nome", "");
-            }   
+            }
             if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
                 bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
             }
-    
+
             return "usuarios/cadastro"; // Retorna a página de cadastro com os erros
         }
-    
+
         if (role != null) {
             usuario.setRole(role);
             usuarioRepository.save(usuario);
             System.out.println("Usuário criado com sucesso");
-            return "redirect:/"; // Redireciona para a página inicial
+            return "redirect:/login"; // Redireciona para a página inicial
         } else {
             return "Erro";
         }
     }
-    
-    private String handleUserErrors(Usuario usuario, BindingResult bindingResult) {
-        // Lógica comum para tratamento de erros do usuário
-        if (bindingResult.hasErrors()) {
-            System.out.println("Formulário com erros");
-            System.out.println(bindingResult.getAllErrors());
-            if (usuario.getNome() == null) {
-                bindingResult.rejectValue("nome", "error.nome", "");
+
+    public ModelAndView updadteUser(Long id, @ModelAttribute Usuario usuario) {
+        ModelAndView mv = new ModelAndView();
+        Optional<Usuario> user = usuarioRepository.findById(id);
+        if (user.isPresent()) {
+            System.out.println("to dentro do optional");
+            Usuario usuarioExistente = user.get();
+            usuarioExistente.setRole(usuario.getRole());
+            usuarioExistente.setNome(usuario.getNome());
+            usuarioExistente.setSenha(usuario.getSenha());
+            usuarioExistente.setCpf(usuario.getCpf());
+
+            // Verifica se o CPF foi alterado durante a atualização do usuário
+            if (!usuario.getCpf().equals(usuarioExistente.getCpf())) {
+                // Se o CPF foi alterado e já existe outro usuário com o novo CPF, redireciona
+                // para a página de erro
+                if (usuarioRepository.existsByCpf(usuario.getCpf())) {
+                    mv.setViewName("usuarios/Edit");
+                    mv.addObject("cpfMismatch", true);
+                    return mv;
+                }
             }
-            // Adicione outras validações conforme necessário
-            return "usuarios/cadastro"; // Retorna a página de cadastro com os erros
+            if (usuario.getSenha().equals("")) {
+                mv.setViewName("usuarios/Edit");
+                mv.addObject("passwordMismatch", true);
+                return mv;
+            }
+
+            this.usuarioRepository.save(usuario);
+            return new ModelAndView("redirect:/listaUsuario");
         }
         return null;
     }
-    
-    
 
     public String validation(@RequestParam("email") String email, @RequestParam("senha") String senha,
             UserDto usuarioDto, HttpSession session, Model model) {
@@ -167,7 +144,7 @@ public class UsuarioService {
 
             if (roleId == 1) {
 
-                return "redirect:/";
+                return "redirect:/admin";
             } else if (roleId == 2) {
                 return "redirect:/estoquista";
             }
@@ -195,35 +172,34 @@ public class UsuarioService {
     }
 
     public ModelAndView listarTodosPedidos(HttpSession session) {
-    ModelAndView mv = new ModelAndView();
+        ModelAndView mv = new ModelAndView();
 
-    Long roleId = (Long) session.getAttribute("roleId");
+        Long roleId = (Long) session.getAttribute("roleId");
 
-    if (roleId == null || roleId != 2) {
-        return new ModelAndView("aviso");
+        if (roleId == null || roleId != 2) {
+            return new ModelAndView("aviso");
+        }
+
+        // Encontrar todos os códigos de pedido distintos
+        List<Long> codigosPedidosUnicos = pedidoRealizadoRepository
+                .findDistinctByCodigoPedidoIsNotNullOrderByCodigoPedidoDesc()
+                .stream()
+                .map(PedidoRealizado::getCodigoPedido)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Buscar os pedidos associados a esses códigos
+        List<PedidoRealizado> todosOsPedidos = pedidoRealizadoRepository
+                .findByCodigoPedidoInOrderByDataPedidoDesc(codigosPedidosUnicos);
+
+        if (todosOsPedidos.isEmpty()) {
+            return new ModelAndView("usuarios/ListaPedidosVazia");
+        }
+
+        mv.setViewName("usuarios/ListaPedido");
+        mv.addObject("pedidos", todosOsPedidos);
+        return mv;
     }
-
-    // Encontrar todos os códigos de pedido distintos
-    List<Long> codigosPedidosUnicos = pedidoRealizadoRepository
-            .findDistinctByCodigoPedidoIsNotNullOrderByCodigoPedidoDesc()
-            .stream()
-            .map(PedidoRealizado::getCodigoPedido)
-            .distinct()
-            .collect(Collectors.toList());
-
-    // Buscar os pedidos associados a esses códigos
-    List<PedidoRealizado> todosOsPedidos = pedidoRealizadoRepository
-            .findByCodigoPedidoInOrderByDataPedidoDesc(codigosPedidosUnicos);
-
-    if (todosOsPedidos.isEmpty()) {
-        return new ModelAndView("usuarios/ListaPedidosVazia");
-    }
-
-    mv.setViewName("usuarios/ListaPedido");
-    mv.addObject("pedidos", todosOsPedidos);
-    return mv;
-}
-
 
     public ModelAndView editarStatusPedido(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView();
