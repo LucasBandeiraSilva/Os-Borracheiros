@@ -118,20 +118,20 @@ public class ClientController {
     }
 
     @GetMapping("/editar/{id}")
-    public String alterar(@PathVariable("id") Long id, Model model) {
-        return clienteService.alterar(id, model);
+    public ModelAndView alterar(@PathVariable("id") Long id) {
+        return clienteService.alterar(id);
     }
 
     @PostMapping("/validar-edicao/{id}")
-    public ModelAndView validarEdicao(@PathVariable Long id,@ModelAttribute("clientDto") ClientDto clientDto){
+    public ModelAndView validarEdicao(@PathVariable Long id, @ModelAttribute("clientDto") ClientDto clientDto) {
         return clienteService.edicaoCliente(id, clientDto);
     }
 
     @PostMapping("/catalogo")
-    public String createUser(ClientDto clientDto, EnderecoDto enderecoDto, BindingResult bindingResult,
-            Model model, @RequestParam("enderecoFaturamento") boolean enderecoFaturamento) {
+    public ModelAndView createUser(ClientDto clientDto, EnderecoDto enderecoDto, BindingResult bindingResult,
+            @RequestParam("enderecoFaturamento") boolean enderecoFaturamento) {
 
-        return clienteService.createUser(clientDto, enderecoDto, bindingResult, model,enderecoFaturamento);
+        return clienteService.createUser(clientDto, enderecoDto, bindingResult, enderecoFaturamento);
     }
 
     @GetMapping("/excluir-endereco/{id}")
@@ -214,8 +214,10 @@ public class ClientController {
             HttpSession session) {
         return carrinhoService.calcularFrete(id, freteSelecionado, session);
     }
+
     @PostMapping("/frete/carrinhoNaoAutenticado/{id}")
-    public ModelAndView calcularFretecarrinhoNaoAutenticado(@PathVariable Long id, @RequestParam("frete") String freteSelecionado,
+    public ModelAndView calcularFretecarrinhoNaoAutenticado(@PathVariable Long id,
+            @RequestParam("frete") String freteSelecionado,
             HttpSession session) {
         return carrinhoService.calcularFretecarrinhoNaoAutenticado(id, freteSelecionado, session);
     }
@@ -251,17 +253,18 @@ public class ClientController {
         return carrinhoService.pedidoDetalhe(codigoProduto, session);
     }
 
-    // Abaixo os metodos adiciona e remove +1, remove o produto do carrinho do cliente não logado
+    // Abaixo os metodos adiciona e remove +1, remove o produto do carrinho do
+    // cliente não logado
     @GetMapping("/add/{id}")
     public ModelAndView addItem(@PathVariable Long id) {
         return carrinhoService.maisUmProduto(id);
     }
 
-
     @GetMapping("/menosUmProduto/{id}/delete")
     public ModelAndView removeItem(@PathVariable Long id) {
         return carrinhoService.menosUmProduto(id);
     }
+
     @GetMapping("/carrinho/{id}/remove")
     public ModelAndView removerProduto(@PathVariable Long id) {
         return carrinhoService.removerProduto(id);

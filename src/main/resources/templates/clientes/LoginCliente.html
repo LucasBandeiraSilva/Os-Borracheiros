@@ -18,7 +18,7 @@
           <input type="password" name="senha" id="senha" placeholder="senha" />
         </div>
         <span th:if="${loginMismatch}">Email e/ou senha incorretos!</span>
-        <p>Não possui cadastro? <a th:href="@{/cliente/cadastrar}" target="_blank" rel="noopener noreferrer">Faça seu Cadastro agora</a></p>
+        <p>Não possui cadastro? <a th:href="@{/cliente/cadastrar}"  rel="noopener noreferrer">Faça seu Cadastro agora</a></p>
         <div class="form-button">
           <button type="submit">Login</button>
         </div>

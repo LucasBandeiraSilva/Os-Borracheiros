@@ -79,21 +79,23 @@ public class ClienteService {
 
     }
 
-    public String createUser(@Valid @ModelAttribute("clientDto") ClientDto clientDto, EnderecoDto enderecoDto,
+    public ModelAndView createUser(@Valid @ModelAttribute("clientDto") ClientDto clientDto,
+            EnderecoDto enderecoDto,
             BindingResult bindingResult,
-            Model model, @RequestParam("enderecoFaturamento") boolean enderecoFaturamento) {
+            @RequestParam("enderecoFaturamento") boolean enderecoFaturamento) {
 
+        ModelAndView mv = new ModelAndView();
         Cliente cliente = clientDto.toCliente();
         Endereco endereco = enderecoDto.toEndereco();
 
-        if (clienteRepository.existsByCpf(cliente.getCpf()) || clienteRepository.existsByEmail(cliente.getEmail())) {
+        if (clienteRepository.existsByCpfOrEmail(cliente.getCpf(), cliente.getEmail())) {
             if (clienteRepository.existsByCpf(cliente.getCpf())) {
-                model.addAttribute("cpfMismatch", true);
+                mv.addObject("cpfMismatch", true);
             }
             if (clienteRepository.existsByEmail(cliente.getEmail())) {
-                model.addAttribute("emailMismatch", true);
+                mv.addObject("emailMismatch", true);
             }
-            return "clientes/CadastroCliente";
+            return new ModelAndView("clientes/CadastroCliente");
         }
 
         String senhaCriptografada = encoder.encode(cliente.getSenha());
@@ -103,19 +105,22 @@ public class ClienteService {
         endereco.setCliente(cliente);
         if (enderecoFaturamento) {
             endereco.setEnderecoFaturamento(endereco.getLogradouro());
+        } else {
+            endereco.setEnderecoFaturamento("Sem Faturamento");
         }
         enderecoRepository.save(endereco);
-        System.out.println(cliente.getDataAniversario());
-        return "redirect:/cliente/login";
+
+        return new ModelAndView("redirect:/cliente/login");
     }
 
-    public String alterar(@PathVariable("id") Long id, Model model) {
+    public ModelAndView alterar(@PathVariable("id") Long id) {
+        ModelAndView mv = new ModelAndView();
         Optional<Cliente> optional = this.clienteRepository.findById(id);
         if (optional.isPresent()) {
-            model.addAttribute("cliente", optional.get());
-            return "clientes/EditCliente";
+            mv.addObject("cliente", optional.get());
+            return new ModelAndView("clientes/EditCliente");
         }
-        return "Erro";
+    return new ModelAndView("Erro");
     }
 
     @Transactional
@@ -130,6 +135,8 @@ public class ClienteService {
             List<CarrinhoNaoAutenticado> carrinhosNaoAutenticados = carrinhoNaoAutenticadoRepository.findAll();
 
             if (!carrinhosNaoAutenticados.isEmpty()) {
+                // verifica se o carrinho ta vazio, se tiver pega o primeiro (validação feita
+                // para o cep)
                 CarrinhoNaoAutenticado primeiroCarrinho = carrinhosNaoAutenticados.get(0);
 
                 for (CarrinhoNaoAutenticado carrinhoNaoAutenticado : carrinhosNaoAutenticados) {
@@ -151,7 +158,7 @@ public class ClienteService {
                 carrinhoNaoAutenticadoRepository.deleteAll();
 
                 session.setAttribute("cliente", cliente);
-                session.removeAttribute("carrinhoNaoAutenticadoID"); // Remova o ID do carrinho da sessão
+                session.removeAttribute("carrinhoNaoAutenticadoID"); // Remove o ID do carrinho da sessão
                 session.setAttribute("nomeUsuario", cliente.getNome());
                 return "redirect:/cliente/logado";
             } else {

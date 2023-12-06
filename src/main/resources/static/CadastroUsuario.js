@@ -1,9 +1,11 @@
 const form = document.getElementById("form");
 const campos = document.querySelectorAll(".required");
 const spans = document.querySelectorAll(".span-required");
+const emailRegex =
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 let isValidCpf = false;
-
+let isValidEmail = false;
 let isValidName = false;
 let isValidpassword = false;
 
@@ -15,7 +17,7 @@ form.addEventListener("submit", (event) => {
   validateMainPassword();
   comparePassword();
 
-  if (!isValidCpf || !isValidName || !is) {
+  if (!isValidCpf || !isValidName || !isValidpassword || !isValidEmail) {
     alert("Dados com erro, corrija antes de enviar");
     event.preventDefault();
   }
@@ -41,6 +43,17 @@ function nameValidate() {
   } else {
     removeError(0);
     isValidName = true;
+  }
+}
+function emailRegexValidation() {
+  const email = document.getElementById("email").value;
+
+  if (!emailRegex.test(email)) {
+    isValidEmail = false;
+    setError(1);
+  } else {
+    isValidEmail = true;
+    removeError(1);
   }
 }
 
@@ -78,27 +91,27 @@ function cpfValidator() {
   const cpf = document.getElementById("cpf").value;
 
   if (!CpfValido(cpf)) {
-    setError(1);
+    setError(2);
     isValidCpf = false;
   } else {
-    removeError(1);
+    removeError(2);
     isValidCpf = true;
   }
 }
 
 function validateMainPassword() {
-  if (campos[2].value.length < 6) {
-    setError(2);
+  if (campos[3].value.length < 6) {
+    setError(3);
   } else {
-    removeError(2);
+    removeError(3);
   }
 }
 function comparePassword() {
-  if (campos[3].value === campos[2].value) {
-    removeError(3);
+  if (campos[4].value === campos[3].value) {
+    removeError(4);
     isValidpassword = false;
   } else {
-    setError(3);
+    setError(4);
     isValidpassword = true;
   }
 }

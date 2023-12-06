@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,6 +39,8 @@ public class UsuarioService {
 
     @Autowired
     private PedidoRealizadoRepository pedidoRealizadoRepository;
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public void status(long id, boolean StatusUsuario) {
 
@@ -89,6 +92,8 @@ public class UsuarioService {
 
         if (role != null) {
             usuario.setRole(role);
+            String senhaCriptografada = encoder.encode(usuario.getSenha());
+            usuario.setSenha(senhaCriptografada);
             usuarioRepository.save(usuario);
             System.out.println("Usuário criado com sucesso");
             return "redirect:/login"; // Redireciona para a página inicial
@@ -105,7 +110,8 @@ public class UsuarioService {
             Usuario usuarioExistente = user.get();
             usuarioExistente.setRole(usuario.getRole());
             usuarioExistente.setNome(usuario.getNome());
-            usuarioExistente.setSenha(usuario.getSenha());
+            String senhaCriptografada = encoder.encode(usuario.getSenha());
+            usuarioExistente.setSenha(senhaCriptografada);
             usuarioExistente.setCpf(usuario.getCpf());
 
             // Verifica se o CPF foi alterado durante a atualização do usuário
@@ -124,7 +130,7 @@ public class UsuarioService {
                 return mv;
             }
 
-            this.usuarioRepository.save(usuario);
+            this.usuarioRepository.save(usuarioExistente);
             List<Usuario> usuarios = this.usuarioRepository.findAll();
             mv.addObject("usuarios", usuarios);
             return new ModelAndView("redirect:/ListaUsuario");
@@ -137,7 +143,7 @@ public class UsuarioService {
 
         Usuario usuario = usuarioRepository.findByEmail(email);
 
-        if (usuario != null && senha.equals(usuario.getSenha())) {
+        if (usuario != null && encoder.matches(senha, usuario.getSenha())) {
             usuarioDto.setRole(usuario.getRole().getId());
 
             System.out.println("roleId: " + usuarioDto.getRole());

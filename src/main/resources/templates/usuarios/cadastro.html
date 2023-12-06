@@ -32,9 +32,12 @@
                       name="nome"
                       id="nome"
                       placeholder="nome de usuario"
-                      onchange="verificaNome()"
-                    />
+                      oninput="nameValidate()"
+                      />
                       <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-danger"></span>
+                      <span class="span-required"
+                    >Nome invalido</span
+                  >
                   </div>
                 </div>
                 
@@ -50,7 +53,7 @@
                     id="email"
                     aria-describedby="helpId"
                     placeholder="Digite seu email"
-                    oninput="nameValidate()"
+                    oninput="emailRegexValidation()"
                   />
                   <span class="span-required"
                     >Email invalido</span
@@ -59,10 +62,12 @@
                 </div>
                 <div class="mb-2">
                   <label for="cpf" class="form-label">CPF</label>
-                  <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf">
+                  <input type="text" class="form-control inputs required" name="cpf" id="cpf" aria-describedby="cpf" placeholder="cpf" oninput="cpfValidator()">
                   <span th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}"
                   class="text-danger"></span>
-                  
+                  <span class="span-required"
+                    >CPF invalido</span
+                  >
                 </div>
 
                 <div class="mb-2">
@@ -122,6 +127,6 @@
         </div>
       </div>
     </main>
-    <script src="/Cadastro.js"></script>
+    <script src="/CadastroUsuario.js"></script>
   </body>
 </html>
