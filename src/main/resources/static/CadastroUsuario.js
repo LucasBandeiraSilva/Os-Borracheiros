@@ -9,7 +9,6 @@ let isValidpassword = false;
 
 const cepInput = document.getElementById("cep");
 
-alert("to na pagina");
 form.addEventListener("submit", (event) => {
   nameValidate();
   cpfValidator();

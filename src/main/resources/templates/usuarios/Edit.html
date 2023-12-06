@@ -28,7 +28,7 @@
 
                 <div class="row">
                   <div>
-                    <label for="" class="form-label mt-4">nome</label>
+                    <label for="" class="form-label mt-4">Nome</label>
                     <input
                       type="text"
                       class="form-control inputs required"
@@ -39,11 +39,11 @@
                       oninput="nameValidate()"
                     />
                     <span class="span-required"
-                    >você precisa digitar um nome maior</span
+                    >Você precisa digitar um nome maior</span
                   >
                 </div>
                 <div class="mb-2 d-none">
-                  <label for="email" class="form-label">email</label>
+                  <label for="email" class="form-label">Email</label>
                   <input
                     type="email"
                     class="form-control inputs"
@@ -53,29 +53,17 @@
                     aria-describedby="helpId"
                     placeholder="digite seu email"
                   />
-<<<<<<< HEAD
+
                 </div>
                 <div class="mb-2">
-                  <label for="cpf" class="form-label">cpf</label>
+                  <label for="cpf" class="form-label">CPF</label>
                   <input type="text" class="form-control inputs required" th:field="*{cpf}" id="cpf" aria-describedby="cpf" placeholder="cpf" oninput="cpfValidator()" >
                   <span class="span-required"
                     >cpf invalido</span
                   >
-                  <span th:if="${cpfMismatch}" class="text-danger">cpf ja existente!!!</span>
-=======
-                  <span class="span-required"
-                    >Email invalido</span
-                  >
-                  <span th:if="${emailNull}" class="text-danger">Email vazio</span>
-                  <span th:if="${EmailMismatch}" class="text-danger">Email ja existente!!!</span>
-                </div>
-                <div class="mb-2">
-                  <label for="cpf" class="form-label">CPF</label>
-                  <input type="text" class="form-control inputs required" th:field="*{cpf}" id="cpf" aria-describedby="cpf" placeholder="cpf" >
-                  <span th:if="${cpf}" class="text-danger">CPF ja existente!!!</span>
->>>>>>> 41125b17134269dd2493d47672fe4bc621198607
-
-                </div>
+                  <span th:if="${cpfMismatch}" class="text-danger">CPF ja existente!!!</span>
+                
+                
 
                 <div class="mb-2">
                   <label for="password" class="form-label">Senha</label>
@@ -94,10 +82,6 @@
                   <span class="span-required"
                     >Senha deve ter no mínimo 6 caracteres.</span
                   >
-<<<<<<< HEAD
-=======
-                  <span th:if="${senhaNull}" class="text-danger">As senhas não coincidem.</span>
->>>>>>> 41125b17134269dd2493d47672fe4bc621198607
 
                 </div>
 

@@ -36,14 +36,29 @@ public class UserController {
     }
 
     @GetMapping("/estoquista")
-    public String telaEstoquista() {
-        return "usuarios/TelaEstoquista";
+    public String telaEstoquista(HttpSession session) {
+        Long roleId = (Long) session.getAttribute("roleId");
 
+        if (roleId == null) {
+            return "aviso";
+        } else if (roleId == 2) {
+
+            return "usuarios/TelaEstoquista";
+        }
+        return null;
     }
 
     @GetMapping("/admin")
-    public String telaAdmin() {
-        return "usuarios/TelaAdmin";
+    public String telaAdmin(HttpSession session) {
+        Long roleId = (Long) session.getAttribute("roleId");
+
+        if (roleId == null) {
+            return "aviso";
+        } else if (roleId == 1) {
+
+            return "usuarios/TelaAdmin";
+        }
+        return null;
     }
 
     @PostMapping("/login")

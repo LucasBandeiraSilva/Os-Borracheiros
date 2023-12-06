@@ -29,6 +29,7 @@
           <div class="col-md-6 offset-md-3">
             <div
               class="border container d-flex flex-column align-items-center justify-content-evenly bg-light rounded text-center"
+              style="height: 62vh"
               id="container"
             >
               <form
@@ -44,9 +45,9 @@
                     <input
                       type="text"
                       class="form-control inputs required"
-                      name="nome"
+                      name="nome" 
                       id="nome"
-                      placeholder="nome de usuario"
+                      placeholder="Nome de usuario"
                       oninput="nameValidate()"
                     />
                     <span class="span-required">Nome invalido</span>
@@ -115,8 +116,7 @@
                     <span class="invalid-feedback" th:errors="*{cpf}"></span>
 
                     <span class="text-danger" th:if="${cpfMismatch}"
-                      >Ja existe um cadastro com este
-                      <h1>CPF!</h1></span
+                      >Ja existe um cadastro com este CPF!</span
                     >
                   </div>
                 </div>
@@ -190,7 +190,7 @@
                       type="text"
                       name="logradouro"
                       id="logradouro"
-                      placeholder="logradouro"
+                      placeholder="Logradouro"
                     />
                   </div>
                   <div class="col-md-6">
@@ -200,7 +200,7 @@
                       type="text"
                       name="bairro"
                       id="bairro"
-                      placeholder="bairro"
+                      placeholder="Bairro"
                     />
                   </div>
                 </div>
@@ -213,7 +213,7 @@
                       type="text"
                       name="cidade"
                       id="cidade"
-                      placeholder="cidade"
+                      placeholder="Cidade"
                     />
                   </div>
                   <div class="col-md-6">
@@ -223,7 +223,7 @@
                       type="text"
                       name="estado"
                       id="estado"
-                      placeholder="estado"
+                      placeholder="Estado"
                     />
                   </div>
                   <div class="col-md-6">
@@ -247,7 +247,7 @@
                       type="text"
                       name="endereco"
                       id="endereco"
-                      placeholder="endereço"
+                      placeholder="Endereço"
                     />
                   </div>
                   <div class="col-md-6">
@@ -262,19 +262,7 @@
                       placeholder="EX: casa"
                     />
                   </div>
-                  <div class="col-md-6">
-                    <label class="form-label" for="Tipo endereço"
-                      >Tipo endereço</label
-                    >
-                    <!-- <select
-                      class="form-select"
-                      name="tipoEndereco"
-                      id="tipoEndereco"
-                      required
-                    >
-                      <option value="entrega">Entrega</option>
-                      <option value="Faturamento">Faturamento</option>
-                    </select> -->
+                  <div class="col-md-6 mt-4">
                     <div class="form-check">
                       <input
                         class="form-check-input"
@@ -303,7 +291,7 @@
                 </div>
 
                 <button class="btn btn-primary mt-3 w-100" type="submit">
-                  Enviar
+                  Cadastrar
                 </button>
               </form>
             </div>

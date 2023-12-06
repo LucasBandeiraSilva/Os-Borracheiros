@@ -180,6 +180,7 @@
           const image = document.createElement("img");
           image.src = URL.createObjectURL(file);
           image.className = "image-preview";
+          image.style.height = '100px'
           preview.appendChild(image);
         }
       });

@@ -23,6 +23,7 @@ import com.borracheiros.projeto.dto.EstoqueDto;
 import com.borracheiros.projeto.dto.UserDto;
 import com.borracheiros.projeto.estoque.entities.Estoque;
 import com.borracheiros.projeto.repositories.EstoqueRepository;
+import com.borracheiros.projeto.service.EstoqueService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -34,82 +35,44 @@ public class EstoqueController {
     @Autowired
     EstoqueRepository estoqueRepository;
 
+    @Autowired
+    EstoqueService estoqueService;
+
     @GetMapping("produto/cadastro")
     public String cadastroProduto(HttpSession session) {
-        Long roleId = (Long) session.getAttribute("roleId");
-
-        if (roleId == null|| roleId == 3) {
-            return "aviso";
-        }
-        return "produtos/CadastraProduto";
+        return estoqueService.cadastraProduto(session);
     }
 
     @GetMapping("/listasProdutos")
-    public ModelAndView showProducts(HttpSession session) {
+    public ModelAndView mostrarProdutos(HttpSession session) {
 
-        Long roleId = (Long) session.getAttribute("roleId");
-        if (roleId == null || roleId == 3) {
-            return new ModelAndView("aviso");
-        }
-        ModelAndView mv = new ModelAndView();
-        List<Estoque> produtos = this.estoqueRepository.findAll();
-
-        mv.setViewName("produtos/ListaProduto");
-        mv.addObject("produtos", produtos);
-        return mv;
+        return estoqueService.mostrarProdutos(session);
 
     }
 
     @PostMapping("/listasProdutos")
-    public String createProduct(@Valid EstoqueDto produtoDTO, BindingResult bindingResult,
+    public String criarProduto(@Valid EstoqueDto produtoDTO, BindingResult bindingResult,
             @RequestParam("fileProduto") List<MultipartFile> files, Model model) {
 
-        if (bindingResult.hasErrors()) {
-            System.out.println("form com erros");
-            System.out.println(bindingResult.getAllErrors());
-            return "Erro";
-        }
-
-        try {
-            List<byte[]> imagens = new ArrayList<>();
-            for (MultipartFile file : files) {
-                imagens.add(file.getBytes());
-            }
-            produtoDTO.setImagem(imagens);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Estoque estoque = produtoDTO.toEstoque();
-        System.out.println(estoque);
-        estoqueRepository.save(estoque);
-
-        return "redirect:/listasProdutos";
+        return estoqueService.criarProduto(produtoDTO, bindingResult, files, model);
     }
 
     @GetMapping("/imagem/{id}")
     @ResponseBody
     public byte[] exibirImagem(Model model, @PathVariable("id") long id) {
-        Estoque estoque = this.estoqueRepository.getReferenceById(id);
-        return estoque.getImagem();
+        return estoqueService.exibirImagem(model, id);
     }
 
     @GetMapping("/produto/{id}")
     @ResponseBody
     public ModelAndView obterProdutoPorId(@PathVariable Long id) {
-        ModelAndView mv = new ModelAndView();
-        Estoque produto = estoqueRepository.findById(id).orElse(null);
-        mv.setViewName("produtos/VisualizarProduto");
-        return mv.addObject("produto", produto);
-
+        return estoqueService.obterProdutoPorId(id);
     }
 
     @GetMapping("/produto/editar/{id}")
-    public String alterar(@PathVariable("id") Long id, Model model) {
-        Optional<Estoque> optional = this.estoqueRepository.findById(id);
-
-        model.addAttribute("estoque", optional.get());
-        return "produtos/EditProduto";
+    public ModelAndView alterar(@PathVariable("id") Long id) {
+        
+        return estoqueService.editarPedido(id);
     }
 
     @PostMapping("produto/salvar")

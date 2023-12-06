@@ -125,7 +125,9 @@ public class UsuarioService {
             }
 
             this.usuarioRepository.save(usuario);
-            return new ModelAndView("redirect:/listaUsuario");
+            List<Usuario> usuarios = this.usuarioRepository.findAll();
+            mv.addObject("usuarios", usuarios);
+            return new ModelAndView("redirect:/ListaUsuario");
         }
         return null;
     }
