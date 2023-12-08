@@ -14,7 +14,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css"
     />
-    <link rel="stylesheet" href="ListaUsuario.css" />
+    <link rel="stylesheet" href="/ListaUsuario.css" />
     <title>Lista Produtos</title>
   </head>
   <style>
@@ -35,6 +35,7 @@ thead th {
 thead th:nth-child(3) {
   flex: 2;
 }
+
   </style>
   <body>
     <h1>Lista de Produtos</h1>
@@ -51,12 +52,12 @@ thead th:nth-child(3) {
         Buscar
       </button>
       <button class="btn btn-success my-2 my-sm-0 mr-2" type="submit">
-        <a class="text-decoration-none text-white" th:href="@{produto/cadastro}"
+        <a class="text-decoration-none text-white" th:href="@{/produto/cadastro}"
           >Novo</a
         >
       </button>
       <button class="btn btn-primary my-2 my-sm-0" type="submit">
-        <a class="text-decoration-none text-white" th:href="@{/}">Voltar</a>
+        <a class="text-decoration-none text-white" th:href="@{/admin}">Voltar</a>
       </button>
     </form>
     <br />

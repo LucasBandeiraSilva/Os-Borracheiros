@@ -38,7 +38,7 @@ public class EstoqueService {
         return "produtos/CadastraProduto";
     }
 
-    public ModelAndView mostrarProdutos(HttpSession session) {
+    public ModelAndView     mostrarProdutos(HttpSession session) {
 
         Long roleId = (Long) session.getAttribute("roleId");
         if (roleId == null || roleId == 3) {
@@ -112,7 +112,7 @@ public class EstoqueService {
 
     }
 
-    public ModelAndView salvarEstoque(@ModelAttribute("estoque") Estoque estoque,
+    public ModelAndView salvarProduto(@ModelAttribute("estoque") Estoque estoque,
             BindingResult bindingResult, @RequestParam("fileProduto") MultipartFile file) {
         ModelAndView mv = new ModelAndView();
 

@@ -89,8 +89,7 @@
             method="post"
             th:action="@{'/cliente/frete/' + ${carrinhos[0].id}}"
           >
-            <p>Frete</p>
-            <!-- Verifica se há um endereço padrão de entrega -->
+           
             <div th:if="${cepCliente != null}">
               <p>
                 O CEP do seu endereço padrão de entrega é
@@ -98,8 +97,10 @@
               </p>
             </div>
             <!-- Seleção de frete -->
-            <span class="span-required">o cep não é válido!!!</span>
-            <select class="form-select" name="frete" style="width: 9vw">
+            <label class="form-label" for="frete">Informe o frete abaixo</label>
+            <input class="form-control w-50 required" type="number" id="cep" placeholder="Informe o CEP">
+            <span class="span-required">O CEP não é válido!!!</span>
+            <select class="form-select" id="freteSelect" name="frete" style="width: 9vw; display: none">
               <option class="text-muted" value="0.00">
                 Escolha o valor do frete
               </option>
@@ -107,14 +108,14 @@
                 Frete Econômico - R$ 5,00
               </option>
               <option class="text-muted" value="10.00">
-                Frete Padrão - R$; 10,00
+                Frete Padrão - R$ 10,00
               </option>
               <option class="text-muted" value="25.00">
                 Frete Expresso - R$ 25,00
               </option>
             </select>
-            <span th:if="${totalFrete != null and totalFrete>0}" th:text="'valor do frete R$: '+ ${totalFrete}"></span>
-            <button class="btn" type="submit">Calcular frete</button>
+            <button class="btn" id="btn" type="submit">Calcular frete</button>
+          </form>
             <div
               class="row"
               style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding: 2vh 0"
@@ -124,7 +125,6 @@
                 R$: <span th:text="${totalItens}"></span>
               </div>
             </div>
-          </form>
           <a th:href="@{'/cliente/endereco/selecionar/' + ${cliente.id}}" class="btn">Avançar</a>
         </div>
       </div>

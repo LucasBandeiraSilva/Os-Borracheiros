@@ -85,7 +85,7 @@ public class EndereçoService {
             Endereco endereco = new Endereco();
             endereco.setCliente(cliente);
             mv.addObject("endereco", endereco);
-            mv.addObject("clienteId", cliente.getId()); // Adicione o clienteId ao modelo
+            mv.addObject("clienteId", cliente.getId()); 
             mv.setViewName("clientes/AdicionaEnderecoEntrega");
             return mv;
         }

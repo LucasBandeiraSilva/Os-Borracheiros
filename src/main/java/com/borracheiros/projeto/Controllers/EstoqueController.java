@@ -76,35 +76,9 @@ public class EstoqueController {
     }
 
     @PostMapping("produto/salvar")
-    public String salvarUser(@ModelAttribute("estoque") Estoque estoque, Model model,
+    public ModelAndView salvarProduto(@ModelAttribute("estoque") Estoque estoque, Model model,
             BindingResult bindingResult, @RequestParam("fileProduto") MultipartFile file) {
 
-        if (estoque.getQuantidadeEstoque() == null || estoque.getQuantidadeEstoque() <= 0) {
-            model.addAttribute("estoqueError", true);
-            return "produtos/EditProduto";
-
-        }
-        if (estoque.getPreco() == null || estoque.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
-            model.addAttribute("precoError", true);
-            return "produtos/EditProduto";
-
-        }
-        if (file == null || file.isEmpty()) {
-            model.addAttribute("imgError", true);
-            return "produtos/EditProduto";
-
-        }
-        try {
-
-            if (!file.isEmpty()) {
-                byte[] imagemBytes = file.getBytes();
-                estoque.setImagem(imagemBytes);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        this.estoqueRepository.save(estoque);
-        return "redirect:/listasProdutos";
+       return estoqueService.salvarProduto(estoque, bindingResult, file);
     }
 }

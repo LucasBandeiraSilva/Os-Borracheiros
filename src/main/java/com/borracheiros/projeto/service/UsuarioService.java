@@ -1,6 +1,5 @@
 package com.borracheiros.projeto.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,10 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.borracheiros.projeto.carrinho.Carrinho;
 import com.borracheiros.projeto.carrinho.PedidoRealizado;
 import com.borracheiros.projeto.dto.UserDto;
-import com.borracheiros.projeto.repositories.CarrinhoRepository;
 import com.borracheiros.projeto.repositories.PedidoRealizadoRepository;
 import com.borracheiros.projeto.repositories.RoleRepository;
 import com.borracheiros.projeto.repositories.UsuarioRepository;
@@ -66,8 +63,7 @@ public class UsuarioService {
 
     public String createUser(@Valid UserDto usuarioDto, BindingResult bindingResult, Model model) {
         Usuario usuario = usuarioDto.toUsuario();
-        Long roleId = usuarioDto.getRole();
-        Role role = roleRepository.findById(roleId).orElse(null);
+        Role role = roleRepository.findById(usuarioDto.getRole()).orElse(null);
 
         if (usuarioRepository.existsByCpf(usuario.getCpf())) {
             bindingResult.rejectValue("cpf", "error.userDto", "CPF já cadastrado");
@@ -81,7 +77,7 @@ public class UsuarioService {
             System.out.println("Formulário com erros");
             System.out.println(bindingResult.getAllErrors());
             if (usuario.getNome() == null) {
-                bindingResult.rejectValue("nome", "error.nome", "");
+                bindingResult.rejectValue("nome", "error.nome", "não pode ser vazio");
             }
             if (!usuarioDto.getSenha().equals(usuarioDto.getConfirmPassword())) {
                 bindingResult.rejectValue("confirmPassword", "error.userDto", "As senhas não coincidem");
@@ -106,7 +102,6 @@ public class UsuarioService {
         ModelAndView mv = new ModelAndView();
         Optional<Usuario> user = usuarioRepository.findById(id);
         if (user.isPresent()) {
-            System.out.println("to dentro do optional");
             Usuario usuarioExistente = user.get();
             usuarioExistente.setRole(usuario.getRole());
             usuarioExistente.setNome(usuario.getNome());
@@ -146,12 +141,10 @@ public class UsuarioService {
         if (usuario != null && encoder.matches(senha, usuario.getSenha())) {
             usuarioDto.setRole(usuario.getRole().getId());
 
-            System.out.println("roleId: " + usuarioDto.getRole());
             session.setAttribute("roleId", usuario.getRole().getId());
             Long roleId = (Long) session.getAttribute("roleId");
 
             if (roleId == 1) {
-
                 return "redirect:/admin";
             } else if (roleId == 2) {
                 return "redirect:/estoquista";
@@ -179,6 +172,7 @@ public class UsuarioService {
 
     }
 
+    // estoquista
     public ModelAndView listarTodosPedidos(HttpSession session) {
         ModelAndView mv = new ModelAndView();
 

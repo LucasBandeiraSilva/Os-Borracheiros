@@ -23,8 +23,8 @@ public class HomeController {
 
     @GetMapping("/cadastro")
     public String criarUsuario(Model model) {
-         UserDto userDto = new UserDto(); // Crie uma instância de UserDto
-        model.addAttribute("userDto", userDto); // Adicione ao modelo
+         UserDto userDto = new UserDto(); 
+        model.addAttribute("userDto", userDto); 
         return "usuarios/cadastro";
     }
 

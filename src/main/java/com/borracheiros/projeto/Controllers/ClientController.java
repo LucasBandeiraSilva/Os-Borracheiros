@@ -104,8 +104,7 @@ public class ClientController {
     @GetMapping("/cadastrar")
     public ModelAndView clienteCadastro() {
         ModelAndView mv = new ModelAndView();
-        ClientDto clientDto = new ClientDto();
-        mv.addObject("clientDto", clientDto);
+        mv.addObject("clientDto", new ClientDto());
         mv.setViewName("clientes/CadastroCliente");
         return mv;
     }

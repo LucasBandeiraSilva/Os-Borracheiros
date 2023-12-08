@@ -113,15 +113,17 @@ public class ClienteService {
         return new ModelAndView("redirect:/cliente/login");
     }
 
-    public ModelAndView alterar(@PathVariable("id") Long id) {
+    public ModelAndView alterar(Long id) {
         ModelAndView mv = new ModelAndView();
         Optional<Cliente> optional = this.clienteRepository.findById(id);
         if (optional.isPresent()) {
             mv.addObject("cliente", optional.get());
-            return new ModelAndView("clientes/EditCliente");
+            mv.setViewName("clientes/EditCliente");  // Configura a view correta
+            return mv;  // Retorna o ModelAndView configurado
         }
-    return new ModelAndView("Erro");
+        return new ModelAndView("Erro");
     }
+    
 
     @Transactional
     public String validacaoLogin(@RequestParam("email") String email, @RequestParam("senha") String senha,

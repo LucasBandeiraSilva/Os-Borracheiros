@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import com.borracheiros.projeto.users.entities.Usuario;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -11,13 +12,14 @@ import lombok.Data;
 
 public class UserDto {
     private Long id;
-    @NotBlank
+    @NotBlank(message = "não pode ser vazio")
     private String nome;
     @NotBlank
     private String senha;
     
     private Boolean StatusUsuario;
-    @NotBlank
+    @NotBlank(message = "não pode ser vazio")
+    @Email
     private String email;
     @NotBlank
      @CPF(message = "CPF inválido")
